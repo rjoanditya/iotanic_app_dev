@@ -1,4 +1,4 @@
-# iotanic_app_dev
+# IoTanic superapp
 
 A new Flutter project.
 
