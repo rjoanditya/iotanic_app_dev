@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import 'view/splash.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'IoTanic | Precision Farming',
           theme: themeProvider.getThemes,
@@ -68,7 +69,8 @@ class ThemeProvider extends ChangeNotifier {
     scaffoldBackgroundColor: const Color(0XFFFCFCFC),
     fontFamily: 'Poppins',
     primaryColor: Colors.black,
-    highlightColor: Colors.white70,
+    highlightColor: const Color(0XFFF5F6FA),
+    splashColor: const Color(0XFF617BF3),
   );
   ThemeData dark = ThemeData(
     // primaryColor: const Color(0XFF05754C),
@@ -88,6 +90,7 @@ class ThemeProvider extends ChangeNotifier {
     fontFamily: 'Poppins',
     primaryColor: Colors.white70,
     highlightColor: const Color(0XFF21242A),
+    splashColor: const Color(0XFF617BF3),
   );
 
   Image logoLight = const Image(image: AssetImage('public/assets/img/logo.png'));

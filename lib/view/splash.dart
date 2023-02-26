@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:iotanic_app_dev/main.dart';
 
-import 'package:iotanic_app_dev/view/signin.dart';
+import 'package:iotanic_app_dev/view/Auth/signin.dart';
 
 class Splash extends StatefulWidget {
   final ThemeData? themeData;
