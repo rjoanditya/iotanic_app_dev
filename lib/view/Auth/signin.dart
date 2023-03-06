@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/main.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
@@ -8,8 +10,17 @@ import 'package:validators/validators.dart';
 // import 'package:hexcolor/hexcolor.dart';
 // import 'package:get/get.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  final _formLoginKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +31,11 @@ class SignIn extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     ThemeProvider themes = ThemeProvider();
 
-    final formKey = GlobalKey<FormState>();
-
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
-
     bool passwordVisible = false;
 
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: SafeArea(
-            child: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -39,7 +44,7 @@ class SignIn extends StatelessWidget {
                 child: themes.getLogo,
               ),
               Form(
-                key: formKey,
+                key: _formLoginKey,
                 child: Column(
                   children: [
                     Builder(
@@ -131,75 +136,77 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 45.0),
-                      child: ButtonTheme(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (BuildContext context) {
-                                return const Index();
-                              }),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 15),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
-                              )),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: const EdgeInsets.fromLTRB(0, 5, 0, 50), child: Text('Lupa Passsword? Atau', style: TextStyle(color: Theme.of(context).primaryColor))),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 45.0),
-                      child: ButtonTheme(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-                            themeProvider.swapTheme();
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              minimumSize: Size(screenWidth * 0.3, 5),
-                              maximumSize: Size(screenWidth * 0.6, 40),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)))),
-                          child: Row(children: [
-                            Image.network(
-                              'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png',
-                              width: 50,
-                              height: 50,
-                            ),
-                            const Text(
-                              "Masuk Dengan Google",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'Belum memiliki akun? Daftar',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 45.0),
+                child: ButtonTheme(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          return const Index();
+                        }),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 15),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        )),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(padding: const EdgeInsets.fromLTRB(0, 5, 0, 50), child: Text('Lupa Passsword? Atau', style: TextStyle(color: Theme.of(context).primaryColor))),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 45.0),
+                child: ButtonTheme(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+                      themeProvider.swapTheme();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        minimumSize: Size(screenWidth * 0.3, 5),
+                        maximumSize: Size(screenWidth * 0.6, 40),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)))),
+                    child: Row(children: [
+                      Image.network(
+                        'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      const Text(
+                        "Masuk Dengan Google",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+              ),
+              Text(
+                'Belum memiliki akun? Daftar',
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 }

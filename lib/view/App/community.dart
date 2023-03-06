@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-class Community extends StatelessWidget {
+class Community extends StatefulWidget {
   const Community({super.key});
+
+  @override
+  State<Community> createState() => _CommunityState();
+}
+
+class _CommunityState extends State<Community> {
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController searchForum = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    final formKey = GlobalKey<FormState>();
-    TextEditingController searchForum = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +46,7 @@ class Community extends StatelessWidget {
                 ),
               ),
               Form(
-                key: formKey,
+                key: _formKey,
                 child: Builder(
                   builder: (context) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20.0),
@@ -109,7 +116,7 @@ class Community extends StatelessWidget {
                           Container(
                             height: 180,
                             width: screenWidth * 0.9,
-                            margin: EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               color: Theme.of(context).highlightColor,
                               borderRadius: const BorderRadius.all(
@@ -144,15 +151,15 @@ class Community extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(13, 13, 20, 20),
+                                  padding: const EdgeInsets.fromLTRB(13, 13, 20, 20),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.all(7),
+                                        margin: const EdgeInsets.all(7),
                                         width: 35,
                                         height: 35,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: Colors.red,
                                           // image: DecorationImage(
                                           //   image: AssetImage('public/assets/img/logo.png'),
@@ -160,10 +167,10 @@ class Community extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.all(7),
+                                        margin: const EdgeInsets.all(7),
                                         width: 35,
                                         height: 35,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: Colors.red,
                                           // image: DecorationImage(
                                           //   image: AssetImage('public/assets/img/logo.png'),
@@ -171,10 +178,10 @@ class Community extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.all(7),
+                                        margin: const EdgeInsets.all(7),
                                         width: 35,
                                         height: 35,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: Colors.red,
                                           // image: DecorationImage(
                                           //   image: AssetImage('public/assets/img/logo.png'),

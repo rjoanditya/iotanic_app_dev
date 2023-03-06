@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:validators/validators.dart';
+// import 'package:provider/provider.dart';
+// import 'package:validators/validators.dart';
 
 class SearchInput extends StatelessWidget {
   const SearchInput({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List riwayat = [
+      'Agrikultur',
+      'Cabai',
+      'Pupuk',
+      'Presisi',
+      'Badai Cabeyan',
+    ];
+    // double screenWidth = MediaQuery.of(context).size.width;
     TextEditingController search = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Scaffold(
@@ -78,6 +86,62 @@ class SearchInput extends StatelessWidget {
                 child: Text(
                   'Riwayat Anda',
                   style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                // height: 30,
+                child: Wrap(
+                  spacing: 2,
+                  // alignment: WrapAlignment.spaceAround,
+                  direction: Axis.horizontal,
+                  children: List.generate(riwayat.length, (index) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: BorderSide.none,
+                        ),
+                        primary: Theme.of(context).highlightColor,
+                        onPrimary: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {},
+                      child: Text('${riwayat[index]}'),
+                    );
+                  }),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Cari Kategori',
+                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                // height: 30,
+                child: Wrap(
+                  spacing: 2,
+                  // alignment: WrapAlignment.spaceAround,
+                  direction: Axis.horizontal,
+                  children: List.generate(riwayat.length, (index) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: BorderSide.none,
+                        ),
+                        primary: Theme.of(context).highlightColor,
+                        onPrimary: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {},
+                      child: Text('${riwayat[index]}'),
+                    );
+                  }),
                 ),
               ),
             ],

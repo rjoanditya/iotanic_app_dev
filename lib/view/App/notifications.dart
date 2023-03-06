@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController search = TextEditingController();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -72,7 +71,7 @@ class Notifications extends StatelessWidget {
                               Expanded(
                                 flex: 4,
                                 child: Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.start,

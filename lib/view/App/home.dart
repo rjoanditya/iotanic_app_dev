@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/view/App/notifications.dart';
 import 'package:iotanic_app_dev/view/Search/search_input.dart';
 
-import '../../main.dart';
+// import '../../main.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -20,14 +20,14 @@ class Home extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(left: 10),
+              margin: const EdgeInsets.only(left: 10),
               child: Text(
                 'Hi, Sonic',
                 style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.w600),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 10),
+              margin: const EdgeInsets.only(left: 10),
               child: Text(
                 'Selamat Datang di IOTANIC',
                 style: TextStyle(
@@ -50,7 +50,7 @@ class Home extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(right: 10),
+            margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               icon: const Icon(Icons.notifications_none),
               color: Theme.of(context).primaryColor,
@@ -79,7 +79,7 @@ class Home extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             height: 130,
             child: ListView.builder(
                 itemCount: 4,
@@ -123,9 +123,9 @@ class Home extends StatelessWidget {
                             ],
                           ),
                           width: 70,
-                          padding: EdgeInsets.all(20),
-                          margin: EdgeInsets.only(top: 15, bottom: 15, right: 15, left: 15),
-                          child: Center(
+                          padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.only(top: 15, bottom: 15, right: 15, left: 15),
+                          child: const Center(
                               // child: Image(image: AssetImage(icon[index])),
                               ),
                         ),
@@ -144,7 +144,7 @@ class Home extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             height: 130,
             child: ListView.builder(
                 itemCount: 4,
@@ -188,8 +188,8 @@ class Home extends StatelessWidget {
                             ],
                           ),
                           width: 70,
-                          padding: EdgeInsets.all(20),
-                          margin: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(15),
                         ),
                         // Text(topic[index]),
                       ],

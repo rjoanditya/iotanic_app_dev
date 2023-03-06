@@ -5,6 +5,7 @@ import 'package:iotanic_app_dev/view/App/articles.dart';
 import 'package:iotanic_app_dev/view/App/community.dart';
 import 'package:iotanic_app_dev/view/App/home.dart';
 import 'package:iotanic_app_dev/view/App/monitor.dart';
+import 'package:iotanic_app_dev/view/App/profile.dart';
 
 class Index extends StatefulWidget {
   const Index({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _IndexState extends State<Index> {
       Monitor(),
       Community(),
       Articles(),
-      // Profile(),
+      Profile(),
     ];
 
     double screenWidth = MediaQuery.of(context).size.width;
