@@ -8,7 +8,6 @@ import 'package:validators/validators.dart';
 
 // import 'package:iotanic_app_dev/view/App/home.dart';
 // import 'package:hexcolor/hexcolor.dart';
-// import 'package:get/get.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);

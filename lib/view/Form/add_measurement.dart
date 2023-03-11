@@ -3,14 +3,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import '../Pages_Monitoring/detail-lahan.dart';
 
-class AddField extends StatefulWidget {
-  const AddField({Key? key}) : super(key: key);
+class AddMeasurement extends StatefulWidget {
+  const AddMeasurement({Key? key}) : super(key: key);
 
   @override
-  State<AddField> createState() => _AddFieldState();
+  State<AddMeasurement> createState() => _AddMeasurementState();
 }
 
-class _AddFieldState extends State<AddField> {
+class _AddMeasurementState extends State<AddMeasurement> {
   final formKey = GlobalKey<FormState>();
   final _popupBuilderKey = GlobalKey<DropdownSearchState<String>>();
   TextEditingController fieldName = TextEditingController();
@@ -25,7 +25,7 @@ class _AddFieldState extends State<AddField> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Tambah Lahan Baru',
+          'Tambah Pengukuran Baru',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

@@ -64,7 +64,7 @@ class Profile extends StatelessWidget {
             // personal data
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},
@@ -109,7 +109,7 @@ class Profile extends StatelessWidget {
             // settings
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},
@@ -154,7 +154,7 @@ class Profile extends StatelessWidget {
             // E-Statement
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},
@@ -206,7 +206,7 @@ class Profile extends StatelessWidget {
             // FAQ
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},
@@ -251,7 +251,7 @@ class Profile extends StatelessWidget {
             // handbook
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},
@@ -296,7 +296,7 @@ class Profile extends StatelessWidget {
             // Signout
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
               onPressed: () {},

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 import 'view/splash.dart';
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return GetMaterialApp(
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'IoTanic | Precision Farming',
           theme: themeProvider.getThemes,
@@ -71,6 +71,11 @@ class ThemeProvider extends ChangeNotifier {
     primaryColor: Colors.black,
     highlightColor: const Color(0XFFF5F6FA),
     splashColor: const Color(0XFF617BF3),
+    canvasColor: const Color(0XFF002D3B),
+    unselectedWidgetColor: const Color(0XFF05754C),
+    indicatorColor: const Color(0XFF759AA2),
+    dialogBackgroundColor: const Color(0XFF8BBEAB),
+    secondaryHeaderColor: const Color(0XFFFFFFFF),
   );
   ThemeData dark = ThemeData(
     // primaryColor: const Color(0XFF05754C),
@@ -91,6 +96,12 @@ class ThemeProvider extends ChangeNotifier {
     primaryColor: Colors.white70,
     highlightColor: const Color(0XFF21242A),
     splashColor: const Color(0XFF617BF3),
+    cardColor: const Color(0XFF21242A),
+    canvasColor: const Color(0XFF002D3B),
+    unselectedWidgetColor: const Color(0XFF05754C),
+    indicatorColor: const Color(0XFF759AA2),
+    dialogBackgroundColor: const Color(0XFF8BBEAB),
+    secondaryHeaderColor: const Color(0XFFFFFFFF),
   );
 
   Image logoLight = const Image(image: AssetImage('public/assets/img/logo.png'));

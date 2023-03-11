@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/view/Form/add_field.dart';
+import 'package:iotanic_app_dev/view/Pages_Monitoring/detail-lahan.dart';
 
 enum _MenuValues {
   addField,
@@ -55,17 +56,6 @@ class Monitor extends StatelessWidget {
                 }
               },
             ),
-            // child: IconButton(
-            //   icon: Icon(
-            //     Icons.more_vert_rounded,
-            //     color: Theme.of(context).primaryColor,
-            //   ),
-            //   onPressed: () => Navigator.of(context).push(
-            //     MaterialPageRoute(
-            //       builder: (BuildContext context) => const SearchInput(),
-            //     ),
-            //   ),
-            // ),
           )
         ],
       ),
@@ -75,85 +65,76 @@ class Monitor extends StatelessWidget {
             height: screenHeight - 175,
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 12,
+                itemCount: 2,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      AlertDialog alert = AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            // Icon(Icons.close_outlined),
-                            Text("Fitur belum tersedia")
-                          ],
-                        ),
-                      );
-                      showDialog(
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return alert;
-                        },
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailLahan()));
                     },
                     child: Column(
                       children: [
-                        Container(
-                          height: 120,
-                          width: screenWidth * 0.9,
+                        Card(
                           margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor.withOpacity(.6),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(24),
-                            ),
+                          elevation: 5,
+                          shadowColor: Colors.black26,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 15),
-                                width: screenWidth * 0.145,
-                                height: screenWidth * 0.145,
-                                decoration: BoxDecoration(
-                                  color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        // data lahan disini
-                                        'Lahan Pak Supriyadi ${index + 1}',
-                                        style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        'Kamis, 12 Januari 2023',
-                                        style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
+                          child: Container(
+                            height: 100,
+                            width: screenWidth * 0.9,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                                  width: screenWidth * 0.145,
+                                  height: screenWidth * 0.145,
+                                  decoration: BoxDecoration(
+                                    // color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Icon(
+                                    Icons.grass,
+                                    size: screenWidth * 0.06,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.15,
-                                child: IconButton(
-                                    iconSize: screenWidth * 0.05,
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Theme.of(context).primaryColor,
-                                    )),
-                              ),
-                            ],
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // data lahan disini
+                                          'Lahan Pak Supriyadi ${index + 1}',
+                                          style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          'Kamis, 12 Januari 2023',
+                                          style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: screenWidth * 0.15,
+                                  child: IconButton(
+                                      iconSize: screenWidth * 0.04,
+                                      onPressed: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailLahan()));
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Theme.of(context).primaryColor,
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
