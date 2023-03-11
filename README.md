@@ -1,37 +1,24 @@
-Judul Proyek
-Tuliskan deskripsi singkat tentang proyek Anda di sini.
+IoTanic Smart Precision Farming
+Aplikasi iotanic merupakan sebuah aplikasi yang digunakan untuk memonitoring pertumbuhan tanaman menggunakan teknologi Internet of Things (IoT).
+
+Deskripsi
+Aplikasi ini dikembangkan dengan menggunakan teknologi Flutter, sehingga dapat dijalankan pada platform Android dan iOS. Aplikasi iotanic akan terhubung dengan perangkat sensor yang ditanam pada tanaman, dan akan menampilkan data pertumbuhan tanaman secara real-time.
 
 Fitur
-Daftar fitur yang ada di aplikasi Anda:
+Beberapa fitur yang disediakan dalam aplikasi iotanic antara lain:
 
-Fitur 1
-Fitur 2
-Fitur 3
-...
-Persyaratan Sistem
-Persyaratan sistem untuk menjalankan aplikasi Anda:
-Persyaratan sistem 1
-Persyaratan sistem 2
-Persyaratan sistem 3
-...
+Monitoring kondisi tanaman (suhu, kelembaban, pH, dll.)
+Notifikasi jika terdapat perubahan kondisi tanaman yang signifikan
+Grafik pertumbuhan tanaman secara real-time
+Pengaturan alarm untuk keperluan pemupukan atau penyiraman
 Instalasi
-Langkah-langkah instalasi
-Langkah-langkah instalasi
-Langkah-langkah instalasi
-...
-Penggunaan
-Langkah-langkah penggunaan
-Langkah-langkah penggunaan
-Langkah-langkah penggunaan
-...
-Kontribusi
-Jika Anda ingin berkontribusi pada proyek ini, silakan ikuti langkah-langkah di bawah ini:
+Untuk menjalankan aplikasi iotanic, pastikan sudah melakukan langkah-langkah berikut:
 
-Fork proyek ini.
-Buat branch fitur baru (git checkout -b fitur-baru).
-Lakukan perubahan pada kode Anda.
-Commit perubahan Anda (git commit -am 'Menambahkan fitur baru').
-Push ke branch Anda (git push origin fitur-baru).
-Buat Pull Request.
+Clone repositori ini ke dalam komputer Anda
+Buka proyek menggunakan IDE (Integrated Development Environment) seperti Android Studio atau Visual Studio Code
+Pastikan telah menginstall Flutter dan dependensinya, sesuai dengan panduan di situs resmi Flutter (https://flutter.dev/docs/get-started/install)
+Kontribusi
+Anda dapat memberikan kontribusi pada pengembangan aplikasi iotanic dengan cara melakukan pull request ke repositori ini. Pastikan untuk melakukan pengetesan terhadap fitur baru sebelum melakukan pull request.
+
 Lisensi
-Proyek ini dilisensikan di bawah Lisensi MIT - lihat file LICENSE.md untuk detailnya.
+Aplikasi iotanic didistribusikan dengan lisensi MIT. Lihat file LICENSE untuk informasi lebih lanjut.
