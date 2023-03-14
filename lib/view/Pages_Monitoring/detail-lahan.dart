@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../model/weather.dart';
 import '../Form/add_measurement.dart';
+import 'detail-measurements.dart';
 import 'detail-records.dart';
 
 enum _MenuValues {
@@ -318,7 +319,7 @@ class _DetailLahanState extends State<DetailLahan> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                        return DetailRecords();
+                        return DetailMeasurements();
                       })));
                     },
                     child: Card(
