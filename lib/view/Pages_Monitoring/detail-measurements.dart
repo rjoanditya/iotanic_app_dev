@@ -1,17 +1,16 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart'; //
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iotanic_app_dev/view/Pages_Monitoring/detail-records.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../constant.dart';
-import '../../model/weather.dart';
 import '../Form/add_measurement.dart';
-import 'detail-records.dart';
 
 enum _MenuValues {
   addMeasurement,
@@ -32,10 +31,32 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
   late final MapController _mapController;
   double _rotation = 0;
 
+  String _scanBarcode = 'Unknown';
+
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
+  }
+
+  Future<void> scanBarcode() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
   }
 
   @override
@@ -128,12 +149,17 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
             Center(
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      height: screenHeight * 0.325,
-                      width: screenWidth * 0.9,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                      height: screenHeight * 0.25,
+                      width: screenWidth * 0.8,
+                      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Theme.of(context).dialogBackgroundColor, width: 5, strokeAlign: BorderSide.strokeAlignOutside),
+                      ),
                       clipBehavior: Clip.antiAlias,
                       child: FlutterMap(
                         options: MapOptions(
@@ -151,7 +177,6 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                         ),
                         children: [
                           TileLayer(
-                            // urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                             urlTemplate: ENDPOINT_MAPBOX,
                             userAgentPackageName: 'com.example.app',
                           ),
@@ -172,79 +197,186 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                         ],
                       ),
                     ),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.all(15),
-                            // padding: EdgeInsets.symmetric(vertical: 15),
-                            width: screenHeight * 0.1,
-                            height: screenHeight * 0.1,
-                            // color: Colors.amber,
-                            child: IconButton(
-                                onPressed: () async {
-                                  List<Placemark> placemark = await placemarkFromCoordinates(7.566463, 110.8949131);
-                                  print(placemark);
-                                },
-                                icon: Icon(
-                                  Icons.location_searching,
+                    Container(
+                      width: screenWidth,
+                      height: screenHeight * 0.15,
+                      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      child: Card(
+                        elevation: 5,
+                        shadowColor: Colors.black26,
+                        color: Theme.of(context).highlightColor,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Devices Status',
+                                style: TextStyle(
                                   color: Theme.of(context).primaryColor,
-                                )),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(15),
-                            // padding: EdgeInsets.symmetric(vertical: 15),
-                            width: screenHeight * 0.1,
-                            height: screenHeight * 0.1,
-                            // color: Colors.amber,
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.location_searching,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 11,
+                                    margin: const EdgeInsets.only(right: 5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Connected',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'SS-123-456-789',
+                                style: TextStyle(
                                   color: Theme.of(context).primaryColor,
-                                )),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(15),
-                            // padding: EdgeInsets.symmetric(vertical: 15),
-                            width: screenHeight * 0.1,
-                            height: screenHeight * 0.1,
-                            // color: Colors.amber,
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.location_searching,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                'Connected at 17.09',
+                                style: TextStyle(
                                   color: Theme.of(context).primaryColor,
-                                )),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 15),
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.1,
-                      color: Colors.amber,
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      width: screenWidth,
+                      child: Text(
+                        'Records',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Card(
+                        elevation: 5,
+                        margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        shadowColor: Colors.black26,
+                        child: SizedBox(
+                          height: screenHeight * 0.275,
+                          child: DataTable(
+                            columns: <DataColumn>[
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(
+                                    '#',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(
+                                    'N',
+                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(
+                                    'P',
+                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(
+                                    'K',
+                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(
+                                    'pH',
+                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            rows: <DataRow>[
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                          return DetailRecords();
+                                        })));
+                                      },
+                                      child: Text('#1', style: TextStyle(color: Theme.of(context).splashColor)))),
+                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                ],
+                              ),
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                          return DetailRecords();
+                                        })));
+                                      },
+                                      child: Text('#2', style: TextStyle(color: Theme.of(context).splashColor)))),
+                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                ],
+                              ),
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                          return DetailRecords();
+                                        })));
+                                      },
+                                      child: Text('#3', style: TextStyle(color: Theme.of(context).splashColor)))),
+                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 15),
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.1,
-                      color: Colors.amber,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 15),
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.1,
-                      color: Colors.amber,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 15),
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.1,
-                      color: Colors.amber,
+                      height: 65,
                     ),
                   ],
                 ),
@@ -252,6 +384,16 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          scanBarcode();
+        },
+        label: const Text(
+          'Linked Devices',
+          style: TextStyle(letterSpacing: 0.1),
+        ),
+        icon: const Icon(Icons.qr_code_2_rounded),
       ),
     );
   }

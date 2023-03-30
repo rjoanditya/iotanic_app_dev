@@ -1,13 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:iotanic_app_dev/view/Pages_Monitoring/detail-records.dart';
+import 'package:iotanic_app_dev/view/Pages_Monitoring/chart-detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:iotanic_app_dev/view/Pages_Monitoring/forecast.dart';
 
 import '../../model/weather.dart';
 import '../Form/add_measurement.dart';
 import 'detail-measurements.dart';
-import 'detail-records.dart';
 
 enum _MenuValues {
   addMeasurement,
@@ -160,7 +160,9 @@ class _DetailLahanState extends State<DetailLahan> {
                               width: screenWidth,
                               height: 20,
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ChartDetail()));
+                                },
                                 child: Text(
                                   'Selengkapnya',
                                   style: TextStyle(
@@ -575,7 +577,7 @@ class WeatherScreen extends StatelessWidget {
                 width: screenWidth,
                 child: InkWell(
                   onTap: () {
-                    // print(jsonEncode(snapshot.data.toString()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Forecast()));
                   },
                   child: Text(
                     'Lihat Detail',
