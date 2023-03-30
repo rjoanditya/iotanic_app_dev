@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
@@ -119,6 +118,24 @@ class ThemeProvider extends ChangeNotifier {
       prefs.setBool('isDarkTheme', true);
     }
     // _selectedLogo = _selectedLogo == logoLight ? logoDark : logoLight;
+    notifyListeners();
+  }
+
+  Future<void> swapLightTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _selectedTheme = light;
+    isDarkMode = false;
+    prefs.setBool('isDarkTheme', false);
+
+    notifyListeners();
+  }
+
+  Future<void> swapDarkTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _selectedTheme = dark;
+    isDarkMode = true;
+    prefs.setBool('isDarkTheme', true);
+
     notifyListeners();
   }
 
