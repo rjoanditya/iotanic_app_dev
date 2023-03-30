@@ -86,10 +86,8 @@ class _CommunityState extends State<Community> {
               Container(
                 padding: const EdgeInsets.all(15),
                 height: screenHeight - 175,
-                child: ListView.builder(
-                  itemCount: 2,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
+                child: Wrap(
+                  children: List.generate(2, (index) {
                     return GestureDetector(
                       onTap: () {
                         AlertDialog alert = AlertDialog(
@@ -206,7 +204,7 @@ class _CommunityState extends State<Community> {
                         ],
                       ),
                     );
-                  },
+                  }),
                 ),
               ),
             ],

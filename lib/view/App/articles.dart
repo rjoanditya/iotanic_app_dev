@@ -5,6 +5,14 @@ class Articles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List categories = [
+      'All',
+      'Agriculture',
+      'Fertilizer',
+      'Diseases',
+      'Market',
+    ];
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -108,7 +116,7 @@ class Articles extends StatelessWidget {
                 height: 35,
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: 5,
+                    itemCount: 1,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -133,25 +141,24 @@ class Articles extends StatelessWidget {
                           );
                         },
                         child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              padding: const EdgeInsets.all(5),
-                              height: 30,
-                              width: screenWidth * 0.25,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).highlightColor,
-                                  border: Border.all(),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(20),
-                                  )),
-                              child: Text(
-                                'Agriculture',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Theme.of(context).primaryColor),
+                          children: List.generate(categories.length, (index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 7),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    side: BorderSide.none,
+                                  ),
+                                  primary: Theme.of(context).highlightColor,
+                                  onPrimary: Theme.of(context).primaryColor,
+                                ),
+                                onPressed: () {},
+                                child: Text('${categories[index]}'),
                               ),
-                            )
-                          ],
+                            );
+                          }),
                         ),
                       );
                     }),
@@ -159,121 +166,120 @@ class Articles extends StatelessWidget {
               SizedBox(
                 width: screenWidth * 0.9,
                 height: screenHeight - 100,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 5,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          AlertDialog alert = AlertDialog(
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                child: Wrap(
+                  children: List.generate(categories.length, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        AlertDialog alert = AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              // Icon(Icons.close_outlined),
+                              Text("Fitur belum tersedia")
+                            ],
+                          ),
+                        );
+                        showDialog(
+                          barrierDismissible: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert;
+                          },
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 7),
+                            height: screenHeight * 0.1525,
+                            width: screenWidth * 0.9,
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                // Icon(Icons.close_outlined),
-                                Text("Fitur belum tersedia")
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Agriculture',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.8,
+                                          child: Text(
+                                            'Padi Rojolele Varietas Premium dari Delanggu, Klaten',
+                                            style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.35,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Icon(
+                                                Icons.date_range_rounded,
+                                                size: 12,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                              Text(
+                                                '15 Mar 2023',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.comment_rounded,
+                                                size: 12,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                              Text(
+                                                '23',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.all(5),
+                                  width: screenWidth * 0.15,
+                                  height: screenWidth * 0.15,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  child: const Image(
+                                    image: AssetImage('public/assets/img/artikel.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ],
                             ),
-                          );
-                          showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return alert;
-                            },
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 7),
-                              height: screenHeight * 0.1425,
-                              width: screenWidth * 0.9,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Agriculture',
-                                            style: TextStyle(
-                                              color: Theme.of(context).primaryColor,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: screenWidth * 0.8,
-                                            child: Text(
-                                              'Padi Rojolele Varietas Premium dari Delanggu, Klaten',
-                                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: screenWidth * 0.275,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Icon(
-                                                  Icons.watch_later_outlined,
-                                                  size: 12,
-                                                  color: Theme.of(context).primaryColor,
-                                                ),
-                                                Text(
-                                                  '14h ago',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context).primaryColor,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.comment_rounded,
-                                                  size: 12,
-                                                  color: Theme.of(context).primaryColor,
-                                                ),
-                                                Text(
-                                                  '23',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context).primaryColor,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.all(5),
-                                    width: screenWidth * 0.15,
-                                    height: screenWidth * 0.15,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                                    ),
-                                    child: const Image(
-                                      image: AssetImage('public/assets/img/artikel.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+                //
               ),
             ],
           ),
