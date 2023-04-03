@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:iotanic_app_dev/view/Pages_Monitoring/chart-detail.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:iotanic_app_dev/view/Pages_Monitoring/forecast.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
 
 import '../../model/weather.dart';
 import '../Form/add_measurement.dart';
@@ -408,7 +408,7 @@ class WeatherScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder<Map<String, dynamic>>(
-      future: fetchWeather('109.2345068', '-7.4217141'),
+      future: fetchWeather('110.935754', '-7.711168'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('${snapshot.error}');

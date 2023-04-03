@@ -106,6 +106,26 @@ class DetailRecords extends StatelessWidget {
 }
 
 Widget dataTable(BuildContext context) {
+  dynamic ideal = {
+    'n': 130,
+    'p': 120,
+    'k': 115,
+    'ph': 6.8,
+  };
+
+  dynamic records = {
+    'n': 157,
+    'p': 145,
+    'k': 127,
+    'ph': 6.32,
+  };
+
+  dynamic scale = {
+    'n': double.parse(((1 - ((ideal['n'] - records['n']).abs() / ideal['n'])) * 100).toStringAsFixed(1)),
+    'p': double.parse(((1 - ((ideal['p'] - records['p']).abs() / ideal['p'])) * 100).toStringAsFixed(1)),
+    'k': double.parse(((1 - ((ideal['k'] - records['k']).abs() / ideal['k'])) * 100).toStringAsFixed(1)),
+    'ph': double.parse(((1 - ((ideal['ph'] - records['ph']).abs() / ideal['ph'])) * 100).toStringAsFixed(1)),
+  };
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
     child: Column(
@@ -134,8 +154,8 @@ Widget dataTable(BuildContext context) {
                 child: Row(
                   children: [
                     Container(
-                      width: 25,
-                      height: 25,
+                      width: 18.6,
+                      height: 18.6,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).canvasColor,
@@ -153,7 +173,7 @@ Widget dataTable(BuildContext context) {
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
-                  '120 ppm',
+                  '${records['n']} ppm',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
@@ -162,10 +182,14 @@ Widget dataTable(BuildContext context) {
 
               Flexible(
                 child: Text(
-                  '76%',
+                  '${scale['n']}%',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
+              ),
+              Icon(
+                Icons.arrow_drop_up_rounded,
+                color: Colors.green,
               ),
             ],
           ),
@@ -193,8 +217,8 @@ Widget dataTable(BuildContext context) {
                 child: Row(
                   children: [
                     Container(
-                      width: 25,
-                      height: 25,
+                      width: 18.6,
+                      height: 18.6,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).unselectedWidgetColor,
@@ -209,10 +233,11 @@ Widget dataTable(BuildContext context) {
                 ),
               ),
               // Data
+
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
-                  '120 ppm',
+                  '${records['p']} ppm',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
@@ -221,10 +246,14 @@ Widget dataTable(BuildContext context) {
 
               Flexible(
                 child: Text(
-                  '76%',
+                  '${scale['p']}%',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
+              ),
+              Icon(
+                Icons.arrow_drop_up_rounded,
+                color: Colors.green,
               ),
             ],
           ),
@@ -252,8 +281,8 @@ Widget dataTable(BuildContext context) {
                 child: Row(
                   children: [
                     Container(
-                      width: 25,
-                      height: 25,
+                      width: 18.6,
+                      height: 18.6,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).indicatorColor,
@@ -271,7 +300,7 @@ Widget dataTable(BuildContext context) {
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
-                  '120 ppm',
+                  '${records['k']} ppm',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
@@ -280,10 +309,14 @@ Widget dataTable(BuildContext context) {
 
               Flexible(
                 child: Text(
-                  '76%',
+                  '${scale['k']}%',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
+              ),
+              Icon(
+                Icons.arrow_drop_up_rounded,
+                color: Colors.green,
               ),
             ],
           ),
@@ -311,8 +344,8 @@ Widget dataTable(BuildContext context) {
                 child: Row(
                   children: [
                     Container(
-                      width: 25,
-                      height: 25,
+                      width: 18.6,
+                      height: 18.6,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).dialogBackgroundColor,
@@ -330,7 +363,7 @@ Widget dataTable(BuildContext context) {
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
-                  '6.3',
+                  '${records['ph']} ppm',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
@@ -339,10 +372,14 @@ Widget dataTable(BuildContext context) {
 
               Flexible(
                 child: Text(
-                  '76%',
+                  '${scale['ph']}%',
                   style: TextStyle(color: Theme.of(context).primaryColor),
                   textAlign: TextAlign.end,
                 ),
+              ),
+              Icon(
+                Icons.arrow_drop_down_rounded,
+                color: Colors.red,
               ),
             ],
           ),

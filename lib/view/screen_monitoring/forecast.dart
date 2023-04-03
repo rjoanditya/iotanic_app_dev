@@ -17,7 +17,7 @@ class _ForecastState extends State<Forecast> {
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'Kota Purwokerto',
+          'Cabeyan, Sukoharjo',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -27,11 +27,12 @@ class _ForecastState extends State<Forecast> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: Text(
                   'Next 7 Days',
                   style: TextStyle(
@@ -58,7 +59,7 @@ class DataForecast extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return FutureBuilder<Map<String, dynamic>>(
-      future: fetchForecast('109.2345068', '-7.4217141'),
+      future: fetchForecast('110.935754', '-7.711168'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -69,15 +70,15 @@ class DataForecast extends StatelessWidget {
             children: List.generate(
                 mapResponse['list'].length,
                 (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      // margin: const EdgeInsets.symmetric(horizontal: 5),
                       width: screenWidth,
                       height: screenHeight * 0.1,
                       child: Row(
                         children: [
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 10),
-                            width: 45,
-                            height: 45,
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Theme.of(context).highlightColor,
@@ -112,7 +113,12 @@ class DataForecast extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Container(margin: const EdgeInsets.only(right: 10), child: Text('${mapResponse['list'][index]['main']['feels_like']} °C')),
+                          Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              child: Text(
+                                '${mapResponse['list'][index]['main']['feels_like']} °C',
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                              )),
                         ],
                       ),
                     )),

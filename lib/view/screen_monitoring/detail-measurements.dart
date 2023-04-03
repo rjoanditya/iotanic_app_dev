@@ -6,7 +6,7 @@ import 'package:flutter_map/flutter_map.dart'; //
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:iotanic_app_dev/view/Pages_Monitoring/detail-records.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/detail-records.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../constant.dart';
@@ -63,7 +63,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    LatLng point = LatLng(-7.4217141, 109.2345068);
+    LatLng point = LatLng(-7.711168, 110.935754);
 
     return Scaffold(
       appBar: AppBar(
@@ -96,36 +96,6 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
             ),
           ],
         ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: PopupMenuButton<_MenuValues>(
-              elevation: 3,
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.white,
-              ),
-              color: Theme.of(context).highlightColor,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _MenuValues.addMeasurement,
-                  child: Text('Tambah Pengukuran',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 14,
-                      )),
-                )
-              ],
-              onSelected: (value) {
-                switch (value) {
-                  case _MenuValues.addMeasurement:
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddMeasurement()));
-                    break;
-                }
-              },
-            ),
-          )
-        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -199,58 +169,56 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                     ),
                     Container(
                       width: screenWidth,
-                      height: screenHeight * 0.15,
-                      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                       child: Card(
                         elevation: 5,
                         shadowColor: Colors.black26,
                         color: Theme.of(context).highlightColor,
                         child: Container(
                           padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                'Devices Status',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 14,
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.sensor_window_rounded,
+                                  color: Colors.red,
                                 ),
                               ),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: 20,
-                                    height: 11,
-                                    margin: const EdgeInsets.only(right: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Disconnected',
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      // Container(
+                                      //   width: 20,
+                                      //   height: 11,
+                                      //   margin: const EdgeInsets.only(left: 5),
+                                      //   decoration: BoxDecoration(
+                                      //     color: Colors.red,
+                                      //     borderRadius: BorderRadius.circular(3),
+                                      //   ),
+                                      // ),
+                                    ],
                                   ),
                                   Text(
-                                    'Connected',
+                                    'Linked Devices Please!',
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
-                                      fontSize: 14,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
-                              ),
-                              Text(
-                                'SS-123-456-789',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                'Connected at 17.09',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 14,
-                                ),
                               ),
                             ],
                           ),
@@ -349,21 +317,6 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                         })));
                                       },
                                       child: Text('#2', style: TextStyle(color: Theme.of(context).splashColor)))),
-                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                                          return DetailRecords();
-                                        })));
-                                      },
-                                      child: Text('#3', style: TextStyle(color: Theme.of(context).splashColor)))),
                                   DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
                                   DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
                                   DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
