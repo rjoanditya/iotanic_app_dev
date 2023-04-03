@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/view/Form/add_field.dart';
-import 'package:iotanic_app_dev/view/Pages_Monitoring/detail-lahan.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/detail-lahan.dart';
 
 enum _MenuValues {
   addField,
@@ -23,7 +23,7 @@ class Monitor extends StatelessWidget {
             'Daftar Lahan',
             style: TextStyle(
               color: Theme.of(context).primaryColor,
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -65,7 +65,7 @@ class Monitor extends StatelessWidget {
             height: screenHeight - 175,
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 2,
+                itemCount: 1,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   return GestureDetector(

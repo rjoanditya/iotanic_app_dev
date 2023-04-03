@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iotanic_app_dev/view/screen_profile/faq.dart';
 import 'package:iotanic_app_dev/view/screen_profile/personal-data.dart';
 import 'package:iotanic_app_dev/view/screen_profile/settings.dart';
 
@@ -44,7 +45,7 @@ class Profile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Petani Cabai',
+                        'Petani Padi Rojolele',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -247,7 +248,13 @@ class Profile extends StatelessWidget {
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return const FAQs();
+                  }),
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                 child: Row(
@@ -262,7 +269,13 @@ class Profile extends StatelessWidget {
                           color: Theme.of(context).primaryColor,
                           size: 20,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                              return const FAQs();
+                            }),
+                          );
+                        },
                       ),
                     ),
                     Expanded(
@@ -280,7 +293,13 @@ class Profile extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         size: 15,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return const FAQs();
+                          }),
+                        );
+                      },
                     )
                   ],
                 ),

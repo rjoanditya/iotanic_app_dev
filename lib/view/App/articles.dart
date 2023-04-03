@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iotanic_app_dev/view/App/detail_articles.dart';
+
+import 'index.dart';
 
 class Articles extends StatelessWidget {
   const Articles({super.key});
@@ -63,26 +66,44 @@ class Articles extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
-                margin: const EdgeInsets.all(10),
-                clipBehavior: Clip.antiAlias,
-                child: Image(
-                  image: const AssetImage('public/assets/img/artikel.png'),
-                  width: screenWidth * 0.85,
-                  fit: BoxFit.cover,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return const DetailArticles();
+                    }),
+                  );
+                },
+                child: Container(
+                  decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
+                  margin: const EdgeInsets.all(10),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image(
+                    image: const AssetImage('public/assets/img/artikel.png'),
+                    width: screenWidth * 0.85,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 10),
-                width: screenWidth * 0.85,
-                child: Text(
-                  'Customer Feedback Over Intuition - Lean Startup',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return const DetailArticles();
+                    }),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10, bottom: 10),
+                  width: screenWidth * 0.85,
+                  child: Text(
+                    'Customer Feedback Over Intuition - Lean Startup',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -91,7 +112,7 @@ class Articles extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Icon(
-                      Icons.watch_later_outlined,
+                      Icons.date_range_rounded,
                       size: 13,
                       color: Theme.of(context).primaryColor,
                     ),
@@ -100,7 +121,7 @@ class Articles extends StatelessWidget {
                     margin: const EdgeInsets.only(left: 5),
                     // width: screenWidth * 0.75,
                     child: Text(
-                      '4h ago',
+                      '27 Mar 2023',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,

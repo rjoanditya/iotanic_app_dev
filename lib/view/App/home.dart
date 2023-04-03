@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/view/App/notifications.dart';
-import 'package:iotanic_app_dev/view/Search/search_input.dart';
-
+import 'package:iotanic_app_dev/view/search/search_input.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 // import '../../main.dart';
 
 class Home extends StatelessWidget {
@@ -10,7 +10,38 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    List carouselItems = [
+      'public/assets/img/carousel1.png',
+      'public/assets/img/carousel2.png',
+      'public/assets/img/carousel3.png',
+    ];
 
+    List categoryName = [
+      'Agriculture',
+      'Fertilizer',
+      'Market',
+      'Technology',
+    ];
+    List categoryIcon = [
+      Icons.agriculture_rounded,
+      Icons.yard,
+      Icons.store,
+      Icons.app_settings_alt_rounded,
+    ];
+
+    List appsName = [
+      'Kalkulator Pupuk',
+      'Katalog Tanaman',
+      'Katalog Penyakit',
+      'Uji Tanah',
+    ];
+    List appsIcon = [
+      Icons.calculate_rounded,
+      Icons.compost,
+      Icons.emoji_nature_rounded,
+      Icons.barcode_reader,
+    ];
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -22,7 +53,7 @@ class Home extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(left: 10),
               child: Text(
-                'Hi, Sonic',
+                'Hi, Rizky',
                 style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.w600),
               ),
             ),
@@ -69,18 +100,42 @@ class Home extends StatelessWidget {
           Container(
             height: screenWidth * 0.6,
             decoration: BoxDecoration(color: Theme.of(context).highlightColor),
+            child: CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                height: screenHeight * 0.25,
+                autoPlayInterval: const Duration(seconds: 8),
+              ),
+              items: [carouselItems[0], carouselItems[1], carouselItems[2]].map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      width: screenWidth,
+                      height: screenHeight * 0.15,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Image.asset('$i'),
+                    );
+                  },
+                );
+              }).toList(),
+              carouselController: CarouselController(),
+            ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(25, 15, 0, 0),
             alignment: Alignment.topLeft,
             child: Text(
-              'Trending',
-              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w600),
+              'Kategori',
+              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(15),
-            height: 130,
+            padding: const EdgeInsets.all(10),
+            height: 125,
             child: ListView.builder(
                 itemCount: 4,
                 scrollDirection: Axis.horizontal,
@@ -109,7 +164,6 @@ class Home extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          height: 70,
                           decoration: BoxDecoration(
                             color: Theme.of(context).highlightColor,
                             borderRadius: BorderRadius.circular(10),
@@ -122,14 +176,27 @@ class Home extends StatelessWidget {
                               )
                             ],
                           ),
-                          width: 70,
-                          padding: const EdgeInsets.all(20),
-                          margin: const EdgeInsets.only(top: 15, bottom: 15, right: 15, left: 15),
-                          child: const Center(
-                              // child: Image(image: AssetImage(icon[index])),
-                              ),
+                          height: 60,
+                          width: 60,
+                          // padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.5),
+                          child: Icon(
+                            categoryIcon[index],
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                         ),
-                        // Text(topic[index]),
+                        SizedBox(
+                          width: 80,
+                          child: Text(
+                            categoryName[index],
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        //
                       ],
                     ),
                   );
@@ -139,13 +206,13 @@ class Home extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
             alignment: Alignment.topLeft,
             child: Text(
-              'Topik untuk Anda',
-              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w600),
+              'Mini Apps',
+              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(15),
-            height: 130,
+            padding: const EdgeInsets.all(10),
+            height: 132,
             child: ListView.builder(
                 itemCount: 4,
                 scrollDirection: Axis.horizontal,
@@ -174,7 +241,6 @@ class Home extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          height: 70,
                           decoration: BoxDecoration(
                             color: Theme.of(context).highlightColor,
                             borderRadius: BorderRadius.circular(10),
@@ -187,9 +253,25 @@ class Home extends StatelessWidget {
                               )
                             ],
                           ),
-                          width: 70,
-                          padding: const EdgeInsets.all(20),
-                          margin: const EdgeInsets.all(15),
+                          height: 60,
+                          width: 60,
+                          // padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.5),
+                          child: Icon(
+                            appsIcon[index],
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: Text(
+                            appsName[index],
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         // Text(topic[index]),
                       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'chat.dart';
+
 class Community extends StatefulWidget {
   const Community({super.key});
 
@@ -58,6 +60,7 @@ class _CommunityState extends State<Community> {
                               elevation: 0,
                               borderRadius: const BorderRadius.all(Radius.circular(50)),
                               child: TextFormField(
+                                style: TextStyle(color: Theme.of(context).primaryColor),
                                 controller: searchForum,
                                 obscureText: false,
                                 autofocus: false,
@@ -87,26 +90,13 @@ class _CommunityState extends State<Community> {
                 padding: const EdgeInsets.all(15),
                 height: screenHeight - 175,
                 child: Wrap(
-                  children: List.generate(2, (index) {
+                  children: List.generate(1, (index) {
                     return GestureDetector(
                       onTap: () {
-                        AlertDialog alert = AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              // Icon(Icons.close_outlined),
-                              Text("Fitur belum tersedia")
-                            ],
-                          ),
-                        );
-                        showDialog(
-                          barrierDismissible: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert;
-                          },
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return const Chats();
+                          }),
                         );
                       },
                       child: Column(
@@ -133,7 +123,7 @@ class _CommunityState extends State<Community> {
                                         margin: const EdgeInsets.only(bottom: 10),
                                         child: Text(
                                           // data lahan disini
-                                          'Lahan Pak Supriyadi ${index + 1}',
+                                          'Topik Komunitas',
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             color: Theme.of(context).primaryColor,
@@ -151,50 +141,55 @@ class _CommunityState extends State<Community> {
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(13, 13, 20, 20),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        margin: const EdgeInsets.all(7),
-                                        width: 35,
-                                        height: 35,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          // image: DecorationImage(
-                                          //   image: AssetImage('public/assets/img/logo.png'),
-                                          // ),
-                                        ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.all(7),
+                                            width: 35,
+                                            height: 35,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                                              color: Colors.red,
+                                              image: DecorationImage(image: AssetImage('public/assets/img/joan.png'), fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(7),
+                                            width: 35,
+                                            height: 35,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                                              color: Colors.red,
+                                              image: DecorationImage(image: AssetImage('public/assets/img/joan.png'), fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(7),
+                                            width: 35,
+                                            height: 35,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                                              color: Colors.red,
+                                              image: DecorationImage(image: AssetImage('public/assets/img/joan.png'), fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.all(7),
-                                        width: 35,
-                                        height: 35,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          // image: DecorationImage(
-                                          //   image: AssetImage('public/assets/img/logo.png'),
-                                          // ),
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Join Forum',
+                                            style: TextStyle(color: Theme.of(context).splashColor, fontWeight: FontWeight.w600),
+                                          ),
+                                          Icon(
+                                            Icons.play_arrow_rounded,
+                                            size: 20,
+                                            color: Theme.of(context).splashColor,
+                                          )
+                                        ],
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.all(7),
-                                        width: 35,
-                                        height: 35,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          // image: DecorationImage(
-                                          //   image: AssetImage('public/assets/img/logo.png'),
-                                          // ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Join Forum',
-                                        style: TextStyle(color: Theme.of(context).splashColor, fontWeight: FontWeight.w600),
-                                      ),
-                                      Icon(
-                                        Icons.play_arrow_rounded,
-                                        size: 20,
-                                        color: Theme.of(context).splashColor,
-                                      )
                                     ],
                                   ),
                                 )
