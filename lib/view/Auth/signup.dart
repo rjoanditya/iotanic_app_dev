@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/main.dart';
 import 'package:iotanic_app_dev/model/user.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
-import 'package:iotanic_app_dev/view/Auth/signup.dart';
+import 'package:iotanic_app_dev/view/Auth/signin.dart';
 import 'package:provider/provider.dart';
 
 import 'package:validators/validators.dart';
@@ -14,17 +14,20 @@ import 'dart:convert';
 // import 'package:iotanic_app_dev/view/App/home.dart';
 // import 'package:hexcolor/hexcolor.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
-  final _formLoginKey = GlobalKey<FormState>();
+  TextEditingController repassword = TextEditingController();
+  TextEditingController sk = TextEditingController();
+  final _formSignupKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -53,22 +56,69 @@ class _SignInState extends State<SignIn> {
     ThemeProvider themes = ThemeProvider();
 
     bool passwordVisible = false;
+    bool repasswordVisible = false;
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Center(
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15, vertical: screenWidth * 0.2),
-                child: themes.getLogo,
-              ),
               Form(
-                key: _formLoginKey,
+                key: _formSignupKey,
                 child: Column(
                   children: [
+                    Builder(
+                      builder: (context) => Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: TextFormField(
+                          // validator: (value) {
+                          //   if (value == null || !isEmail(value)) {
+                          //     return 'Phone Number is Required!';
+                          //   }
+                          // },
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          controller: phone,
+                          obscureText: false,
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              borderSide: BorderSide.none,
+                            ),
+                            labelText: 'Phone Number',
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 14,
+                            ),
+                            // hintText: 'Email',
+                            hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),
+                            fillColor: Theme.of(context).highlightColor,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     Builder(
                       builder: (context) => Container(
                         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -87,7 +137,7 @@ class _SignInState extends State<SignIn> {
                               borderRadius: BorderRadius.all(Radius.circular(12)),
                               borderSide: BorderSide.none,
                             ),
-                            labelText: 'Email / Phone Number',
+                            labelText: 'Email',
                             labelStyle: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 14,
@@ -129,7 +179,40 @@ class _SignInState extends State<SignIn> {
                               padding: const EdgeInsets.only(right: 15),
                               icon: Icon(
                                 passwordVisible == true ? Icons.visibility_off : Icons.visibility,
-                                color: Theme.of(context).primaryColorLight,
+                                color: Theme.of(context).primaryColorLight.withOpacity(.6),
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) => Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        child: TextFormField(
+                          controller: repassword,
+                          obscureText: !repasswordVisible,
+                          autofocus: false,
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              borderSide: BorderSide.none,
+                            ),
+                            labelText: 'Konfirmasi Password',
+                            labelStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),
+                            fillColor: Theme.of(context).highlightColor,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 10,
+                            ),
+                            suffixIcon: IconButton(
+                              padding: const EdgeInsets.only(right: 15),
+                              icon: Icon(
+                                passwordVisible == true ? Icons.visibility_off : Icons.visibility,
+                                color: Theme.of(context).primaryColorLight.withOpacity(.6),
                               ),
                               onPressed: () {},
                             ),
@@ -140,66 +223,36 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
               ),
-              ButtonTheme(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (BuildContext context) {
-                        return const Index();
-                      }),
-                    );
-
-                    // User.connectToApi('2cb9c27e-cc71-4870-95c2-a2a2f4aad07a').then((value) {
-                    //   user = value;
-                    //   setState(() {});
-                    // });
-                    // print(email.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 17),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      )),
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 50), child: Text('Lupa Passsword? Atau', style: TextStyle(color: Theme.of(context).primaryColor))),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 45.0),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 child: ButtonTheme(
                   child: ElevatedButton(
                     onPressed: () {
-                      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-                      themeProvider.swapTheme();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          return const SignIn();
+                        }),
+                      );
+
+                      // User.connectToApi('2cb9c27e-cc71-4870-95c2-a2a2f4aad07a').then((value) {
+                      //   user = value;
+                      //   setState(() {});
+                      // });
+                      // print(email.text);
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        minimumSize: Size(screenWidth * 0.3, 5),
-                        maximumSize: Size(screenWidth * 0.6, 40),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)))),
-                    child: Row(children: [
-                      Image.network(
-                        'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png',
-                        width: 50,
-                        height: 50,
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 17),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        )),
+                    child: const Text(
+                      "Daftar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
                       ),
-                      const Text(
-                        "Masuk Dengan Google",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ]),
+                    ),
                   ),
                 ),
               ),
@@ -207,19 +260,19 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Belum memiliki akun? ',
+                    'Sudah memiliki akun? ',
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
-                          return const SignUp();
+                          return const SignIn();
                         }),
                       );
                     },
                     child: Text(
-                      'Daftar',
+                      'Masuk',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w600,
