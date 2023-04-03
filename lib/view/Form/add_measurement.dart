@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-import '../Pages_Monitoring/detail-lahan.dart';
+import '../screen_monitoring/detail-lahan.dart';
 
 class AddMeasurement extends StatefulWidget {
   const AddMeasurement({Key? key}) : super(key: key);

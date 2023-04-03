@@ -55,6 +55,7 @@ class SearchInput extends StatelessWidget {
                                 //     return 'Email is not valid!';
                                 //   }
                                 // },
+                                style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(0.6)),
                                 controller: search,
                                 obscureText: false,
                                 autofocus: false,

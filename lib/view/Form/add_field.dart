@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:iotanic_app_dev/view/Form/add_location.dart';
 
-import '../Pages_Monitoring/detail-lahan.dart';
+import '../screen_monitoring/detail-lahan.dart';
 
 class AddField extends StatefulWidget {
   const AddField({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _AddFieldState extends State<AddField> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 7.5),
+                        margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Nama Lahan',
@@ -77,21 +78,39 @@ class _AddFieldState extends State<AddField> {
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
                           popupProps: PopupProps.bottomSheet(
-                            title: Text(
-                              'Pilih Jenis Tanaman yang tersedia',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
+                            title: Container(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                'Pilih Jenis Tanaman yang tersedia',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
                               focusNode: FocusNode(),
-                              padding: EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
+                                  hintText: 'Cari Tanaman',
+                                  hintStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     // gapPadding: 17.0,
                                     borderRadius: BorderRadius.circular(10),
@@ -108,6 +127,9 @@ class _AddFieldState extends State<AddField> {
                             ),
                             bottomSheetProps: BottomSheetProps(
                               elevation: 10,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                              ),
                               backgroundColor: Theme.of(context).highlightColor,
                             ),
                             listViewProps: const ListViewProps(
@@ -115,6 +137,7 @@ class _AddFieldState extends State<AddField> {
                             ),
                             fit: FlexFit.loose,
                             constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
+
                             // itemBuilder: listItem,
                           ),
                           items: data,
@@ -143,8 +166,16 @@ class _AddFieldState extends State<AddField> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 7.5),
+                        margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: TextFormField(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (BuildContext context) {
+                                return const AddLocation(); // return const Index();
+                              }),
+                            );
+                          },
+                          readOnly: true,
                           decoration: InputDecoration(
                             labelText: 'Lokasi',
                             labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
@@ -172,12 +203,27 @@ class _AddFieldState extends State<AddField> {
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
                           popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
                               focusNode: FocusNode(),
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
+                                  label: Text(
+                                    'Cari Provinsi',
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     // gapPadding: 17.0,
                                     borderRadius: BorderRadius.circular(10),
@@ -232,12 +278,27 @@ class _AddFieldState extends State<AddField> {
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
                           popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
                               focusNode: FocusNode(),
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
+                                  label: Text(
+                                    'Cari Kabupaten',
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     // gapPadding: 17.0,
                                     borderRadius: BorderRadius.circular(10),
@@ -292,12 +353,27 @@ class _AddFieldState extends State<AddField> {
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
                           popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
                               focusNode: FocusNode(),
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
+                                  label: Text(
+                                    'Cari Kecamatan',
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     // gapPadding: 17.0,
                                     borderRadius: BorderRadius.circular(10),
@@ -352,12 +428,27 @@ class _AddFieldState extends State<AddField> {
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
                           popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
                               focusNode: FocusNode(),
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
+                                  label: Text(
+                                    'Cari Desa',
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     // gapPadding: 17.0,
                                     borderRadius: BorderRadius.circular(10),
