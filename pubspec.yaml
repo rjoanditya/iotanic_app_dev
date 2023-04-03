@@ -43,7 +43,10 @@ dependencies:
   hexcolor: ^3.0.1
   flutter_barcode_scanner: ^2.0.0
   cupertino_icons: ^1.0.2
+  carousel_slider: ^4.2.1
   http: ^0.13.5
+  flutter_bloc: ^8.1.2
+
   # maps
   flutter_map: ^3.1.0
   geocoding: ^2.1.0

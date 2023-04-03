@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+// import 'package:flutter/services.dart';
+// import 'package:http/http.dart' as http;
 
 import 'view/splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(ChangeNotifierProvider(
     child: const MyApp(),
@@ -111,10 +115,12 @@ class ThemeProvider extends ChangeNotifier {
     if (_selectedTheme == dark) {
       _selectedTheme = light;
       _selectedLogo = logoLight;
+      isDarkMode = false;
       prefs.setBool('isDarkTheme', false);
     } else {
       _selectedTheme = dark;
       _selectedLogo = logoDark;
+      isDarkMode = true;
       prefs.setBool('isDarkTheme', true);
     }
     // _selectedLogo = _selectedLogo == logoLight ? logoDark : logoLight;
