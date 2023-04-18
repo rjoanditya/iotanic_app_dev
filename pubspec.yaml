@@ -36,16 +36,24 @@ dependencies:
     # Use with the CupertinoIcons class for iOS style icons.
   validators: ^3.0.0
   provider: ^6.0.5
-  curved_navigation_bar: ^1.0.3
+
+  # session
   shared_preferences: ^2.0.17
+  jwt_decoder: ^2.0.1
+
+  # ui widget
   syncfusion_flutter_charts: ^20.4.53
   dropdown_search: ^5.0.6
   hexcolor: ^3.0.1
   flutter_barcode_scanner: ^2.0.0
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.2.1
+
+  # mvvm
   http: ^0.13.5
-  flutter_bloc: ^8.1.2
+  get: ^4.6.5
+  # flutter_bloc: ^8.1.2
+  internet_connection_checker: ^1.0.0+1
 
   # maps
   flutter_map: ^3.1.0
