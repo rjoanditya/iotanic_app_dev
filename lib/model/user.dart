@@ -1,28 +1,37 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User {
-  String? id;
-  String? email;
-
-  User({this.id, this.email});
-
-  factory User.createUser(Map<String, dynamic> object) {
-    return User(
-      id: object['id'],
-      email: object['email'],
-    );
+  String? name;
+  static Future saveAuth(name, email, phoneNumber, address_id, role, createdAt, updatedAt) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('name', name);
+    prefs.setString('email', email);
+    prefs.setString('phone_number', phoneNumber);
+    prefs.setString('address_id', address_id);
+    prefs.setString('role', role);
+    prefs.setString('created_at', createdAt);
+    prefs.setString('updated_at', updatedAt);
   }
 
-  static Future<User> connectToApi(String email) async {
-    String apiURL = "http://34.101.57.46:8080/user/?role=USER?email=" + email;
+  /// ---------------------------
+  ///  Key Parameter to get user data
+  /// ---------------------------
+  ///  'name' to get name
+  ///
+  ///  'email' to get email
+  ///
+  ///  'phone_number' to get phone_number
+  ///
+  ///  'adress_id' to get adress_id
+  ///
+  ///  'role' to get role
+  static getUser(key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.get(key);
+  }
 
-    var apiResult = await http.get(apiURL as Uri);
-    var jsonObject = json.decode(apiResult.body);
-    var userData = (jsonObject as Map<String, dynamic>);
-
-    return User.createUser(userData);
+  static getName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.get('name');
   }
 }
-
-class UninitializedUser extends User {}
