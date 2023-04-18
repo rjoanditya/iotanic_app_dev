@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iotanic_app_dev/bloc/login_bloc.dart';
+import 'package:iotanic_app_dev/model/user.dart';
 import 'package:iotanic_app_dev/view/screen_profile/faq.dart';
 import 'package:iotanic_app_dev/view/screen_profile/personal-data.dart';
 import 'package:iotanic_app_dev/view/screen_profile/settings.dart';
@@ -18,7 +20,7 @@ class Profile extends StatelessWidget {
           children: [
             // profile name & photos
             Container(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 20),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
               child: Row(children: [
                 Container(
                   width: screenWidth * 0.175,
@@ -31,26 +33,38 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Rizky Joanditya Nur Iman',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                      FutureBuilder(
+                        future: User.getUser('address_id'),
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.data.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            // maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        'Petani Padi Rojolele',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                      FutureBuilder(
+                        future: User.getUser('role'),
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.data.toString(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -356,7 +370,10 @@ class Profile extends StatelessWidget {
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
-              onPressed: () {},
+              onPressed: () {
+                LoginBloC signout = LoginBloC();
+                signout.signout();
+              },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                 child: Row(

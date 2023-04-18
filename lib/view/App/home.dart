@@ -46,27 +46,27 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        toolbarHeight: 98,
+        toolbarHeight: 75,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               margin: const EdgeInsets.only(left: 10),
               child: Text(
-                'Hi, Rizky',
-                style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.w600),
+                'IOTANIC',
+                style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 22, fontWeight: FontWeight.w800),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Selamat Datang di IOTANIC',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 14,
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.only(left: 10),
+            //   child: Text(
+            //     'Selamat Datang di IOTANIC',
+            //     style: TextStyle(
+            //       color: Theme.of(context).primaryColor,
+            //       fontSize: 14,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -99,7 +99,7 @@ class Home extends StatelessWidget {
         child: Column(children: [
           Container(
             height: screenWidth * 0.6,
-            decoration: BoxDecoration(color: Theme.of(context).highlightColor),
+            decoration: BoxDecoration(color: Theme.of(context).highlightColor.withOpacity(.5)),
             child: CarouselSlider(
               options: CarouselOptions(
                 autoPlay: true,
@@ -111,10 +111,10 @@ class Home extends StatelessWidget {
                   builder: (BuildContext context) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      width: screenWidth,
+                      // width: screenWidth,
                       height: screenHeight * 0.15,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: Image.asset('$i'),
@@ -212,7 +212,7 @@ class Home extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(10),
-            height: 132,
+            height: 150,
             child: ListView.builder(
                 itemCount: 4,
                 scrollDirection: Axis.horizontal,
@@ -264,6 +264,7 @@ class Home extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 80,
+                          height: 50,
                           child: Text(
                             appsName[index],
                             style: TextStyle(

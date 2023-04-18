@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:iotanic_app_dev/main.dart';
-import 'package:iotanic_app_dev/model/user.dart';
+import 'package:iotanic_app_dev/model/auth.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signin.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +50,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    User? user;
+    // User? user;
 
     double screenWidth = MediaQuery.of(context).size.width;
     ThemeProvider themes = ThemeProvider();

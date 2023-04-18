@@ -51,7 +51,7 @@ class _IndexState extends State<Index> {
               navButton(0, _selectedIndex, Icons.home_rounded, "Home", screenWidth * 0.2),
               navButton(1, _selectedIndex, Icons.area_chart_rounded, "Monitor", screenWidth * 0.2),
               navButton(2, _selectedIndex, Icons.chat_rounded, "Forum", screenWidth * 0.2),
-              navButton(3, _selectedIndex, Icons.list_rounded, "Article", screenWidth * 0.2),
+              navButton(3, _selectedIndex, Icons.line_style_rounded, "Article", screenWidth * 0.2),
               navButton(4, _selectedIndex, Icons.person, "Profil", screenWidth * 0.2),
             ],
           ),

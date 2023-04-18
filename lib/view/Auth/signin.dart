@@ -1,16 +1,18 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:iotanic_app_dev/bloc/login_bloc.dart';
 
 import 'package:iotanic_app_dev/main.dart';
-import 'package:iotanic_app_dev/model/user.dart';
-import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signup.dart';
 import 'package:provider/provider.dart';
+// import 'package:iotanic_app_dev/model/auth.dart';
+// import 'package:iotanic_app_dev/view/App/index.dart';
 
 import 'package:validators/validators.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 // import 'package:iotanic_app_dev/view/App/home.dart';
 // import 'package:hexcolor/hexcolor.dart';
 
@@ -22,32 +24,16 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  LoginBloC loginController = Get.put(LoginBloC());
+
+  var isLogin = false.obs;
+  // TextEditingController email = TextEditingController();
+  // TextEditingController password = TextEditingController();
   final _formLoginKey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    super.initState();
-    // Start listening to changes.
-    email.addListener(_printLatestValue);
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
-    // This also removes the _printLatestValue listener.
-    email.dispose();
-    super.dispose();
-  }
-
-  void _printLatestValue() {
-    print('email text field: ${email.text}');
-  }
-
-  @override
   Widget build(BuildContext context) {
-    User? user;
+    // User? user;
 
     double screenWidth = MediaQuery.of(context).size.width;
     ThemeProvider themes = ThemeProvider();
@@ -79,7 +65,7 @@ class _SignInState extends State<SignIn> {
                             }
                           },
                           style: TextStyle(color: Theme.of(context).primaryColor),
-                          controller: email,
+                          controller: loginController.email,
                           obscureText: false,
                           autofocus: false,
                           decoration: InputDecoration(
@@ -108,7 +94,7 @@ class _SignInState extends State<SignIn> {
                       builder: (context) => Container(
                         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: TextFormField(
-                          controller: password,
+                          controller: loginController.password,
                           obscureText: !passwordVisible,
                           autofocus: false,
                           style: TextStyle(color: Theme.of(context).primaryColor),
@@ -143,17 +129,7 @@ class _SignInState extends State<SignIn> {
               ButtonTheme(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (BuildContext context) {
-                        return const Index();
-                      }),
-                    );
-
-                    // User.connectToApi('2cb9c27e-cc71-4870-95c2-a2a2f4aad07a').then((value) {
-                    //   user = value;
-                    //   setState(() {});
-                    // });
-                    // print(email.text);
+                    loginController.signin(context);
                   },
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 17),

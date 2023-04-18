@@ -7,6 +7,8 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     List riwayat = [
       'Agrikultur',
       'Cabai',
@@ -91,9 +93,11 @@ class SearchInput extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                width: screenWidth * .9,
                 // height: 30,
                 child: Wrap(
-                  spacing: 2,
+                  spacing: 15,
+                  runSpacing: 15,
                   // alignment: WrapAlignment.spaceAround,
                   direction: Axis.horizontal,
                   children: List.generate(riwayat.length, (index) {
@@ -123,9 +127,11 @@ class SearchInput extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                width: screenWidth * .9,
                 // height: 30,
                 child: Wrap(
-                  spacing: 2,
+                  spacing: 15,
+                  runSpacing: 15,
                   // alignment: WrapAlignment.spaceAround,
                   direction: Axis.horizontal,
                   children: List.generate(riwayat.length, (index) {

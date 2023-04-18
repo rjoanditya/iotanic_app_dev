@@ -139,7 +139,7 @@ class _CommunityState extends State<Community> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(13, 13, 20, 20),
+                                  padding: const EdgeInsets.fromLTRB(13, 10, 20, 15),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -171,7 +171,7 @@ class _CommunityState extends State<Community> {
                                             height: 35,
                                             decoration: const BoxDecoration(
                                               borderRadius: BorderRadius.all(Radius.circular(5)),
-                                              color: Colors.red,
+                                              color: Colors.grey,
                                               image: DecorationImage(image: AssetImage('public/assets/img/joan.png'), fit: BoxFit.cover),
                                             ),
                                           ),

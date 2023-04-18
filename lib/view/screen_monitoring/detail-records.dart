@@ -1,103 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class DetailRecords extends StatelessWidget {
-  const DetailRecords({super.key});
+import '../../model/condition.dart';
+
+class DetailRecords extends StatefulWidget {
+  DetailRecords({super.key});
 
   @override
+  State<DetailRecords> createState() => _DetailRecordsState();
+}
+
+class _DetailRecordsState extends State<DetailRecords> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 70,
-        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        actions: [
-          Container(
-            margin: EdgeInsets.all(15),
-            padding: EdgeInsets.all(12),
-            height: 10,
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Theme.of(context).dialogBackgroundColor.withOpacity(.5),
-            ),
-            child: Text(
-              'Records #5',
-              style: TextStyle(
-                color: Theme.of(context).canvasColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Title
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'NPK PH',
-                      style: TextStyle(
-                        letterSpacing: 5,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    Text(
-                      'Tanaman Anda',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Nampak ',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'Baik',
-                          style: TextStyle(
-                            color: Theme.of(context).unselectedWidgetColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          ' Hari Ini!',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+    return FutureBuilder(
+      future: Condition.fetchRecord('6404548d2020957027a2da40'),
+      builder: (context, snapshot) => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          toolbarHeight: 70,
+          iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          actions: [
+            InkWell(
+              onTap: () {
+                // print(snapshot.data.nitrogen);
+              },
+              child: Container(
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.all(12),
+                height: 10,
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).dialogBackgroundColor.withOpacity(.5),
+                ),
+                child: Text(
+                  'Records #5',
+                  style: TextStyle(
+                    color: Theme.of(context).canvasColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              // RadialBarChart
-              dataCircularChart(context),
-              // Table
-              dataTable(context),
-              // Button
-              Container(),
-            ],
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Title
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'NPK PH',
+                        style: TextStyle(
+                          letterSpacing: 5,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      Text(
+                        'Tanaman Anda',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Nampak ',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'Baik',
+                            style: TextStyle(
+                              color: Theme.of(context).unselectedWidgetColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            ' Hari Ini!',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // RadialBarChart
+                dataCircularChart(context),
+                // Table
+                dataTable(context),
+                // Button
+                Container(),
+              ],
+            ),
           ),
         ),
       ),

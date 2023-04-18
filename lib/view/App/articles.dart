@@ -50,7 +50,7 @@ class Articles extends StatelessWidget {
         ),
         actions: [
           Container(
-            margin: const EdgeInsets.only(right: 10),
+            // margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {},
               icon: Icon(
@@ -63,6 +63,7 @@ class Articles extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -76,11 +77,11 @@ class Articles extends StatelessWidget {
                 },
                 child: Container(
                   decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   clipBehavior: Clip.antiAlias,
                   child: Image(
                     image: const AssetImage('public/assets/img/artikel.png'),
-                    width: screenWidth * 0.85,
+                    // width: screenWidth * 0.85,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -94,8 +95,8 @@ class Articles extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(left: 10, bottom: 10),
-                  width: screenWidth * 0.85,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  // width: screenWidth * 0.85,
                   child: Text(
                     'Customer Feedback Over Intuition - Lean Startup',
                     textAlign: TextAlign.start,
@@ -110,7 +111,7 @@ class Articles extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 30),
+                    // margin: const EdgeInsets.only(left: 30),
                     child: Icon(
                       Icons.date_range_rounded,
                       size: 13,
@@ -133,7 +134,7 @@ class Articles extends StatelessWidget {
                 ],
               ),
               Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 10),
                 height: 35,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -185,10 +186,10 @@ class Articles extends StatelessWidget {
                     }),
               ),
               SizedBox(
-                width: screenWidth * 0.9,
-                height: screenHeight - 100,
+                // width: screenWidth * 0.9,
+                // height: screenHeight - 100,
                 child: Wrap(
-                  children: List.generate(categories.length, (index) {
+                  children: List.generate(3, (index) {
                     return GestureDetector(
                       onTap: () {
                         AlertDialog alert = AlertDialog(
@@ -213,70 +214,74 @@ class Articles extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(vertical: 7),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             height: screenHeight * 0.1525,
-                            width: screenWidth * 0.9,
+                            // width: screenWidth * 0.9,
+
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Agriculture',
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Agriculture',
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth * 0.8,
+                                        child: Text(
+                                          'Padi Rojolele Varietas Premium dari Delanggu, Klaten',
+                                          maxLines: 2,
                                           style: TextStyle(
                                             color: Theme.of(context).primaryColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(
-                                          width: screenWidth * 0.8,
-                                          child: Text(
-                                            'Padi Rojolele Varietas Premium dari Delanggu, Klaten',
-                                            style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                          ),
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth * 0.35,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.date_range_rounded,
+                                              size: 12,
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                            Text(
+                                              '15 Mar 2023',
+                                              style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.comment_rounded,
+                                              size: 12,
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                            Text(
+                                              '23',
+                                              style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: screenWidth * 0.35,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Icon(
-                                                Icons.date_range_rounded,
-                                                size: 12,
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                              Text(
-                                                '15 Mar 2023',
-                                                style: TextStyle(
-                                                  color: Theme.of(context).primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.comment_rounded,
-                                                size: 12,
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                              Text(
-                                                '23',
-                                                style: TextStyle(
-                                                  color: Theme.of(context).primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 Container(
