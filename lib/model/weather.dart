@@ -38,7 +38,7 @@ Future<Map<String, dynamic>> getLand() async {
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, parse the JSON.
-    print(response.body);
+    // print(response.body);
     return jsonDecode(response.body);
   } else {
     // If the server did not return a 200 OK response, throw an error.
