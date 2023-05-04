@@ -2,9 +2,11 @@
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:iotanic_app_dev/bloc/login_bloc.dart';
+import 'package:iotanic_app_dev/controller/auth_controller.dart';
 
 import 'package:iotanic_app_dev/main.dart';
+import 'package:iotanic_app_dev/view/App/home.dart';
+import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signup.dart';
 import 'package:provider/provider.dart';
 // import 'package:iotanic_app_dev/model/auth.dart';
@@ -24,7 +26,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  LoginBloC loginController = Get.put(LoginBloC());
+  AuthController loginController = Get.put(AuthController());
 
   var isLogin = false.obs;
   // TextEditingController email = TextEditingController();
@@ -129,6 +131,7 @@ class _SignInState extends State<SignIn> {
               ButtonTheme(
                 child: ElevatedButton(
                   onPressed: () {
+                    // Get.off(Index());
                     loginController.signin(context);
                   },
                   style: ElevatedButton.styleFrom(

@@ -2,8 +2,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class User {
   String? name;
-  static Future saveAuth(name, email, phoneNumber, address_id, role, createdAt, updatedAt) async {
+  static Future saveAuth(id, name, email, phoneNumber, address_id, role, createdAt, updatedAt) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('id', id);
     prefs.setString('name', name);
     prefs.setString('email', email);
     prefs.setString('phone_number', phoneNumber);
@@ -16,6 +17,8 @@ class User {
   /// ---------------------------
   ///  Key Parameter to get user data
   /// ---------------------------
+  ///  'id' to get id
+  ///
   ///  'name' to get name
   ///
   ///  'email' to get email
@@ -25,9 +28,10 @@ class User {
   ///  'adress_id' to get adress_id
   ///
   ///  'role' to get role
-  static getUser(key) async {
+  static Future getUser(key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get(key);
+    var result = prefs.get(key);
+    return result;
   }
 
   static getName() async {

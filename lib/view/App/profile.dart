@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:iotanic_app_dev/bloc/login_bloc.dart';
+import 'package:get/get.dart';
+import 'package:iotanic_app_dev/controller/auth_controller.dart';
 import 'package:iotanic_app_dev/model/user.dart';
 import 'package:iotanic_app_dev/view/screen_profile/faq.dart';
 import 'package:iotanic_app_dev/view/screen_profile/personal-data.dart';
 import 'package:iotanic_app_dev/view/screen_profile/settings.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  // const Profile({super.key});
+
+  AuthController authcontroller = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
+    User user = User();
     double screenWidth = MediaQuery.of(context).size.width;
     // double screenHeight = MediaQuery.of(context).size.height;
 
@@ -39,7 +43,7 @@ class Profile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FutureBuilder(
-                        future: User.getUser('address_id'),
+                        future: User.getUser('email'),
                         builder: (context, snapshot) {
                           return Text(
                             snapshot.data.toString(),
@@ -371,8 +375,7 @@ class Profile extends StatelessWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                LoginBloC signout = LoginBloC();
-                signout.signout();
+                authcontroller.signout();
               },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),

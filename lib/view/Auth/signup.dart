@@ -1,16 +1,21 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controller/address_controller.dart';
 
 import 'package:iotanic_app_dev/main.dart';
-import 'package:iotanic_app_dev/model/auth.dart';
+import 'package:iotanic_app_dev/model/conn.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signin.dart';
 import 'package:provider/provider.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:validators/validators.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../../controller/auth_controller.dart';
 // import 'package:iotanic_app_dev/view/App/home.dart';
 // import 'package:hexcolor/hexcolor.dart';
 
@@ -22,30 +27,15 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  TextEditingController email = TextEditingController();
-  TextEditingController phone = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController repassword = TextEditingController();
-  TextEditingController sk = TextEditingController();
+  AuthController signUpController = Get.put(AuthController());
   final _formSignupKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    // Start listening to changes.
-    email.addListener(_printLatestValue);
-  }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the widget tree.
     // This also removes the _printLatestValue listener.
-    email.dispose();
     super.dispose();
-  }
-
-  void _printLatestValue() {
-    print('email text field: ${email.text}');
   }
 
   @override
@@ -53,8 +43,10 @@ class _SignUpState extends State<SignUp> {
     // User? user;
 
     double screenWidth = MediaQuery.of(context).size.width;
-    ThemeProvider themes = ThemeProvider();
-
+    // ThemeProvider themes = ThemeProvider();
+    // final List provinces = AddressController.provinces;
+    // Future<List<Map<String, dynamic>>> provinces = AddressController.getProvinces();
+    // List provinces = List.generate(3, (index) => provincesList);
     bool passwordVisible = false;
     bool repasswordVisible = false;
 
@@ -94,7 +86,42 @@ class _SignUpState extends State<SignUp> {
                           //   }
                           // },
                           style: TextStyle(color: Theme.of(context).primaryColor),
-                          controller: phone,
+                          controller: signUpController.name,
+                          obscureText: false,
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              borderSide: BorderSide.none,
+                            ),
+                            labelText: 'Name',
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 14,
+                            ),
+                            // hintText: 'Email',
+                            hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),
+                            fillColor: Theme.of(context).highlightColor,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) => Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: TextFormField(
+                          // validator: (value) {
+                          //   if (value == null || !isEmail(value)) {
+                          //     return 'Phone Number is Required!';
+                          //   }
+                          // },
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          controller: signUpController.phone,
                           obscureText: false,
                           autofocus: false,
                           decoration: InputDecoration(
@@ -129,7 +156,7 @@ class _SignUpState extends State<SignUp> {
                             }
                           },
                           style: TextStyle(color: Theme.of(context).primaryColor),
-                          controller: email,
+                          controller: signUpController.email,
                           obscureText: false,
                           autofocus: false,
                           decoration: InputDecoration(
@@ -156,9 +183,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                     Builder(
                       builder: (context) => Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: TextFormField(
-                          controller: password,
+                          controller: signUpController.password,
                           obscureText: !passwordVisible,
                           autofocus: false,
                           style: TextStyle(color: Theme.of(context).primaryColor),
@@ -189,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     Builder(
                       builder: (context) => Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: TextFormField(
                           controller: repassword,
                           obscureText: !repasswordVisible,
@@ -220,6 +247,352 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
+                    FutureBuilder(
+                      future: AddressController.getProvinces(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).highlightColor,
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                            ),
+                            child: DropdownSearch<dynamic>(
+                              onChanged: (value) async {
+                                print(value);
+                                var id = await AddressController.getIdProvincesByName(value);
+                                signUpController.province.text = id;
+                                print(signUpController.province.text);
+                              },
+                              popupProps: PopupProps.menu(
+                                itemBuilder: (context, item, isSelected) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    child: Text(
+                                      item ?? "",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                showSearchBox: true,
+                                searchFieldProps: TextFieldProps(
+                                  focusNode: FocusNode(),
+                                  padding: EdgeInsets.all(20),
+                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  decoration: InputDecoration(
+                                    label: Text(
+                                      'Cari Provinsi',
+                                      style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                    ),
+                                  ),
+                                ),
+                                menuProps: MenuProps(
+                                  elevation: 10,
+                                  backgroundColor: Theme.of(context).highlightColor,
+                                ),
+                                listViewProps: const ListViewProps(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                ),
+                              ),
+                              items: snapshot.data!,
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                baseStyle: TextStyle(color: Theme.of(context).primaryColor),
+                                dropdownSearchDecoration: InputDecoration(
+                                  label: Text(
+                                    'Provinsi',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  suffixIconColor: Theme.of(context).primaryColorDark,
+                                  // focusedBorder: OutlineInputBorder(
+                                  //   borderRadius: BorderRadius.circular(10),
+                                  //   borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                  // ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColorDark,
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          print(snapshot.error);
+                          return Text('Data Not Found');
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                    Builder(
+                      builder: (context) => Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                        child: DropdownSearch<dynamic>(
+                          popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
+                            showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                              focusNode: FocusNode(),
+                              padding: EdgeInsets.all(20),
+                              style: TextStyle(color: Theme.of(context).primaryColor),
+                              decoration: InputDecoration(
+                                label: Text(
+                                  'Cari Kabupaten',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  // gapPadding: 17.0,
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  // gapPadding: 17.0,
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                // constraints: BoxConstraints(
+                                //   maxHeight: screenHeight * 0.065,
+                                // ),
+                              ),
+                            ),
+                            menuProps: MenuProps(
+                              elevation: 10,
+                              backgroundColor: Theme.of(context).highlightColor,
+                            ),
+                            listViewProps: const ListViewProps(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                            ),
+                            // fit: FlexFit.loose,
+                            // constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
+                            // itemBuilder: listItem,
+                          ),
+                          // items: provinces,
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            baseStyle: TextStyle(color: Theme.of(context).primaryColor),
+                            dropdownSearchDecoration: InputDecoration(
+                              label: Text(
+                                'Kabupaten',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              suffixIconColor: Theme.of(context).primaryColorDark,
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+                              //   borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                              // ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) => Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                        child: DropdownSearch<dynamic>(
+                          popupProps: PopupProps.menu(
+                            itemBuilder: (context, item, isSelected) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                child: Text(
+                                  item ?? "",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
+                            showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                              focusNode: FocusNode(),
+                              padding: EdgeInsets.all(20),
+                              style: TextStyle(color: Theme.of(context).primaryColor),
+                              decoration: InputDecoration(
+                                label: Text(
+                                  'Cari Kecamatan',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  // gapPadding: 17.0,
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  // gapPadding: 17.0,
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                // constraints: BoxConstraints(
+                                //   maxHeight: screenHeight * 0.065,
+                                // ),
+                              ),
+                            ),
+                            menuProps: MenuProps(
+                              elevation: 10,
+                              backgroundColor: Theme.of(context).highlightColor,
+                            ),
+                            listViewProps: const ListViewProps(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                            ),
+                            // fit: FlexFit.loose,
+                            // constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
+                            // itemBuilder: listItem,
+                          ),
+                          // items: provinces.toList(),
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            baseStyle: TextStyle(color: Theme.of(context).primaryColor),
+                            dropdownSearchDecoration: InputDecoration(
+                              label: Text(
+                                'Kecamatan',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              suffixIconColor: Theme.of(context).primaryColorDark,
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+                              //   borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                              // ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    FutureBuilder(
+                        future: AddressController.getProvinces(),
+                        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).highlightColor,
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                            ),
+                            child: DropdownSearch<dynamic>(
+                              popupProps: PopupProps.menu(
+                                itemBuilder: (context, item, isSelected) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    child: Text(
+                                      item ?? "",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                showSearchBox: true,
+                                searchFieldProps: TextFieldProps(
+                                  focusNode: FocusNode(),
+                                  padding: EdgeInsets.all(20),
+                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  decoration: InputDecoration(
+                                    label: Text(
+                                      'Cari Kelurahan',
+                                      style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      // gapPadding: 17.0,
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      // gapPadding: 17.0,
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                    ),
+                                    // constraints: BoxConstraints(
+                                    //   maxHeight: screenHeight * 0.065,
+                                    // ),
+                                  ),
+                                ),
+                                menuProps: MenuProps(
+                                  elevation: 10,
+                                  backgroundColor: Theme.of(context).highlightColor,
+                                ),
+                                listViewProps: const ListViewProps(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                ),
+                                // fit: FlexFit.loose,
+                                // constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
+                                // itemBuilder: listItem,
+                              ),
+                              // items: provinces!,
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                baseStyle: TextStyle(color: Theme.of(context).primaryColor),
+                                dropdownSearchDecoration: InputDecoration(
+                                  label: Text(
+                                    'Kelurahan',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  suffixIconColor: Theme.of(context).primaryColorDark,
+                                  // focusedBorder: OutlineInputBorder(
+                                  //   borderRadius: BorderRadius.circular(10),
+                                  //   borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                  // ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColorDark,
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -228,17 +601,18 @@ class _SignUpState extends State<SignUp> {
                 child: ButtonTheme(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                          return const SignIn();
-                        }),
-                      );
-
-                      // User.connectToApi('2cb9c27e-cc71-4870-95c2-a2a2f4aad07a').then((value) {
-                      //   user = value;
-                      //   setState(() {});
-                      // });
-                      // print(email.text);
+                      // if (repassword.text == signUpController.password.text) {
+                      //   signUpController.signup(context);
+                      //   print(repassword.text + '=' + signUpController.password.text);
+                      // } else {
+                      //   Get.snackbar(
+                      //     "Sign Up Gagal",
+                      //     'Konfirmasi password tidak sama',
+                      //     colorText: Theme.of(context).primaryColor,
+                      //     margin: const EdgeInsets.all(20),
+                      //   );
+                      // }
+                      // ;
                     },
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.3, vertical: 17),

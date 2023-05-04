@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,12 +10,19 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constant.dart';
-import '../model/auth.dart';
+import '../model/conn.dart';
 import '../model/user.dart';
 
-class LoginBloC extends GetxController {
+class AuthController extends GetxController {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController repassword = TextEditingController();
+  TextEditingController province = TextEditingController();
+  TextEditingController district = TextEditingController();
+  TextEditingController regency = TextEditingController();
+  TextEditingController village = TextEditingController();
   // User user = User();
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -24,7 +32,7 @@ class LoginBloC extends GetxController {
 
     try {
       // expected to post http://localhost:5000/auth/signin
-      var url = Uri.parse(Auth.baseUrl + Auth.authEndPoints.signin);
+      var url = Uri.parse(Conn.baseUrl + Conn.endPoints.signin);
       Map body = {
         'email': email.text,
         'password': password.text,
@@ -44,10 +52,11 @@ class LoginBloC extends GetxController {
 
           // save prefs attribut user from token
           Map<String, dynamic> session = JwtDecoder.decode(token);
-          print(session['user']['address']['id']);
+          print(session['user']);
           // print(session['address']['id']);
 
           User.saveAuth(
+            session['user']['id'],
             session['user']['name'],
             session['user']['email'],
             session['user']['phone_number'],
@@ -95,9 +104,55 @@ class LoginBloC extends GetxController {
 
   Future<void> signout() async {
     final SharedPreferences prefs = await _prefs;
-    print(prefs.getString('token'));
     prefs.remove('token');
 
     Get.off(const SignIn());
+  }
+
+  Future<void> signup(BuildContext context) async {
+    var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
+    try {
+      var url = Uri.parse(Conn.baseUrl + Conn.endPoints.signup);
+      var address = province.text + '.' + district.text + '.' + regency.text + '.' + village.text;
+      Map body = {
+        'name': name.text,
+        'email': email.text,
+        'password': password.text,
+        'phone_number': phone.text,
+        'address': '33.72.01.1005',
+      };
+
+      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['success'] == true) {
+          Get.snackbar(
+            "Sign Up Berhasil",
+            'Akun berhasil terdaftar',
+            colorText: Theme.of(context).primaryColor,
+            margin: const EdgeInsets.all(20),
+          );
+          Get.off(const SignIn());
+        }
+      } else {
+        final json = jsonDecode(response.body);
+        if (json['success'] == false) {
+          Get.snackbar(
+            "Sign Up Gagal",
+            json['error'],
+            colorText: Theme.of(context).primaryColor,
+            margin: const EdgeInsets.all(20),
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Sign Up Gagal",
+        'Nomor handphone sudah terdaftar',
+        colorText: Theme.of(context).primaryColor,
+        margin: const EdgeInsets.all(20),
+      );
+    }
   }
 }
