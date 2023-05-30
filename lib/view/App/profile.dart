@@ -43,7 +43,7 @@ class Profile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FutureBuilder(
-                        future: User.getUser('email'),
+                        future: user.getUser('email'),
                         builder: (context, snapshot) {
                           return Text(
                             snapshot.data.toString(),
@@ -58,7 +58,7 @@ class Profile extends StatelessWidget {
                         },
                       ),
                       FutureBuilder(
-                        future: User.getUser('role'),
+                        future: user.getUser('role'),
                         builder: (context, snapshot) {
                           return Text(
                             snapshot.data.toString(),

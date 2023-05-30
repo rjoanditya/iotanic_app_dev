@@ -28,7 +28,7 @@ class User {
   ///  'adress_id' to get adress_id
   ///
   ///  'role' to get role
-  static Future getUser(key) async {
+  Future getUser(key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var result = prefs.get(key);
     return result;

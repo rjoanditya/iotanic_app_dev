@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -26,6 +25,19 @@ class AuthController extends GetxController {
   // User user = User();
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  /// Melakukan proses autentikasi login pengguna.
+  ///
+  /// Fungsi ini mengirim permintaan HTTP POST ke endpoint API untuk proses autentikasi login pengguna.
+  /// Permintaan tersebut mencakup email dan password yang diambil dari kontroler `email` dan `password`.
+  ///
+  /// Fungsi ini tidak mengembalikan nilai (`void`), tetapi mengubah status aplikasi dan menampilkan notifikasi
+  /// atau tampilan sesuai dengan hasil autentikasi.
+  ///
+  /// Perhatian: Fungsi ini mengharapkan adanya konstanta `API_KEY` yang telah didefinisikan sebelumnya.
+  ///
+  /// Throws:
+  ///   - Jika terjadi kesalahan selama permintaan HTTP atau pemrosesan data, fungsi ini akan melempar Exception.
 
   Future<void> signin(BuildContext context) async {
     var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
@@ -95,7 +107,7 @@ class AuthController extends GetxController {
       // Get.back();
       Get.snackbar(
         "Login Gagal",
-        'Tidak Terhubung ke Server Aplikasi',
+        'Tidak Terhubung ke Server Aplikasi | $e',
         colorText: Theme.of(context).primaryColor,
         margin: const EdgeInsets.all(20),
       );

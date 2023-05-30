@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:get/get.dart';
 import 'package:iotanic_app_dev/view/Form/add_location.dart';
 
+import '../../controller/land_controller.dart';
 import '../screen_monitoring/detail-lahan.dart';
 
 class AddField extends StatefulWidget {
@@ -14,11 +16,11 @@ class AddField extends StatefulWidget {
 class _AddFieldState extends State<AddField> {
   final formKey = GlobalKey<FormState>();
   final _popupBuilderKey = GlobalKey<DropdownSearchState<String>>();
-  TextEditingController fieldName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> data = ['Padi', 'Cabai', 'Jagung'];
+    var landC = Get.put(Land());
+    final List<dynamic> dataTanaman = ['Padi', 'Cabai', 'Jagung'];
     // TextEditingController typePlant = TextEditingController();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -71,7 +73,7 @@ class _AddFieldState extends State<AddField> {
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                           ),
-                          controller: fieldName,
+                          controller: landC.name,
                         ),
                       ),
                       Container(
@@ -103,6 +105,7 @@ class _AddFieldState extends State<AddField> {
                             ),
                             showSearchBox: true,
                             searchFieldProps: TextFieldProps(
+                              controller: landC.varietyId,
                               focusNode: FocusNode(),
                               padding: const EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
@@ -140,7 +143,7 @@ class _AddFieldState extends State<AddField> {
 
                             // itemBuilder: listItem,
                           ),
-                          items: data,
+                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -168,6 +171,30 @@ class _AddFieldState extends State<AddField> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: TextFormField(
+                          decoration: InputDecoration(
+                            suffix: Text('m²'),
+                            labelText: 'Luas Lahan',
+                            labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                            ),
+                            constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
+                          ),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          controller: landC.area,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 7.5),
+                        child: TextFormField(
+                          controller: landC.location,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (BuildContext context) {
@@ -249,7 +276,7 @@ class _AddFieldState extends State<AddField> {
                             constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
                             // itemBuilder: listItem,
                           ),
-                          items: data,
+                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -324,7 +351,7 @@ class _AddFieldState extends State<AddField> {
                             constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
                             // itemBuilder: listItem,
                           ),
-                          items: data,
+                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -399,7 +426,7 @@ class _AddFieldState extends State<AddField> {
                             constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
                             // itemBuilder: listItem,
                           ),
-                          items: data,
+                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -474,7 +501,7 @@ class _AddFieldState extends State<AddField> {
                             constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
                             // itemBuilder: listItem,
                           ),
-                          items: data,
+                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -507,11 +534,14 @@ class _AddFieldState extends State<AddField> {
                   child: ButtonTheme(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (BuildContext context) {
-                            return DetailLahan(); // return const Index();
-                          }),
-                        );
+                        // Navigator.of(context).pushReplacement(
+                        //   MaterialPageRoute(builder: (BuildContext context) {
+                        //     return DetailLahan(); // return const Index();
+                        //   }),
+                        // );
+                        // createLand();
+
+                        landC.createLand(context);
                       },
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 18.5, horizontal: screenWidth * 0.34),

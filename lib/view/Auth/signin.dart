@@ -165,8 +165,8 @@ class _SignInState extends State<SignIn> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)))),
                     child: Row(children: [
-                      Image.network(
-                        'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png',
+                      Image.asset(
+                        'public/assets/img/google.png',
                         width: 50,
                         height: 50,
                       ),

@@ -31,7 +31,7 @@ class Notifications extends StatelessWidget {
             height: screenHeight - 100,
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 15,
+                itemCount: 3,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   return GestureDetector(

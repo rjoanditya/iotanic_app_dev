@@ -154,3 +154,28 @@ class ThemeProvider extends ChangeNotifier {
     _selectedLogo = isDarkMode ? logoDark : logoLight;
   }
 }
+
+dynamic chatDB = [
+  {
+    'forum_id': 'id1',
+    'content': [
+      {
+        'user_id': 'adasda',
+        'message': 'lorem',
+        'attachment': '',
+        'timestamp': 123123,
+      }
+    ],
+  },
+  {
+    'forum_id': 'id2',
+    'content': [
+      {
+        'user_id': 'bcasck',
+        'message': 'lorem',
+        'attachment': 'img/adasda.jpg',
+        'timestamp': 123123,
+      }
+    ],
+  }
+];

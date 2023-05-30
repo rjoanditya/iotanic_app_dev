@@ -7,18 +7,7 @@ import '../model/conn.dart';
 import '../constant.dart';
 
 class AddressController extends GetxController {
-  // static List<Map> provinces = [
-  //   {
-  //     'id': '11',
-  //     'name': 'ACEH',
-  //   },
-  //   {
-  //     'id': '12',
-  //     'name': 'SUMATERA UTARA',
-  //   },
-  // ];
-
-// Method untuk mengambil provinsi dari API
+  // Method untuk mengambil provinsi dari API
   static Future<List<String>> getProvinces() async {
     // URL API static
     var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
@@ -28,32 +17,32 @@ class AddressController extends GetxController {
 
     // Parsing data dari JSON ke list of Map
     List<dynamic> jsonData = json.decode(response.body);
-    jsonData.forEach((data) => result.add(data['name']));
-    // List<Map<String, dynamic>> json = jsonDecode(response.body).cast<Map<String, dynamic>>();
-
-    // Mapping data menjadi list of Map dengan hanya mengambil title dan id dari setiap data
-    // List<Map<String, dynamic>> resultList = json
-    //     .map((data) => {
-    //           // 'id': data['id'],
-    //           'name': data['name'],
-    //         })
-    //     .toList();
+    for (var data in jsonData) {
+      result.add(data['name']);
+    }
 
     return result;
   }
 
-  // static Future getNameProvincesById(id) async {
-  //   List<Map<String, dynamic>> data = await getProvinces();
-  //   String name = '';
-  //   for (int i = 0; i < data.length; i++) {
-  //     if (data[i]['id'] == id) {
-  //       name = data[i]['name'].toString();
-  //       print(name);
-  //       break;
-  //     }
-  //   }
-  //   return name;
-  // }
+  static Future<List> getDistricts(idProvinces) async {
+    // URL API static
+    var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
+    List result = [];
+    try {
+      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.address}?search=district?id=$idProvinces');
+      http.Response response = await http.get(url, headers: headers);
+      // Parsing data dari JSON ke list of Map
+      // List result = [];
+      List<dynamic> jsonData = json.decode(response.body);
+      for (var data in jsonData) {
+        result.add(data['name']);
+        return result;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return result = ['error'];
+  }
 
   static Future<String> getIdProvincesByName(name) async {
     // URL API static

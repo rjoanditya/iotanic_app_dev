@@ -3,19 +3,78 @@ import 'package:iotanic_app_dev/view/App/detail_articles.dart';
 
 import 'index.dart';
 
-class Articles extends StatelessWidget {
+class Articles extends StatefulWidget {
   const Articles({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    List categories = [
-      'All',
-      'Agriculture',
-      'Fertilizer',
-      'Diseases',
-      'Market',
-    ];
+  State<Articles> createState() => _ArticlesState();
+}
 
+class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
+  late final TabController _tabController;
+  List categories = [
+    {
+      'category_name': 'Latest',
+      'data': [
+        'Customer Feedback Over Intuition - Lean Startup',
+        'Pertanian Presisi untuk Keberlanjutan Pertanian Indonesia',
+        // 'artikel latest 3',
+        // 'artikel latest 4',
+      ]
+    },
+    {
+      'category_name': 'Agriculture',
+      'data': [
+        'artikel Agriculture 1',
+        'artikel Agriculture 2',
+        // 'artikel Agriculture 3',
+        // 'artikel Agriculture 4',
+      ]
+    },
+    {
+      'category_name': 'Fertilizer',
+      'data': [
+        'artikel Fertilizer 1',
+        'artikel Fertilizer 2',
+        'artikel Fertilizer 3',
+        // 'artikel Fertilizer 4',
+      ]
+    },
+    {
+      'category_name': 'Diseases',
+      'data': [
+        'artikel Diseases 1',
+        'artikel Diseases 2',
+        'Padi Rojolele mengalamani kenaikan disease 3',
+        'artikel Diseases 4',
+        'artikel Diseases 5',
+      ]
+    },
+    {
+      'category_name': 'Market',
+      'data': [
+        'artikel Market 1',
+        // 'artikel Market 2',
+        // 'artikel Market 3',
+        // 'artikel Market 4',
+      ]
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: categories.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -108,204 +167,191 @@ class Articles extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Container(
-                    // margin: const EdgeInsets.only(left: 30),
-                    child: Icon(
-                      Icons.date_range_rounded,
-                      size: 13,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    // width: screenWidth * 0.75,
-                    child: Text(
-                      '27 Mar 2023',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      // margin: const EdgeInsets.only(left: 30),
+                      child: Icon(
+                        Icons.date_range_rounded,
+                        size: 13,
                         color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 5),
+                      // width: screenWidth * 0.75,
+                      child: Text(
+                        '27 Mar 2023',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Icon(
+                        Icons.comment_rounded,
+                        size: 12,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        '23',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 35,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 1,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          AlertDialog alert = AlertDialog(
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                // Icon(Icons.close_outlined),
-                                Text("Fitur belum tersedia")
-                              ],
-                            ),
-                          );
-                          showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return alert;
-                            },
-                          );
-                        },
-                        child: Row(
-                          children: List.generate(categories.length, (index) {
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  width: screenWidth * 0.9,
+                  child: TabBar(
+                    isScrollable: true,
+                    labelColor: Colors.white,
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                    ),
+                    unselectedLabelStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
+                    unselectedLabelColor: Theme.of(context).primaryColor,
+                    indicatorWeight: 0,
+                    automaticIndicatorColorAdjustment: true,
+                    indicatorPadding: const EdgeInsets.symmetric(vertical: 5),
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).primaryColorDark,
+                      borderRadius: BorderRadius.circular(30),
+                      shape: BoxShape.rectangle,
+                    ),
+                    controller: _tabController,
+                    tabs: List.generate(
+                        categories.length,
+                        (index) => Tab(
+                              text: '${categories[index]['category_name']}',
+                            )),
+                  )),
+              Container(
+                // padding: const EdgeInsets.symmetric(horizontal: 10),
+                // color: Colors.green,
+                width: screenWidth * 0.9,
+                height: screenHeight * .65,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: List.generate(
+                    categories.length,
+                    (index) {
+                      List articles = categories[index]['data'];
+                      return ListView(
+                        scrollDirection: Axis.vertical,
+                        children: List.generate(
+                          articles.length,
+                          (e) {
                             return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 7),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    side: BorderSide.none,
-                                  ),
-                                  primary: Theme.of(context).highlightColor,
-                                  onPrimary: Theme.of(context).primaryColor,
-                                ),
-                                onPressed: () {},
-                                child: Text('${categories[index]}'),
-                              ),
-                            );
-                          }),
-                        ),
-                      );
-                    }),
-              ),
-              SizedBox(
-                // width: screenWidth * 0.9,
-                // height: screenHeight - 100,
-                child: Wrap(
-                  children: List.generate(3, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        AlertDialog alert = AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              // Icon(Icons.close_outlined),
-                              Text("Fitur belum tersedia")
-                            ],
-                          ),
-                        );
-                        showDialog(
-                          barrierDismissible: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert;
-                          },
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            height: screenHeight * 0.1525,
-                            // width: screenWidth * 0.9,
-
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Agriculture',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: screenWidth * 0.8,
-                                        child: Text(
-                                          'Padi Rojolele Varietas Premium dari Delanggu, Klaten',
-                                          maxLines: 2,
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                              height: screenHeight * 0.125,
+                              width: screenWidth * 0.9,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${categories[index]['category_name']}',
                                           style: TextStyle(
                                             color: Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: screenWidth * 0.35,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Icon(
-                                              Icons.date_range_rounded,
-                                              size: 12,
+                                        SizedBox(
+                                          width: screenWidth * 0.8,
+                                          child: Text(
+                                            '${categories[index]['data'][e]}',
+                                            maxLines: 2,
+                                            style: TextStyle(
                                               color: Theme.of(context).primaryColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
                                             ),
-                                            Text(
-                                              '15 Mar 2023',
-                                              style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.comment_rounded,
-                                              size: 12,
-                                              color: Theme.of(context).primaryColor,
-                                            ),
-                                            Text(
-                                              '23',
-                                              style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                      )
-                                    ],
+                                        SizedBox(
+                                          width: screenWidth * 0.35,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Icon(
+                                                Icons.date_range_rounded,
+                                                size: 12,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                              Text(
+                                                '15 Mar 2023',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.comment_rounded,
+                                                size: 12,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                              Text(
+                                                '23',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.all(5),
-                                  width: screenWidth * 0.15,
-                                  height: screenWidth * 0.15,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  Container(
+                                    margin: const EdgeInsets.all(5),
+                                    width: screenWidth * 0.15,
+                                    height: screenWidth * 0.15,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    child: const Image(
+                                      image: AssetImage('public/assets/img/artikel.png'),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  child: const Image(
-                                    image: AssetImage('public/assets/img/artikel.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                //
               ),
             ],
           ),

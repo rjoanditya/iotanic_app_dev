@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iotanic_app_dev/controller/measurment_controller.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
@@ -13,16 +15,11 @@ enum _MenuValues {
   addMeasurement,
 }
 
-class DetailLahan extends StatefulWidget {
-  const DetailLahan({super.key});
-
-  @override
-  State<DetailLahan> createState() => _DetailLahanState();
-}
-
-class _DetailLahanState extends State<DetailLahan> {
+class DetailLahan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var data = Get.arguments;
+    Measurement measureC = Get.put(Measurement());
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -51,15 +48,25 @@ class _DetailLahanState extends State<DetailLahan> {
     }
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          measureC.createMeasurement(context, data['id']);
+        },
+        icon: Icon(Icons.add),
+        label: Text(
+          'Tambah Pengukuran',
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        ),
+      ),
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 80,
         backgroundColor: Theme.of(context).canvasColor,
         title: Container(
           margin: const EdgeInsets.only(left: 5),
-          child: const Text(
-            'Lahan Pak Supriyadi #1',
-            style: TextStyle(
+          child: Text(
+            '${data['name']}',
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -133,7 +140,7 @@ class _DetailLahanState extends State<DetailLahan> {
                       padding: EdgeInsets.all(20),
                       width: screenWidth * 0.85,
                       height: screenHeight * 0.2,
-                      child: const WeatherScreen(),
+                      child: WeatherScreen(),
                     ),
                   ),
                   Card(
@@ -318,76 +325,114 @@ class _DetailLahanState extends State<DetailLahan> {
                       ),
                     ],
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                        return DetailMeasurements();
-                      })));
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 15),
-                      elevation: 5,
-                      shadowColor: Colors.black26,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        width: screenWidth * 0.85,
-                        height: screenHeight * 0.15,
-                        child: Row(
-                          children: [
-                            Container(
-                              // margin: const EdgeInsets.symmetric(horizontal: 15),
-                              width: screenWidth * 0.13,
-                              // height: screenWidth * 0.145,
-                              decoration: BoxDecoration(
-                                // color: Colors.amber,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Icon(
-                                Icons.grass,
-                                size: screenWidth * 0.06,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      // data lahan disini
-                                      'Pengukuran ke-5',
-                                      style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      'Kamis, 12 Januari 2023',
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
+                  FutureBuilder(
+                    future: measureC.getMeasurements('${data['id']}'),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('$snapshot.error');
+                      } else if (snapshot.hasData && snapshot.data!['data'] != null) {
+                        return Column(
+                          children: List.generate(
+                            snapshot.data!['count'],
+                            (index) => GestureDetector(
+                              onTap: () {
+                                // Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                //   return DetailMeasurements();
+                                // })));
+                                print(snapshot.data!['data'][index]['id']);
+                                var id = snapshot.data!;
+                                measureC.getMeasurementById(id['data'][index]['id']);
+                              },
+                              child: Card(
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                elevation: 5,
+                                shadowColor: Colors.black26,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  width: screenWidth * 0.85,
+                                  height: screenHeight * 0.15,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        // margin: const EdgeInsets.symmetric(horizontal: 15),
+                                        width: screenWidth * 0.13,
+                                        // height: screenWidth * 0.145,
+                                        decoration: BoxDecoration(
+                                          // color: Colors.amber,
+                                          borderRadius: BorderRadius.circular(50),
+                                        ),
+                                        child: Icon(
+                                          Icons.grass,
+                                          size: screenWidth * 0.06,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        flex: 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                // data lahan disini
+                                                'MID-${snapshot.data!['data'][index]['id']}',
+                                                style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                              ),
+                                              Text(
+                                                'Kamis, 12 Januari 2023',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth * 0.15,
+                                        child: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Theme.of(context).primaryColor,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: screenWidth * 0.15,
-                              child: Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Theme.of(context).primaryColor,
-                                size: 15,
-                              ),
+                          ),
+                        );
+                      } else if (snapshot.hasData && snapshot.data!['data'] == null) {
+                        return SizedBox(
+                          height: screenHeight * 0.15,
+                          child: const Center(
+                              child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Tidak ada data. Silahkan tambahkan pengukuran',
+                              textAlign: TextAlign.center,
                             ),
-                          ],
+                          )),
+                        );
+                      }
+                      // By default, show a loading spinner.
+                      return SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: LinearProgressIndicator(
+                          color: Theme.of(context).primaryColorDark,
+                          backgroundColor: Theme.of(context).splashColor,
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   )
                 ],
               ),
@@ -400,15 +445,14 @@ class _DetailLahanState extends State<DetailLahan> {
 }
 
 class WeatherScreen extends StatelessWidget {
-  const WeatherScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    var data = Get.arguments;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder<Map<String, dynamic>>(
-      future: fetchWeather('110.935754', '-7.711168'),
+      future: fetchWeather('${data['location']['lat']}', '${data['location']['lon']}'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('${snapshot.error}');

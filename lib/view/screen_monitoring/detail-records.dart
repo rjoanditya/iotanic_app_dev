@@ -4,8 +4,6 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../model/condition.dart';
 
 class DetailRecords extends StatefulWidget {
-  DetailRecords({super.key});
-
   @override
   State<DetailRecords> createState() => _DetailRecordsState();
 }

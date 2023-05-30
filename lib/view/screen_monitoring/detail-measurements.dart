@@ -5,46 +5,48 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart'; //
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
+import 'package:iotanic_app_dev/controller/measurment_controller.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-records.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../constant.dart';
 import '../Form/add_measurement.dart';
+import '../../controller/record_controller.dart';
 
 enum _MenuValues {
   addMeasurement,
 }
 
 class DetailMeasurements extends StatefulWidget {
-  const DetailMeasurements({super.key});
+  // const DetailMeasurements({super.key});
 
   @override
   State<DetailMeasurements> createState() => _DetailMeasurementsState();
 }
 
-// final LatLng london = LatLng(51.5, -0.09);
-// final LatLng paris = LatLng(48.8566, 2.3522);
-// final LatLng dublin = LatLng(53.3498, -6.2603);
-
 class _DetailMeasurementsState extends State<DetailMeasurements> {
+  var data = Get.arguments;
   late final MapController _mapController;
   double _rotation = 0;
 
-  String _scanBarcode = 'Unknown';
-
-  @override
+  // String _scanBarcode = 'Unknown';
   void initState() {
     super.initState();
     _mapController = MapController();
   }
 
   Future<void> scanBarcode() async {
+    Measurement measureC = Get.put(Measurement());
+    // final measureC.deviceId.text = 'unknown';
+
+    @override
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
+      // print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -55,15 +57,20 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
     if (!mounted) return;
 
     setState(() {
-      _scanBarcode = barcodeScanRes;
+      measureC.deviceId.text = barcodeScanRes;
+      measureC.connectToDevice(data['id']);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Measurement measureC = Get.put(Measurement());
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    LatLng point = LatLng(-7.711168, 110.935754);
+    var lat = data['land']['location']['lat'];
+    var lon = data['land']['location']['lon'];
+    LatLng point = LatLng(lat, lon);
 
     return Scaffold(
       appBar: AppBar(
@@ -75,9 +82,9 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
           children: [
             Container(
               margin: const EdgeInsets.only(left: 5),
-              child: const Text(
-                'Measurements #5',
-                style: TextStyle(
+              child: Text(
+                "MID-${data['id']}",
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -86,9 +93,9 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
             ),
             Container(
               margin: const EdgeInsets.only(left: 5),
-              child: const Text(
-                'Lahan Pak Supriyadi #1',
-                style: TextStyle(
+              child: Text(
+                "${data['land']['name']}",
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
                 ),
@@ -135,7 +142,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                         options: MapOptions(
                           onTap: (x, y) async {
                             List<Placemark> placemark = await placemarkFromCoordinates(7.566463, 110.8949131);
-                            print(placemark);
+                            // print(placemark);
                             setState(() {
                               point = y;
                             });
@@ -171,59 +178,108 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                       width: screenWidth,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      child: Card(
-                        elevation: 5,
-                        shadowColor: Colors.black26,
-                        color: Theme.of(context).highlightColor,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(right: 10),
-                                child: Icon(
-                                  Icons.sensor_window_rounded,
-                                  color: Colors.red,
+                      child: (data['device'] == null)
+                          ? Card(
+                              elevation: 5,
+                              shadowColor: Colors.black26,
+                              color: Theme.of(context).highlightColor,
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(5),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      child: const Icon(
+                                        Icons.sensor_window_rounded,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Disconnected',
+                                              style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            // Container(
+                                            //   width: 20,
+                                            //   height: 11,
+                                            //   margin: const EdgeInsets.only(left: 5),
+                                            //   decoration: BoxDecoration(
+                                            //     color: Colors.red,
+                                            //     borderRadius: BorderRadius.circular(3),
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                        Text(
+                                          'Linked Devices Please!',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Disconnected',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 12,
-                                        ),
+                            )
+                          : Card(
+                              elevation: 5,
+                              shadowColor: Colors.black26,
+                              color: Theme.of(context).highlightColor,
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(5),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      child: const Icon(
+                                        Icons.sensor_window_rounded,
+                                        color: Colors.green,
                                       ),
-                                      // Container(
-                                      //   width: 20,
-                                      //   height: 11,
-                                      //   margin: const EdgeInsets.only(left: 5),
-                                      //   decoration: BoxDecoration(
-                                      //     color: Colors.red,
-                                      //     borderRadius: BorderRadius.circular(3),
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
-                                  Text(
-                                    'Linked Devices Please!',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
                                     ),
-                                  ),
-                                ],
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Connected',
+                                              style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          width: screenWidth * 0.6,
+                                          child: Text(
+                                            'Tekan untuk Melepaskan Tautan',
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                              color: Theme.of(context).primaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 30),
@@ -246,85 +302,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                         shadowColor: Colors.black26,
                         child: SizedBox(
                           height: screenHeight * 0.275,
-                          child: DataTable(
-                            columns: <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    '#',
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'N',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'P',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'K',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'pH',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
-                                  ),
-                                ),
-                              ),
-                            ],
-                            rows: <DataRow>[
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                                          return DetailRecords();
-                                        })));
-                                      },
-                                      child: Text('#1', style: TextStyle(color: Theme.of(context).splashColor)))),
-                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                                          return DetailRecords();
-                                        })));
-                                      },
-                                      child: Text('#2', style: TextStyle(color: Theme.of(context).splashColor)))),
-                                  DataCell(Text('192', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('185', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('130', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                  DataCell(Text('5.6', style: TextStyle(color: Theme.of(context).primaryColor))),
-                                ],
-                              ),
-                            ],
-                          ),
+                          child: TableRecord(),
                         ),
                       ),
                     ),
@@ -343,11 +321,112 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
           scanBarcode();
         },
         label: const Text(
-          'Linked Devices',
+          'Tautkan Perangkat',
           style: TextStyle(letterSpacing: 0.1),
         ),
         icon: const Icon(Icons.qr_code_2_rounded),
       ),
     );
+  }
+}
+
+class TableRecord extends StatelessWidget {
+  @override
+  var data = Get.arguments;
+  Widget build(BuildContext context) {
+    Record recordC = Get.put(Record());
+    return FutureBuilder(
+        future: recordC.fetchRecordsByMeasurementId('${data['id']}'),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          } else if (snapshot.hasData && snapshot.data!['records'] != null) {
+            print(snapshot.data);
+            return DataTable(
+                columns: <DataColumn>[
+                  DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        '#',
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        'N',
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        'P',
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        'K',
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        'pH',
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                ],
+                rows: List.generate(snapshot.data!['records'].length, (row) {
+                  return DataRow(
+                    cells: <DataCell>[
+                      DataCell(InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                              return DetailRecords();
+                            })));
+                          },
+                          child: Text('#${row + 1}', style: TextStyle(color: Theme.of(context).splashColor)))),
+                      DataCell(Text('${snapshot.data!['records'][row]['condition']['nitrogen']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                      DataCell(Text('${snapshot.data!['records'][row]['condition']['phosphorus']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                      DataCell(Text('${snapshot.data!['records'][row]['condition']['potassium']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                      DataCell(Text('${snapshot.data!['records'][row]['condition']['ph']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                    ],
+                  );
+                }));
+          } else if (snapshot.hasData && snapshot.data!['data'] == null) {
+            return const SizedBox(
+              height: 150,
+              child: Center(
+                  child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Tidak ada data. Silahkan tambahkan pengukuran',
+                  textAlign: TextAlign.center,
+                ),
+              )),
+            );
+          }
+          // By default, show a loading spinner.
+          return SizedBox(
+            width: 50,
+            height: 50,
+            child: LinearProgressIndicator(
+              color: Theme.of(context).primaryColorDark,
+              backgroundColor: Theme.of(context).splashColor,
+            ),
+          );
+        });
   }
 }
