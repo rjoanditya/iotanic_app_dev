@@ -57,16 +57,6 @@ class Home extends StatelessWidget {
                 style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 22, fontWeight: FontWeight.w800),
               ),
             ),
-            // Container(
-            //   margin: const EdgeInsets.only(left: 10),
-            //   child: Text(
-            //     'Selamat Datang di IOTANIC',
-            //     style: TextStyle(
-            //       color: Theme.of(context).primaryColor,
-            //       fontSize: 14,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

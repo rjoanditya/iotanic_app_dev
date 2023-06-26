@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../model/weather.dart';
+import 'package:intl/intl.dart';
 
 class Forecast extends StatefulWidget {
   const Forecast({super.key});
@@ -11,18 +13,38 @@ class Forecast extends StatefulWidget {
 class _ForecastState extends State<Forecast> {
   @override
   Widget build(BuildContext context) {
+    var data = Get.arguments;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(
-          'Cabeyan, Sukoharjo',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).primaryColor,
-          ),
+        title: FutureBuilder(
+          future: fetchForecast(data['location']['lon'], data['location']['lat']),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            } else if (snapshot.hasData) {
+              Map<String, dynamic>? mapResponse = snapshot.data;
+              return Text(
+                snapshot.data?['city']['name'],
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).primaryColor,
+                ),
+              );
+            }
+            return SizedBox(
+              width: screenWidth,
+              height: 50,
+              child: LinearProgressIndicator(
+                color: Theme.of(context).primaryColorDark,
+                backgroundColor: Theme.of(context).splashColor,
+              ),
+            );
+          },
         ),
       ),
       body: SafeArea(
@@ -34,7 +56,7 @@ class _ForecastState extends State<Forecast> {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: Text(
-                  'Next 7 Days',
+                  'Ramalan Cuaca',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 16,
@@ -42,7 +64,7 @@ class _ForecastState extends State<Forecast> {
                   ),
                 ),
               ),
-              const DataForecast(),
+              DataForecast(),
             ],
           ),
         ),
@@ -52,24 +74,25 @@ class _ForecastState extends State<Forecast> {
 }
 
 class DataForecast extends StatelessWidget {
-  const DataForecast({Key? key}) : super(key: key);
+  DataForecast({super.key});
+  // const DataForecast({Key? key}) : super(key: key);
+  var data = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return FutureBuilder<Map<String, dynamic>>(
-      future: fetchForecast('110.935754', '-7.711168'),
+    return FutureBuilder(
+      future: fetchForecast(data['location']['lon'], data['location']['lat']),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else if (snapshot.hasData) {
           Map<String, dynamic>? mapResponse = snapshot.data;
-          print(mapResponse!);
           return Column(
             children: List.generate(
-                mapResponse['list'].length,
-                (index) => Container(
+                mapResponse!['list'].length,
+                (index) => SizedBox(
                       // margin: const EdgeInsets.symmetric(horizontal: 5),
                       width: screenWidth,
                       height: screenHeight * 0.1,
@@ -104,7 +127,16 @@ class DataForecast extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${mapResponse['list'][index]['dt']}',
+                                  DateFormat('E, d MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(mapResponse['list'][index]['dt'] * 1000)),
+                                  // '${mapResponse['list'][index]['dt']}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(mapResponse['list'][index]['dt'] * 1000)),
+                                  // '${mapResponse['list'][index]['dt']}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Theme.of(context).primaryColor,

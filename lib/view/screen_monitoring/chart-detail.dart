@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../controller/land_controller.dart';
+import '../../model/chartData.dart';
 
 class ChartDetail extends StatefulWidget {
   const ChartDetail({super.key});
@@ -9,49 +12,48 @@ class ChartDetail extends StatefulWidget {
 }
 
 class _ChartDetailState extends State<ChartDetail> {
+  var data = Get.arguments;
+  Land landC = Get.put(Land());
+
+  List<ChartData>? nData;
+  List<ChartData>? pData;
+  List<ChartData>? kData;
+  List<ChartData>? phData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // Call the function to fetch the data here
+  }
+
+  Future<void> fetchData() async {
+    final List<ChartData> nChart = await landC.getNitrogen(data['id'], data['variety']['id']);
+    final List<ChartData> pChart = await landC.getPhosporus(data['id'], data['variety']['id']);
+    final List<ChartData> kChart = await landC.getPotassium(data['id'], data['variety']['id']);
+    final List<ChartData> phChart = await landC.getPH(data['id'], data['variety']['id']);
+
+    setState(() {
+      nData = nChart;
+      pData = pChart;
+      kData = kChart;
+      phData = phChart;
+    });
+    {}
+  }
+
+  final List legend = ['Ideal', 'Pengukuran'];
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double nRecommendations = 31.6;
-    double pRecommendations = 30.2;
-    double kRecommendations = 28.3;
-    double pHRecommendations = 6.43;
-
-    final List<ChartData> nData = [
-      ChartData(1, [nRecommendations, 29]),
-      ChartData(2, [nRecommendations, 15]),
-      ChartData(3, [nRecommendations, 27]),
-      ChartData(4, [nRecommendations, 37]),
-      ChartData(5, [nRecommendations, 36]),
-    ];
-    final List<ChartData> pData = [
-      ChartData(1, [pRecommendations, 29]),
-      ChartData(2, [pRecommendations, 27]),
-      ChartData(3, [pRecommendations, 26]),
-      ChartData(4, [pRecommendations, 31]),
-      ChartData(5, [pRecommendations, 36]),
-    ];
-    final List<ChartData> kData = [
-      ChartData(1, [kRecommendations, 28]),
-      ChartData(2, [kRecommendations, 27]),
-      ChartData(3, [kRecommendations, 25]),
-      ChartData(4, [kRecommendations, 33]),
-      ChartData(5, [kRecommendations, 36]),
-    ];
-    final List<ChartData> pHData = [
-      ChartData(1, [pHRecommendations, 6.8]),
-      ChartData(2, [pHRecommendations, 6.5]),
-      ChartData(3, [pHRecommendations, 6.1]),
-      ChartData(4, [pHRecommendations, 7.2]),
-      ChartData(5, [pHRecommendations, 7.5]),
-    ];
 
     List<SplineAreaSeries> generateNitrogenSeries(List<ChartData> nData) {
       List<SplineAreaSeries> splines = [];
       for (int i = 0; i < nData.first.y!.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
+            legendItemText: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: nData,
@@ -68,6 +70,7 @@ class _ChartDetailState extends State<ChartDetail> {
       for (int i = 0; i < pData.first.y!.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
+            legendItemText: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: pData,
@@ -84,6 +87,7 @@ class _ChartDetailState extends State<ChartDetail> {
       for (int i = 0; i < kData.first.y!.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
+            legendItemText: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: kData,
@@ -97,9 +101,10 @@ class _ChartDetailState extends State<ChartDetail> {
 
     List<SplineAreaSeries> generatepHSeries(List<ChartData> pHData) {
       List<SplineAreaSeries> splines = [];
-      for (int i = 0; i < pHData.first.y!.length; i++) {
+      for (int i = 0; i < phData!.first.y!.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
+            legendItemText: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: pHData,
@@ -205,7 +210,10 @@ class _ChartDetailState extends State<ChartDetail> {
                               minorGridLines: const MinorGridLines(width: 0.2),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                            series: generateNitrogenSeries(nData),
+                            series: generateNitrogenSeries(nData ??
+                                [
+                                  ChartData(1, [0, 0])
+                                ]),
                           ),
                         ),
                       ]),
@@ -287,7 +295,10 @@ class _ChartDetailState extends State<ChartDetail> {
                               minorGridLines: const MinorGridLines(width: 0.2),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                            series: generatePhosphorusSeries(pData),
+                            series: generatePhosphorusSeries(pData ??
+                                [
+                                  ChartData(1, [0, 0, 0, 0])
+                                ]),
                           ),
                         ),
                       ]),
@@ -370,7 +381,10 @@ class _ChartDetailState extends State<ChartDetail> {
                               minorGridLines: const MinorGridLines(width: 0.2),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                            series: generatePottasiumSeries(kData),
+                            series: generatePottasiumSeries(kData ??
+                                [
+                                  ChartData(1, [0, 0, 0, 0])
+                                ]),
                           ),
                         ),
                       ]),
@@ -453,7 +467,10 @@ class _ChartDetailState extends State<ChartDetail> {
                               minorGridLines: const MinorGridLines(width: 0.2),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                            series: generatepHSeries(pHData),
+                            series: generatepHSeries(phData ??
+                                [
+                                  ChartData(1, [0, 0, 0, 0])
+                                ]),
                           ),
                         ),
                       ]),
@@ -467,10 +484,4 @@ class _ChartDetailState extends State<ChartDetail> {
       ),
     );
   }
-}
-
-class ChartData {
-  ChartData(this.x, this.y);
-  final int x;
-  final List? y;
 }

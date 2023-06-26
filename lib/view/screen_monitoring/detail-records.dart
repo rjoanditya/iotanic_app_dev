@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../model/condition.dart';
@@ -8,11 +9,13 @@ class DetailRecords extends StatefulWidget {
   State<DetailRecords> createState() => _DetailRecordsState();
 }
 
+var data = Get.arguments;
+
 class _DetailRecordsState extends State<DetailRecords> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Condition.fetchRecord('6404548d2020957027a2da40'),
+      future: Conditions.fetchRecord('6498f0386df1e5db4067f6c0'),
       builder: (context, snapshot) => Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -21,9 +24,7 @@ class _DetailRecordsState extends State<DetailRecords> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           actions: [
             InkWell(
-              onTap: () {
-                // print(snapshot.data.nitrogen);
-              },
+              onTap: () {},
               child: Container(
                 margin: EdgeInsets.all(15),
                 padding: EdgeInsets.all(12),
@@ -34,7 +35,7 @@ class _DetailRecordsState extends State<DetailRecords> {
                   color: Theme.of(context).dialogBackgroundColor.withOpacity(.5),
                 ),
                 child: Text(
-                  'Records #5',
+                  '${data['data']['device']['id']}',
                   style: TextStyle(
                     color: Theme.of(context).canvasColor,
                     fontSize: 12,
@@ -120,19 +121,18 @@ class _DetailRecordsState extends State<DetailRecords> {
 
 Widget dataTable(BuildContext context) {
   dynamic ideal = {
-    'n': 130,
-    'p': 120,
-    'k': 115,
-    'ph': 6.8,
+    'n': data['data']['variety']['optimal_condition']['nitrogen'],
+    'p': data['data']['variety']['optimal_condition']['phosphorus'],
+    'k': data['data']['variety']['optimal_condition']['potassium'],
+    'ph': data['data']['variety']['optimal_condition']['ph'],
   };
 
   dynamic records = {
-    'n': 157,
-    'p': 145,
-    'k': 127,
-    'ph': 6.32,
+    'n': data['condition']['condition']['nitrogen'],
+    'p': data['condition']['condition']['phosphorus'],
+    'k': data['condition']['condition']['potassium'],
+    'ph': data['condition']['condition']['ph'],
   };
-
   dynamic scale = {
     'n': double.parse(((1 - ((ideal['n'] - records['n']).abs() / ideal['n'])) * 100).toStringAsFixed(1)),
     'p': double.parse(((1 - ((ideal['p'] - records['p']).abs() / ideal['p'])) * 100).toStringAsFixed(1)),
@@ -404,17 +404,17 @@ Widget dataTable(BuildContext context) {
 
 Widget dataCircularChart(BuildContext context) {
   dynamic ideal = {
-    'n': 130,
-    'p': 120,
-    'k': 115,
-    'ph': 6.8,
+    'n': data['data']['variety']['optimal_condition']['nitrogen'],
+    'p': data['data']['variety']['optimal_condition']['phosphorus'],
+    'k': data['data']['variety']['optimal_condition']['potassium'],
+    'ph': data['data']['variety']['optimal_condition']['ph'],
   };
 
   dynamic records = {
-    'n': 157,
-    'p': 145,
-    'k': 127,
-    'ph': 6.32,
+    'n': data['condition']['condition']['nitrogen'],
+    'p': data['condition']['condition']['phosphorus'],
+    'k': data['condition']['condition']['potassium'],
+    'ph': data['condition']['condition']['ph'],
   };
 
   dynamic scale = {

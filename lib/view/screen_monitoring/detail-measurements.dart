@@ -1,12 +1,10 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart'; //
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:iotanic_app_dev/controller/measurment_controller.dart';
+import 'package:iotanic_app_dev/controller/measurement_controller.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-records.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -37,41 +35,26 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
     _mapController = MapController();
   }
 
+// scannnn
   Future<void> scanBarcode() async {
     Measurement measureC = Get.put(Measurement());
-    // final measureC.deviceId.text = 'unknown';
 
-    @override
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
-      // print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+    String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
 
     setState(() {
-      measureC.deviceId.text = barcodeScanRes;
-      measureC.connectToDevice(data['id']);
+      measureC.deviceId.text = barcodeScanResult;
     });
+    measureC.connectToDevice(data['id']);
   }
 
   @override
   Widget build(BuildContext context) {
     Measurement measureC = Get.put(Measurement());
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    var lat = data['land']['location']['lat'];
-    var lon = data['land']['location']['lon'];
+    double lat = (data['land']['location']['lat'] is double) ? data['land']['location']['lat'] : double.parse(data['land']['location']['lat']);
+    double lon = (data['land']['location']['lon'] is double) ? data['land']['location']['lon'] : double.parse(data['land']['location']['lon']);
     LatLng point = LatLng(lat, lon);
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -140,13 +123,6 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                       clipBehavior: Clip.antiAlias,
                       child: FlutterMap(
                         options: MapOptions(
-                          onTap: (x, y) async {
-                            List<Placemark> placemark = await placemarkFromCoordinates(7.566463, 110.8949131);
-                            // print(placemark);
-                            setState(() {
-                              point = y;
-                            });
-                          },
                           center: point,
                           zoom: 15,
                           minZoom: 5,
@@ -178,7 +154,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                       width: screenWidth,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      child: (data['device'] == null)
+                      child: (data['device'] == null || data['end'] != null)
                           ? Card(
                               elevation: 5,
                               shadowColor: Colors.black26,
@@ -207,19 +183,10 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                                 fontSize: 12,
                                               ),
                                             ),
-                                            // Container(
-                                            //   width: 20,
-                                            //   height: 11,
-                                            //   margin: const EdgeInsets.only(left: 5),
-                                            //   decoration: BoxDecoration(
-                                            //     color: Colors.red,
-                                            //     borderRadius: BorderRadius.circular(3),
-                                            //   ),
-                                            // ),
                                           ],
                                         ),
                                         Text(
-                                          'Linked Devices Please!',
+                                          'Tautkan Perangkat!',
                                           style: TextStyle(
                                             color: Theme.of(context).primaryColor,
                                             fontSize: 16,
@@ -236,53 +203,59 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                               elevation: 5,
                               shadowColor: Colors.black26,
                               color: Theme.of(context).highlightColor,
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(5),
-                                      margin: const EdgeInsets.only(right: 10),
-                                      child: const Icon(
-                                        Icons.sensor_window_rounded,
-                                        color: Colors.green,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.snackbar('Tautan dilepaskan', 'Berhasil melepaskan tautan');
+                                  measureC.disconnectToDevice(data['id'], data['device']['id']);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(5),
+                                        margin: const EdgeInsets.only(right: 10),
+                                        child: const Icon(
+                                          Icons.sensor_window_rounded,
+                                          color: Colors.green,
+                                        ),
                                       ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Connected',
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Connected',
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              'Tekan untuk Melepaskan Tautan',
+                                              maxLines: 2,
                                               style: TextStyle(
                                                 color: Theme.of(context).primaryColor,
-                                                fontSize: 12,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Container(
-                                          width: screenWidth * 0.6,
-                                          child: Text(
-                                            'Tekan untuk Melepaskan Tautan',
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: Theme.of(context).primaryColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      margin: const EdgeInsets.symmetric(horizontal: 30),
                       width: screenWidth,
                       child: Text(
                         'Records',
@@ -298,7 +271,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                       scrollDirection: Axis.horizontal,
                       child: Card(
                         elevation: 5,
-                        margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                         shadowColor: Colors.black26,
                         child: SizedBox(
                           height: screenHeight * 0.275,
@@ -331,8 +304,9 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
 }
 
 class TableRecord extends StatelessWidget {
-  @override
   var data = Get.arguments;
+  Record conditionController = Get.put(Record());
+  @override
   Widget build(BuildContext context) {
     Record recordC = Get.put(Record());
     return FutureBuilder(
@@ -341,17 +315,13 @@ class TableRecord extends StatelessWidget {
           if (snapshot.hasError) {
             return Text('${snapshot.error}');
           } else if (snapshot.hasData && snapshot.data!['records'] != null) {
-            print(snapshot.data);
             return DataTable(
                 columns: <DataColumn>[
                   DataColumn(
                     label: Expanded(
                       child: Text(
-                        '#',
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                        'No',
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -359,7 +329,7 @@ class TableRecord extends StatelessWidget {
                     label: Expanded(
                       child: Text(
                         'N',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -367,7 +337,7 @@ class TableRecord extends StatelessWidget {
                     label: Expanded(
                       child: Text(
                         'P',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -375,7 +345,7 @@ class TableRecord extends StatelessWidget {
                     label: Expanded(
                       child: Text(
                         'K',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -383,7 +353,7 @@ class TableRecord extends StatelessWidget {
                     label: Expanded(
                       child: Text(
                         'pH',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -393,9 +363,12 @@ class TableRecord extends StatelessWidget {
                     cells: <DataCell>[
                       DataCell(InkWell(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                              return DetailRecords();
-                            })));
+                            dynamic id = snapshot.data!['records'][row]['_id'];
+                            conditionController.getConditionId(id, data);
+
+                            // Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                            //   return DetailRecords();
+                            // })));
                           },
                           child: Text('#${row + 1}', style: TextStyle(color: Theme.of(context).splashColor)))),
                       DataCell(Text('${snapshot.data!['records'][row]['condition']['nitrogen']}', style: TextStyle(color: Theme.of(context).primaryColor))),

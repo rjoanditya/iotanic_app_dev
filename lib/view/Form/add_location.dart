@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iotanic_app_dev/controller/land_controller.dart';
 // import 'package:flutter/services.dart';
 import '../../constant.dart';
 import 'package:flutter_map/flutter_map.dart'; //
 import 'package:flutter_map/plugin_api.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddLocation extends StatefulWidget {
   const AddLocation({super.key});
@@ -14,158 +18,181 @@ class AddLocation extends StatefulWidget {
 }
 
 class _AddLocationState extends State<AddLocation> {
-  late final MapController _mapController;
-  double _rotation = 0;
+  final MapController _mapController = MapController();
+  TextEditingController searchController = TextEditingController();
+  LatLng point = LatLng(-7.5624974, 110.8557175);
 
-  String _scanBarcode = 'Unknown';
+  LatLng currentLocation = LatLng(0, 0);
 
+  void performGeocoding(String query) async {
+    List<Location> locations = await locationFromAddress(query);
+    if (locations.isNotEmpty) {
+      Location location = locations.first;
+      currentLocation = LatLng(location.latitude, location.longitude);
+      _mapController.move(currentLocation, 15); // Move the map to the geocoded location
+
+      setState(() {});
+    } else {
+      // Handle the case where no locations are found
+      print('error');
+    }
+  }
+
+  // double _rotation = 0;
+  // String _scanBarcode = 'Unknown';
+  // var search_text = '';
+
+  Land landC = Get.put(Land());
   @override
   void initState() {
     super.initState();
-    _mapController = MapController();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    LatLng point = LatLng(-7.4217141, 109.2345068);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        title: Text(
-          'Pilih Lokasi',
-          style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: screenHeight * 0.3,
-                width: screenWidth,
-                child: FlutterMap(
-                  options: MapOptions(
-                    onTap: (x, y) async {
-                      List<Placemark> placemark = await placemarkFromCoordinates(7.566463, 110.8949131);
-                      print(placemark);
-                      setState(() {
-                        point = y;
-                      });
-                    },
-                    center: point,
-                    zoom: 15,
-                    minZoom: 5,
-                    maxZoom: 18,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate: ENDPOINT_MAPBOX,
-                      userAgentPackageName: 'com.example.app',
-                    ),
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                            width: 50,
-                            height: 50,
-                            point: point,
-                            builder: (context) => Icon(
-                                  Icons.location_on,
-                                  color: Theme.of(context).splashColor,
-                                  size: 30,
-                                  shadows: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 4),
-                                    )
-                                  ],
-                                ))
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                margin: const EdgeInsets.only(top: 10),
-                child: Text(
-                  'Nearby Places',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).primaryColor.withOpacity(.6),
-                  ),
-                ),
-              ),
-              Container(
-                height: screenHeight * 0.5,
-                child: ListView.builder(
-                  itemCount: 3,
-                  itemBuilder: (BuildContext context, index) {
-                    return Column(
+              Stack(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: screenHeight,
+                    width: screenWidth,
+                    child: FlutterMap(
+                      mapController: _mapController,
+                      options: MapOptions(
+                        onTap: (position, y) async {
+                          point = y;
+                          setState(() {});
+                        },
+                        // onPositionChanged: (position, hasGesture) {
+                        //   setState(() {});
+                        // },
+                        center: point,
+                        zoom: 15,
+                        minZoom: 5,
+                        maxZoom: 18,
+                      ),
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                              height: 50,
-                              width: 50,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                color: Theme.of(context).highlightColor,
-                              ),
-                              child: Icon(
-                                Icons.compost_rounded,
-                                color: Theme.of(context).primaryColor,
-                                size: 20,
-                              ),
-                            ),
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Kelompok Tani',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  'Cabeyan, Sukoharjo',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 12,
-                                    // fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        TileLayer(
+                          urlTemplate: ENDPOINT_MAPBOX,
+                          userAgentPackageName: 'com.example.app',
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                                width: 50,
+                                height: 50,
+                                point: point,
+                                builder: (context) {
+                                  return Icon(
+                                    Icons.location_on_rounded,
+                                    color: Colors.red,
+                                    size: 50,
+                                    shadows: [BoxShadow(color: Colors.black.withOpacity(.5), spreadRadius: 5, blurRadius: 7, offset: const Offset(0, 4))],
+                                  );
+                                })
                           ],
-                        )
+                        ),
                       ],
-                    );
-                  },
-                ),
-              )
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Form(
+                        child: TextFormField(
+                      controller: searchController,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      obscureText: false,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.edit_location_alt_outlined),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () async {
+                            String query = searchController.text.trim();
+                            if (query.isNotEmpty) {
+                              performGeocoding(query);
+                            }
+                          },
+                        ),
+                        hintText: 'Cari Lokasi',
+                        hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor.withOpacity(.8)),
+                        filled: true,
+                        fillColor: Theme.of(context).highlightColor.withOpacity(.9),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 25,
+                        ),
+                      ),
+                    )),
+                  ),
+                  Container(
+                    height: screenHeight * 0.9,
+                    alignment: Alignment.bottomCenter,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: ButtonTheme(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          landC.lat.text = point.latitude.toString();
+                          landC.lon.text = point.longitude.toString();
+
+                          setState(() {});
+                          Get.back(result: [point.latitude, point.longitude]);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.375, vertical: 23),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                            )),
+                        child: const Text(
+                          "Simpan",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: Container(
+          margin: EdgeInsets.only(bottom: 120),
+          // width: 50,
+          // height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              maximumSize: Size(60, 60),
+              minimumSize: Size(60, 60),
+              backgroundColor: Colors.white,
+              shape: CircleBorder(),
+            ),
+            onPressed: () {
+              _mapController.move(point, 15);
+            },
+            child: Center(
+              child: Icon(
+                Icons.location_searching_rounded,
+                color: Theme.of(context).canvasColor,
+              ),
+            ),
+          )),
     );
   }
 }

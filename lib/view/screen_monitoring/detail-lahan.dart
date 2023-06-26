@@ -1,35 +1,61 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iotanic_app_dev/controller/measurment_controller.dart';
+import 'package:iotanic_app_dev/controller/measurement_controller.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
 
+import '../../model/user.dart';
 import '../../model/weather.dart';
-import '../Form/add_measurement.dart';
-import 'detail-measurements.dart';
+import '../../model/chartData.dart';
+import '../../controller/land_controller.dart';
+// import '../Form/add_measurement.dart';
+// import 'detail-measurements.dart';
 
-enum _MenuValues {
-  addMeasurement,
+// enum _MenuValues {
+//   addMeasurement,
+// }
+
+class DetailLahan extends StatefulWidget {
+  const DetailLahan({super.key});
+
+  @override
+  State<DetailLahan> createState() => _DetailLahanState();
 }
 
-class DetailLahan extends StatelessWidget {
+class _DetailLahanState extends State<DetailLahan> {
+  List<ChartData>? chartData;
+  var data = Get.arguments;
+  User user = Get.put(User());
+  Land landC = Get.put(Land());
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // Call the function to fetch the data here
+  }
+
+  Future<void> fetchData() async {
+    final List<ChartData> chart = await landC.getRecordsByLandId(data['id']);
+    setState(() {
+      chartData = chart; // Assign the fetched data to the chartData variable
+    });
+    chartData ??= [
+      ChartData(1, [0, 0, 0, 0]),
+      // ChartData(2, [15, 27, 27, 27]),
+      // ChartData(3, [27, 26, 25, 25]),
+      // ChartData(4, [37, 31, 33, 35]),
+      // ChartData(5, [36, 36, 36, 36]),
+    ];
+    {}
+  }
+
   @override
   Widget build(BuildContext context) {
-    var data = Get.arguments;
     Measurement measureC = Get.put(Measurement());
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final List<ChartData> chartData = [
-      ChartData(1, [29, 29, 28, 28]),
-      ChartData(2, [15, 27, 27, 27]),
-      ChartData(3, [27, 26, 25, 25]),
-      ChartData(4, [37, 31, 33, 35]),
-      ChartData(5, [36, 36, 36, 36]),
-    ];
     final List legendItem = ['Nitrogen', 'Phospat', 'Potasium', 'pH'];
 
     List<SplineSeries> generateSplineSeries(List<ChartData> chartData) {
@@ -48,15 +74,17 @@ class DetailLahan extends StatelessWidget {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           measureC.createMeasurement(context, data['id']);
         },
-        icon: Icon(Icons.add),
-        label: Text(
-          'Tambah Pengukuran',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-        ),
+        child: Icon(Icons.add),
+        tooltip: 'Tambah',
+        // icon: Icon(Icons.add),
+        // label: Text(
+        //   'Tambah Pengukuran',
+        //   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        // ),
       ),
       appBar: AppBar(
         elevation: 0,
@@ -73,36 +101,36 @@ class DetailLahan extends StatelessWidget {
             ),
           ),
         ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: PopupMenuButton<_MenuValues>(
-              elevation: 3,
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.white,
-              ),
-              color: Theme.of(context).highlightColor,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _MenuValues.addMeasurement,
-                  child: Text('Tambah Pengukuran',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 14,
-                      )),
-                )
-              ],
-              onSelected: (value) {
-                switch (value) {
-                  case _MenuValues.addMeasurement:
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddMeasurement()));
-                    break;
-                }
-              },
-            ),
-          )
-        ],
+        // actions: [
+        //   Container(
+        //     margin: const EdgeInsets.only(right: 10),
+        //     child: PopupMenuButton<_MenuValues>(
+        //       elevation: 3,
+        //       icon: const Icon(
+        //         Icons.more_vert_rounded,
+        //         color: Colors.white,
+        //       ),
+        //       color: Theme.of(context).highlightColor,
+        //       itemBuilder: (context) => [
+        //         PopupMenuItem(
+        //           value: _MenuValues.addMeasurement,
+        //           child: Text('Tambah Pengukuran',
+        //               style: TextStyle(
+        //                 color: Theme.of(context).primaryColor,
+        //                 fontSize: 14,
+        //               )),
+        //         )
+        //       ],
+        //       onSelected: (value) {
+        //         switch (value) {
+        //           case _MenuValues.addMeasurement:
+        //             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddMeasurement()));
+        //             break;
+        //         }
+        //       },
+        //     ),
+        //   )
+        // ],
       ),
       body: SafeArea(
         child: Stack(
@@ -167,8 +195,8 @@ class DetailLahan extends StatelessWidget {
                               width: screenWidth,
                               height: 20,
                               child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ChartDetail()));
+                                onTap: () async {
+                                  Get.to(const ChartDetail(), arguments: data);
                                 },
                                 child: Text(
                                   'Selengkapnya',
@@ -222,7 +250,12 @@ class DetailLahan extends StatelessWidget {
                                   minorGridLines: MinorGridLines(width: 0.2),
                                 ),
                                 // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                                series: generateSplineSeries(chartData),
+                                series: generateSplineSeries(
+                                  chartData ??
+                                      [
+                                        ChartData(1, [0, 0, 0, 0])
+                                      ],
+                                ),
                               ),
                             ),
                           ),
@@ -230,68 +263,68 @@ class DetailLahan extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    width: screenWidth,
-                    height: screenHeight * 0.1,
-                    margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Card(
-                          elevation: 5,
-                          shadowColor: Colors.black26,
-                          child: SizedBox(
-                            width: screenWidth * 0.175,
-                            height: screenWidth * 0.175,
-                            child: Icon(
-                              Icons.safety_check,
-                              color: Theme.of(context).primaryColor,
-                              size: screenWidth * 0.065,
-                            ),
-                          ),
-                        ),
-                        Card(
-                          elevation: 5,
-                          shadowColor: Colors.black26,
-                          child: SizedBox(
-                            width: screenWidth * 0.175,
-                            height: screenWidth * 0.175,
-                            child: Icon(
-                              Icons.access_alarm_rounded,
-                              color: Theme.of(context).primaryColor,
-                              size: screenWidth * 0.065,
-                            ),
-                          ),
-                        ),
-                        Card(
-                          elevation: 5,
-                          shadowColor: Colors.black26,
-                          child: SizedBox(
-                            width: screenWidth * 0.175,
-                            height: screenWidth * 0.175,
-                            child: Icon(
-                              Icons.baby_changing_station_outlined,
-                              color: Theme.of(context).primaryColor,
-                              size: screenWidth * 0.065,
-                            ),
-                          ),
-                        ),
-                        Card(
-                          elevation: 5,
-                          shadowColor: Colors.black26,
-                          child: SizedBox(
-                            width: screenWidth * 0.175,
-                            height: screenWidth * 0.175,
-                            child: Icon(
-                              Icons.kayaking_rounded,
-                              color: Theme.of(context).primaryColor,
-                              size: screenWidth * 0.065,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   width: screenWidth,
+                  //   height: screenHeight * 0.1,
+                  //   margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //     children: [
+                  //       Card(
+                  //         elevation: 5,
+                  //         shadowColor: Colors.black26,
+                  //         child: SizedBox(
+                  //           width: screenWidth * 0.175,
+                  //           height: screenWidth * 0.175,
+                  //           child: Icon(
+                  //             Icons.safety_check,
+                  //             color: Theme.of(context).primaryColor,
+                  //             size: screenWidth * 0.065,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Card(
+                  //         elevation: 5,
+                  //         shadowColor: Colors.black26,
+                  //         child: SizedBox(
+                  //           width: screenWidth * 0.175,
+                  //           height: screenWidth * 0.175,
+                  //           child: Icon(
+                  //             Icons.access_alarm_rounded,
+                  //             color: Theme.of(context).primaryColor,
+                  //             size: screenWidth * 0.065,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Card(
+                  //         elevation: 5,
+                  //         shadowColor: Colors.black26,
+                  //         child: SizedBox(
+                  //           width: screenWidth * 0.175,
+                  //           height: screenWidth * 0.175,
+                  //           child: Icon(
+                  //             Icons.baby_changing_station_outlined,
+                  //             color: Theme.of(context).primaryColor,
+                  //             size: screenWidth * 0.065,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Card(
+                  //         elevation: 5,
+                  //         shadowColor: Colors.black26,
+                  //         child: SizedBox(
+                  //           width: screenWidth * 0.175,
+                  //           height: screenWidth * 0.175,
+                  //           child: Icon(
+                  //             Icons.kayaking_rounded,
+                  //             color: Theme.of(context).primaryColor,
+                  //             size: screenWidth * 0.065,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -308,21 +341,6 @@ class DetailLahan extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(right: 30),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'Lihat Semua',
-                            style: TextStyle(
-                              color: Theme.of(context).splashColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                   FutureBuilder(
@@ -336,10 +354,6 @@ class DetailLahan extends StatelessWidget {
                             snapshot.data!['count'],
                             (index) => GestureDetector(
                               onTap: () {
-                                // Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                                //   return DetailMeasurements();
-                                // })));
-                                print(snapshot.data!['data'][index]['id']);
                                 var id = snapshot.data!;
                                 measureC.getMeasurementById(id['data'][index]['id']);
                               },
@@ -448,6 +462,7 @@ class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = Get.arguments;
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -458,7 +473,6 @@ class WeatherScreen extends StatelessWidget {
           return Text('${snapshot.error}');
         } else if (snapshot.hasData) {
           Map<String, dynamic>? mapResponse = snapshot.data;
-          // print(mapResponse!['wind']['speed']);
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -621,7 +635,7 @@ class WeatherScreen extends StatelessWidget {
                 width: screenWidth,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Forecast()));
+                    Get.to(const Forecast(), arguments: data);
                   },
                   child: Text(
                     'Lihat Detail',
@@ -650,10 +664,4 @@ class WeatherScreen extends StatelessWidget {
       },
     );
   }
-}
-
-class ChartData {
-  ChartData(this.x, this.y);
-  final int x;
-  final List? y;
 }
