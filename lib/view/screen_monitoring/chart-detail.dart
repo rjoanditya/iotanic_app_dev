@@ -41,7 +41,7 @@ class _ChartDetailState extends State<ChartDetail> {
     {}
   }
 
-  final List legend = ['Ideal', 'Pengukuran'];
+  final List legend = ['Ideal', 'Pengukuran', '', '', ''];
 
   @override
   Widget build(BuildContext context) {
@@ -99,15 +99,15 @@ class _ChartDetailState extends State<ChartDetail> {
       return splines;
     }
 
-    List<SplineAreaSeries> generatepHSeries(List<ChartData> pHData) {
+    List<SplineAreaSeries> generatepHSeries(List<ChartData> phData) {
       List<SplineAreaSeries> splines = [];
-      for (int i = 0; i < phData!.first.y!.length; i++) {
+      for (int i = 0; i < phData.first.y!.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
-            dataSource: pHData,
+            dataSource: phData,
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
