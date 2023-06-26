@@ -20,23 +20,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  // late StreamSubscription subscription;
-  // late StreamSubscription internetSubscription;
-  // bool hasInternet = false;
   ThemeProvider themes = ThemeProvider();
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   subscription = Connectivity().onConnectivityChanged.listen(_showConnectivitySnackBar);
-  // // internetSubscription = InternetConnectionChecker().onStatusChange.listen((status) {
-  // //   final hasInternet = status == InternetConnectionStatus.connected;
-
-  // });
-
-  // setState(() => this.hasInternet = hasInternet);
-  // }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -93,29 +77,4 @@ class _SplashState extends State<Splash> {
       ),
     );
   }
-
-  // void _showConnectivitySnackBar(ConnectivityResult result) {
-  //   final hasInternet = result != ConnectivityResult.none;
-  //   final message = hasInternet
-  //       ? result == ConnectivityResult.mobile
-  //           ? "you're connected to mobile network"
-  //           : "You're connected to wifi network"
-  //       : "You're not connected";
-
-  //   final color = hasInternet ? Colors.green : Colors.red;
-
-  //   _showSnackBar(context, message, color);
-  // }
-
-  // void _showSnackBar(context, String message, MaterialColor color) {
-  //   Get.snackbar(
-  //     'Alert!',
-  //     message,
-  //     colorText: Theme.of(context).primaryColor,
-  //     borderColor: color,
-  //   );
-  //   Timer(Duration(seconds: 3), () {
-  //     Get.to(SignIn());
-  //   });
-  // }
 }
