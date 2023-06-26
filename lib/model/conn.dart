@@ -13,4 +13,5 @@ class Routes {
   final String land = 'land';
   final String measurement = 'measurement';
   final String record = 'record';
+  final String variety = 'variety';
 }
