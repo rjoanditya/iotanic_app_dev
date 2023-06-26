@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:get/get.dart';
+import 'package:iotanic_app_dev/controller/variety.dart';
 import 'package:iotanic_app_dev/view/Form/add_location.dart';
 
+import '../../controller/address_controller.dart';
 import '../../controller/land_controller.dart';
 import '../screen_monitoring/detail-lahan.dart';
 
@@ -17,11 +19,10 @@ class _AddFieldState extends State<AddField> {
   final formKey = GlobalKey<FormState>();
   final _popupBuilderKey = GlobalKey<DropdownSearchState<String>>();
 
+  var landC = Get.put(Land());
+
   @override
   Widget build(BuildContext context) {
-    var landC = Get.put(Land());
-    final List<dynamic> dataTanaman = ['Padi', 'Cabai', 'Jagung'];
-    // TextEditingController typePlant = TextEditingController();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -79,12 +80,19 @@ class _AddFieldState extends State<AddField> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: DropdownSearch<dynamic>(
+                          asyncItems: (text) {
+                            return VarietyController.getVariety();
+                          },
+                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Tanaman'),
+                          onChanged: (newValue) async {
+                            landC.varietyId.text = newValue.id;
+                          },
                           popupProps: PopupProps.bottomSheet(
                             itemBuilder: (context, item, isSelected) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                 child: Text(
-                                  item ?? "",
+                                  item.name ?? "",
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                   ),
@@ -143,7 +151,6 @@ class _AddFieldState extends State<AddField> {
 
                             // itemBuilder: listItem,
                           ),
-                          items: dataTanaman,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -194,7 +201,6 @@ class _AddFieldState extends State<AddField> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: TextFormField(
-                          controller: landC.location,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (BuildContext context) {
@@ -206,7 +212,7 @@ class _AddFieldState extends State<AddField> {
                           decoration: InputDecoration(
                             labelText: 'Lokasi',
                             labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 14),
-                            hintText: 'tentukan lokasi lahan anda',
+                            hintText: (landC.lat.text != '') ? '${landC.lat.text}, ${landC.lon.text}' : 'Tersimpan, ketuk untuk mengubah',
                             hintStyle: TextStyle(
                               color: Theme.of(context).primaryColor.withOpacity(0.5),
                               fontSize: 14,
@@ -228,15 +234,30 @@ class _AddFieldState extends State<AddField> {
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        ),
                         child: DropdownSearch<dynamic>(
+                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Provinsi'),
+                          onChanged: (newValue) async {
+                            landC.province.text = newValue.id;
+                          },
+
+                          asyncItems: (text) async {
+                            return AddressController.getProvinces();
+                          },
+
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, item, isSelected) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                child: Text(
-                                  item ?? "",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                child: ListTile(
+                                  title: Text(
+                                    item.name ?? "",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               );
@@ -247,23 +268,19 @@ class _AddFieldState extends State<AddField> {
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
-                                  label: Text(
-                                    'Cari Provinsi',
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: screenHeight * 0.065,
-                                  )),
+                                label: Text(
+                                  'Cari Provinsi',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                              ),
                             ),
                             menuProps: MenuProps(
                               elevation: 10,
@@ -272,11 +289,8 @@ class _AddFieldState extends State<AddField> {
                             listViewProps: const ListViewProps(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                             ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
-                            // itemBuilder: listItem,
                           ),
-                          items: dataTanaman,
+                          // items: snapshot.data!,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -296,22 +310,35 @@ class _AddFieldState extends State<AddField> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
                               ),
-                              constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
                             ),
                           ),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        ),
                         child: DropdownSearch<dynamic>(
+                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kabupaten'),
+                          onChanged: (newValue) async {
+                            landC.regency.text = newValue.id;
+                          },
+                          asyncItems: (text) async {
+                            return AddressController.getRegencies(landC.province.text);
+                          },
+
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, item, isSelected) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                child: Text(
-                                  item ?? "",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                child: ListTile(
+                                  title: Text(
+                                    item.name ?? "",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               );
@@ -322,23 +349,19 @@ class _AddFieldState extends State<AddField> {
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
-                                  label: Text(
-                                    'Cari Kabupaten',
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: screenHeight * 0.065,
-                                  )),
+                                label: Text(
+                                  'Cari Kabupaten',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                              ),
                             ),
                             menuProps: MenuProps(
                               elevation: 10,
@@ -347,11 +370,8 @@ class _AddFieldState extends State<AddField> {
                             listViewProps: const ListViewProps(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                             ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
-                            // itemBuilder: listItem,
                           ),
-                          items: dataTanaman,
+                          // items: snapshot.data!,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -371,22 +391,35 @@ class _AddFieldState extends State<AddField> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
                               ),
-                              constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
                             ),
                           ),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        ),
                         child: DropdownSearch<dynamic>(
+                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kecamatan'),
+                          onChanged: (newValue) async {
+                            landC.district.text = newValue.id;
+                          },
+                          asyncItems: (text) async {
+                            return AddressController.getDistricts(landC.regency.text);
+                          },
+
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, item, isSelected) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                child: Text(
-                                  item ?? "",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                child: ListTile(
+                                  title: Text(
+                                    item.name ?? "",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               );
@@ -397,23 +430,19 @@ class _AddFieldState extends State<AddField> {
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
-                                  label: Text(
-                                    'Cari Kecamatan',
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: screenHeight * 0.065,
-                                  )),
+                                label: Text(
+                                  'Cari Kecamatan',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                              ),
                             ),
                             menuProps: MenuProps(
                               elevation: 10,
@@ -422,11 +451,8 @@ class _AddFieldState extends State<AddField> {
                             listViewProps: const ListViewProps(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                             ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
-                            // itemBuilder: listItem,
                           ),
-                          items: dataTanaman,
+                          // items: snapshot.data!,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -446,22 +472,35 @@ class _AddFieldState extends State<AddField> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
                               ),
-                              constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
                             ),
                           ),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        ),
                         child: DropdownSearch<dynamic>(
+                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Desa'),
+                          onChanged: (newValue) async {
+                            landC.village.text = newValue.id;
+                          },
+                          asyncItems: (text) async {
+                            return AddressController.getVillages(landC.district.text);
+                          },
+
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, item, isSelected) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                child: Text(
-                                  item ?? "",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                child: ListTile(
+                                  title: Text(
+                                    item.name ?? "",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               );
@@ -472,23 +511,19 @@ class _AddFieldState extends State<AddField> {
                               padding: EdgeInsets.all(20),
                               style: TextStyle(color: Theme.of(context).primaryColor),
                               decoration: InputDecoration(
-                                  label: Text(
-                                    'Cari Desa',
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: screenHeight * 0.065,
-                                  )),
+                                label: Text(
+                                  'Cari Desa',
+                                  style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                                ),
+                              ),
                             ),
                             menuProps: MenuProps(
                               elevation: 10,
@@ -497,11 +532,8 @@ class _AddFieldState extends State<AddField> {
                             listViewProps: const ListViewProps(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                             ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
-                            // itemBuilder: listItem,
                           ),
-                          items: dataTanaman,
+                          // items: snapshot.data!,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             baseStyle: TextStyle(color: Theme.of(context).primaryColor),
                             dropdownSearchDecoration: InputDecoration(
@@ -521,7 +553,6 @@ class _AddFieldState extends State<AddField> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
                               ),
-                              constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
                             ),
                           ),
                         ),
