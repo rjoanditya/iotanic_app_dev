@@ -75,7 +75,7 @@ class _SignInState extends State<SignIn> {
                               borderRadius: BorderRadius.all(Radius.circular(12)),
                               borderSide: BorderSide.none,
                             ),
-                            labelText: 'Email / Phone Number',
+                            labelText: 'Email',
                             labelStyle: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 14,

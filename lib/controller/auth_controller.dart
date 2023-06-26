@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -18,11 +19,12 @@ class AuthController extends GetxController {
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController repassword = TextEditingController();
+  TextEditingController address = TextEditingController();
+
   TextEditingController province = TextEditingController();
   TextEditingController district = TextEditingController();
   TextEditingController regency = TextEditingController();
   TextEditingController village = TextEditingController();
-  // User user = User();
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -40,7 +42,7 @@ class AuthController extends GetxController {
   ///   - Jika terjadi kesalahan selama permintaan HTTP atau pemrosesan data, fungsi ini akan melempar Exception.
 
   Future<void> signin(BuildContext context) async {
-    var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
+    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
 
     try {
       // expected to post http://localhost:5000/auth/signin
@@ -64,18 +66,13 @@ class AuthController extends GetxController {
 
           // save prefs attribut user from token
           Map<String, dynamic> session = JwtDecoder.decode(token);
-          print(session['user']);
-          // print(session['address']['id']);
 
           User.saveAuth(
-            session['user']['id'],
-            session['user']['name'],
-            session['user']['email'],
-            session['user']['phone_number'],
-            session['user']['address']['id'],
-            session['user']['role'],
-            session['user']['created_at'],
-            session['user']['updated_at'],
+            session['payload']['id'],
+            session['payload']['name'],
+            session['payload']['email'],
+            session['payload']['role'],
+            // session['payload']['updated_at'],
           );
 
           // go to homepage()
@@ -95,7 +92,6 @@ class AuthController extends GetxController {
           );
         }
       } else {
-        // print("status: " + response.statusCode.toString());
         Get.snackbar(
           "Email / Password Salah",
           'Periksa kembali email dan password anda',
@@ -107,13 +103,23 @@ class AuthController extends GetxController {
       // Get.back();
       Get.snackbar(
         "Login Gagal",
-        'Tidak Terhubung ke Server Aplikasi | $e',
+        '$e',
         colorText: Theme.of(context).primaryColor,
         margin: const EdgeInsets.all(20),
       );
     }
   }
 
+  /// Signs out the user and clears the token from shared preferences.
+  ///
+  /// This method removes the authentication token from the shared preferences,
+  /// effectively signing out the user. After signing out, the user is navigated
+  /// to the SignIn screen.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await signout();
+  /// ```
   Future<void> signout() async {
     final SharedPreferences prefs = await _prefs;
     prefs.remove('token');
@@ -121,17 +127,31 @@ class AuthController extends GetxController {
     Get.off(const SignIn());
   }
 
+  /// Melakukan proses pendaftaran pengguna baru.
+  ///
+  /// Method ini digunakan untuk melakukan proses pendaftaran pengguna baru
+  /// ke dalam aplikasi. Pengguna baru akan mengisi informasi seperti nama,
+  /// email, password, nomor telepon, dan alamat. Setelah pendaftaran berhasil,
+  /// pengguna akan diarahkan ke halaman SignIn.
+  ///
+  /// Parameter [context] digunakan untuk mendapatkan konteks dari widget yang
+  /// memanggil method ini.
+  ///
+  /// Contoh penggunaan:
+  /// ```dart
+  /// await signup(context);
+  /// ```
   Future<void> signup(BuildContext context) async {
-    var headers = {'Content-Type': 'application/json', 'x-api-key': API_KEY};
+    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
     try {
       var url = Uri.parse(Conn.baseUrl + Conn.endPoints.signup);
-      var address = province.text + '.' + district.text + '.' + regency.text + '.' + village.text;
+
       Map body = {
         'name': name.text,
         'email': email.text,
         'password': password.text,
         'phone_number': phone.text,
-        'address': '33.72.01.1005',
+        'address': village.text,
       };
 
       http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
@@ -145,6 +165,12 @@ class AuthController extends GetxController {
             colorText: Theme.of(context).primaryColor,
             margin: const EdgeInsets.all(20),
           );
+
+          province.clear();
+          regency.clear();
+          district.clear();
+          village.clear();
+
           Get.off(const SignIn());
         }
       } else {
