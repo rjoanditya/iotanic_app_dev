@@ -54,19 +54,20 @@ dependencies:
   get: ^4.6.5
   # flutter_bloc: ^8.1.2
   internet_connection_checker: ^1.0.0+1
+  intl: ^0.18.1
 
   # maps
   flutter_map: ^3.1.0
   geocoding: ^2.1.0
   tuple: ^2.0.1
   latlong2: ^0.8.1
-  positioned_tap_detector_2: ^1.0.0
   transparent_image: ^2.0.1
   async: ^2.1.0
   flutter_image: ^4.1.5
   vector_math: ^2.1.4
   proj4dart: ^2.1.0
   location: ^4.4.0
+  mockito: ^5.4.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  image_path: "public/assets/img/icon.png"
+  android: true
+  ios: true
+  min_sdk_android: 21
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
