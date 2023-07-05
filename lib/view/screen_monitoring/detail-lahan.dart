@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:iotanic_app_dev/controller/measurement_controller.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -60,7 +61,7 @@ class _DetailLahanState extends State<DetailLahan> {
 
     List<SplineSeries> generateSplineSeries(List<ChartData> chartData) {
       List<SplineSeries> splines = [];
-      for (int i = 0; i < chartData.first.y!.length; i++) {
+      for (int i = 0; i < legendItem.length; i++) {
         splines.add(
           SplineSeries<ChartData, String>(
             legendItemText: legendItem[i],
@@ -263,68 +264,6 @@ class _DetailLahanState extends State<DetailLahan> {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   width: screenWidth,
-                  //   height: screenHeight * 0.1,
-                  //   margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     children: [
-                  //       Card(
-                  //         elevation: 5,
-                  //         shadowColor: Colors.black26,
-                  //         child: SizedBox(
-                  //           width: screenWidth * 0.175,
-                  //           height: screenWidth * 0.175,
-                  //           child: Icon(
-                  //             Icons.safety_check,
-                  //             color: Theme.of(context).primaryColor,
-                  //             size: screenWidth * 0.065,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Card(
-                  //         elevation: 5,
-                  //         shadowColor: Colors.black26,
-                  //         child: SizedBox(
-                  //           width: screenWidth * 0.175,
-                  //           height: screenWidth * 0.175,
-                  //           child: Icon(
-                  //             Icons.access_alarm_rounded,
-                  //             color: Theme.of(context).primaryColor,
-                  //             size: screenWidth * 0.065,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Card(
-                  //         elevation: 5,
-                  //         shadowColor: Colors.black26,
-                  //         child: SizedBox(
-                  //           width: screenWidth * 0.175,
-                  //           height: screenWidth * 0.175,
-                  //           child: Icon(
-                  //             Icons.baby_changing_station_outlined,
-                  //             color: Theme.of(context).primaryColor,
-                  //             size: screenWidth * 0.065,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Card(
-                  //         elevation: 5,
-                  //         shadowColor: Colors.black26,
-                  //         child: SizedBox(
-                  //           width: screenWidth * 0.175,
-                  //           height: screenWidth * 0.175,
-                  //           child: Icon(
-                  //             Icons.kayaking_rounded,
-                  //             color: Theme.of(context).primaryColor,
-                  //             size: screenWidth * 0.065,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -398,7 +337,7 @@ class _DetailLahanState extends State<DetailLahan> {
                                                 style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                                               ),
                                               Text(
-                                                'Kamis, 12 Januari 2023',
+                                                DateFormat("EEE, d MMM yyyy HH:mm:ss").format(DateTime.parse(snapshot.data!['data'][index]['created_at'].toString())),
                                                 style: TextStyle(
                                                   color: Theme.of(context).primaryColor,
                                                   fontWeight: FontWeight.w400,
@@ -483,7 +422,7 @@ class WeatherScreen extends StatelessWidget {
                     flex: 4,
                     fit: FlexFit.tight,
                     child: Text(
-                      'Current Weather',
+                      'Cuaca Saat Ini',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -533,7 +472,7 @@ class WeatherScreen extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: Text(
-                    'Desc',
+                    'Desk',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -557,7 +496,7 @@ class WeatherScreen extends StatelessWidget {
                   flex: 3,
                   fit: FlexFit.tight,
                   child: Text(
-                    'Humidity',
+                    'Kelembaban',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -584,7 +523,7 @@ class WeatherScreen extends StatelessWidget {
                     flex: 2,
                     // fit: FlexFit.tight,
                     child: Text(
-                      'Visibility',
+                      'Jarak Pandang',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -608,7 +547,7 @@ class WeatherScreen extends StatelessWidget {
                     flex: 2,
                     fit: FlexFit.tight,
                     child: Text(
-                      'Winds',
+                      'Angin',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

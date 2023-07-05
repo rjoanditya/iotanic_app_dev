@@ -48,7 +48,8 @@ class Conditions {
   /// Note: The `Conditions` class must have a corresponding implementation with the necessary properties and methods to parse the JSON data received from the API response.
   ///
   static Future<Conditions> fetchRecord(String id) async {
-    String apiURL = "${Conn.baseUrl}${Conn.endPoints.record}/$id";
+    String baseUrl = await getApi();
+    String apiURL = "$baseUrl${Conn.endPoints.record}/$id";
 
     var apiResult = await http.get(Uri.parse(apiURL));
     var jsonObject = json.decode(apiResult.body);

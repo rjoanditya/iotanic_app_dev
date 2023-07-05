@@ -27,6 +27,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   AuthController loginController = Get.put(AuthController());
+  bool passwordVisible = true;
 
   var isLogin = false.obs;
   // TextEditingController email = TextEditingController();
@@ -39,8 +40,6 @@ class _SignInState extends State<SignIn> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     ThemeProvider themes = ThemeProvider();
-
-    bool passwordVisible = false;
 
     return Scaffold(
       body: SafeArea(
@@ -97,7 +96,7 @@ class _SignInState extends State<SignIn> {
                         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: TextFormField(
                           controller: loginController.password,
-                          obscureText: !passwordVisible,
+                          obscureText: passwordVisible,
                           autofocus: false,
                           style: TextStyle(color: Theme.of(context).primaryColor),
                           decoration: InputDecoration(
@@ -119,7 +118,11 @@ class _SignInState extends State<SignIn> {
                                 passwordVisible == true ? Icons.visibility_off : Icons.visibility,
                                 color: Theme.of(context).primaryColorLight,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisible = !passwordVisible;
+                                });
+                              },
                             ),
                           ),
                         ),

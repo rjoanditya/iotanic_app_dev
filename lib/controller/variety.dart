@@ -5,6 +5,8 @@ import '../constant.dart';
 import '../model/conn.dart';
 import '../model/variety.dart';
 import 'package:http/http.dart' as http;
+import '../service/jwt.dart';
+import '../service/api.dart';
 
 class VarietyController extends GetxController {
   /// Mengambil daftar varietas tanaman dari API.
@@ -21,9 +23,9 @@ class VarietyController extends GetxController {
   /// - Future<List<Variety>>: Daftar varietas tanaman dalam bentuk daftar objek Variety.
   static Future<List<Variety>> getVariety() async {
     // URL API static
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
-    var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.variety}');
-    http.Response response = await http.get(url, headers: headers);
+    String baseUrl = await getApi();
+    var url = Uri.parse('$baseUrl${Conn.endPoints.variety}');
+    http.Response response = await api.get(url);
 
     List<Variety> result = [];
     if (response.statusCode != 200) {

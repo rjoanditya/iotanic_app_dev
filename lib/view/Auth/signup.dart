@@ -16,6 +16,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  late bool passwordVisible = true;
+  late bool repasswordVisible = true;
   TextEditingController repassword = TextEditingController();
   AuthController signUpController = Get.put(AuthController());
   final _formSignupKey = GlobalKey<FormState>();
@@ -29,19 +31,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    signUpController.province.text = '0';
-    signUpController.regency.text = '0';
-    signUpController.district.text = '0';
-    // User? user;
-
     double screenWidth = MediaQuery.of(context).size.width;
-    // ThemeProvider themes = ThemeProvider();
-    // final List provinces = AddressController.provinces;
-    // Future<List<Map<String, dynamic>>> provinces = AddressController.getProvinces();
-    // List provinces = List.generate(3, (index) => provincesList);
-    bool passwordVisible = false;
-    bool repasswordVisible = false;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -74,7 +64,7 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           style: TextStyle(color: Theme.of(context).primaryColor),
                           controller: signUpController.name,
-                          obscureText: false,
+                          // obscureText: passwordVisible,
                           autofocus: false,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
@@ -173,7 +163,7 @@ class _SignUpState extends State<SignUp> {
                         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: TextFormField(
                           controller: signUpController.password,
-                          obscureText: !passwordVisible,
+                          obscureText: passwordVisible,
                           autofocus: false,
                           style: TextStyle(color: Theme.of(context).primaryColor),
                           decoration: InputDecoration(
@@ -195,7 +185,10 @@ class _SignUpState extends State<SignUp> {
                                 passwordVisible == true ? Icons.visibility_off : Icons.visibility,
                                 color: Theme.of(context).primaryColorLight.withOpacity(.6),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                passwordVisible = !passwordVisible;
+                                setState(() {});
+                              },
                             ),
                           ),
                         ),
@@ -206,7 +199,7 @@ class _SignUpState extends State<SignUp> {
                         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: TextFormField(
                           controller: repassword,
-                          obscureText: !repasswordVisible,
+                          obscureText: repasswordVisible,
                           autofocus: false,
                           style: TextStyle(color: Theme.of(context).primaryColor),
                           decoration: InputDecoration(
@@ -225,10 +218,13 @@ class _SignUpState extends State<SignUp> {
                             suffixIcon: IconButton(
                               padding: const EdgeInsets.only(right: 15),
                               icon: Icon(
-                                passwordVisible == true ? Icons.visibility_off : Icons.visibility,
+                                repasswordVisible == true ? Icons.visibility_off : Icons.visibility,
                                 color: Theme.of(context).primaryColorLight.withOpacity(.6),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                repasswordVisible = !repasswordVisible;
+                                setState(() {});
+                              },
                             ),
                           ),
                         ),
@@ -244,6 +240,7 @@ class _SignUpState extends State<SignUp> {
                         dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Provinsi'),
                         onChanged: (newValue) async {
                           signUpController.province.text = newValue.id;
+                          setState(() {});
                         },
                         asyncItems: (text) async {
                           return AddressController.getProvinces();
@@ -328,8 +325,10 @@ class _SignUpState extends State<SignUp> {
                         dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kabupaten'),
                         onChanged: (newValue) async {
                           signUpController.regency.text = newValue.id;
+                          setState(() {});
                         },
                         asyncItems: (text) async {
+                          print('id provinsi: ${signUpController.province.text}');
                           return AddressController.getRegencies(signUpController.province.text);
                         },
 
@@ -412,6 +411,7 @@ class _SignUpState extends State<SignUp> {
                         dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kecamatan'),
                         onChanged: (newValue) async {
                           signUpController.district.text = newValue.id;
+                          setState(() {});
                         },
                         asyncItems: (text) async {
                           return AddressController.getDistricts(signUpController.regency.text);
@@ -496,6 +496,7 @@ class _SignUpState extends State<SignUp> {
                         dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Desa'),
                         onChanged: (newValue) async {
                           signUpController.village.text = newValue.id;
+                          setState(() {});
                         },
                         asyncItems: (text) async {
                           return AddressController.getVillages(signUpController.district.text);

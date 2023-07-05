@@ -25,9 +25,12 @@ class DetailMeasurements extends StatefulWidget {
 }
 
 class _DetailMeasurementsState extends State<DetailMeasurements> {
-  var data = Get.arguments;
+  var arguments = Get.arguments;
+
   late final MapController _mapController;
+  late final bool isEmptyRecords = true;
   double _rotation = 0;
+  late final data = arguments['data'];
 
   // String _scanBarcode = 'Unknown';
   void initState() {
@@ -49,12 +52,20 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
 
   @override
   Widget build(BuildContext context) {
+    List<LatLng> pointPolygons = [];
+    // print('arguments : ${arguments['data']}');
+    if (arguments['polygon'] != []) {
+      pointPolygons = arguments['polygon'];
+    }
     Measurement measureC = Get.put(Measurement());
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double lat = (data['land']['location']['lat'] is double) ? data['land']['location']['lat'] : double.parse(data['land']['location']['lat']);
     double lon = (data['land']['location']['lon'] is double) ? data['land']['location']['lon'] : double.parse(data['land']['location']['lon']);
+    // print('Data: $data');
+
     LatLng point = LatLng(lat, lon);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -122,9 +133,10 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: FlutterMap(
+                        mapController: _mapController,
                         options: MapOptions(
                           center: point,
-                          zoom: 15,
+                          zoom: 16,
                           minZoom: 5,
                           maxZoom: 18,
                         ),
@@ -133,20 +145,27 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                             urlTemplate: ENDPOINT_MAPBOX,
                             userAgentPackageName: 'com.example.app',
                           ),
+                          CircleLayer(
+                            circles: [CircleMarker(point: point, radius: 500, useRadiusInMeter: true, color: Colors.blueAccent.withOpacity(.15), borderStrokeWidth: 0.5)],
+                          ),
+                          PolygonLayer(
+                            polygons: [Polygon(points: pointPolygons, isFilled: false, color: Theme.of(context).dialogBackgroundColor.withOpacity(.5))],
+                          ),
                           MarkerLayer(
                             markers: [
                               Marker(
-                                  width: 50,
-                                  height: 50,
-                                  point: point,
-                                  builder: (context) => Icon(
-                                        Icons.location_on,
-                                        color: Theme.of(context).splashColor,
-                                        size: 30,
-                                        shadows: [BoxShadow(color: Colors.black.withOpacity(.5), spreadRadius: 5, blurRadius: 7, offset: Offset(0, 4))],
-                                      ))
+                                width: 50,
+                                height: 50,
+                                point: point,
+                                builder: (context) => Icon(
+                                  Icons.location_on,
+                                  color: Theme.of(context).splashColor,
+                                  size: 30,
+                                  shadows: [BoxShadow(color: Colors.black.withOpacity(.5), spreadRadius: 5, blurRadius: 7, offset: const Offset(0, 4))],
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -303,103 +322,82 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
   }
 }
 
-class TableRecord extends StatelessWidget {
-  var data = Get.arguments;
+class TableRecord extends StatefulWidget {
+  TableRecord({super.key});
+
+  @override
+  State<TableRecord> createState() => _TableRecordState();
+}
+
+class _TableRecordState extends State<TableRecord> {
+  var arguments = Get.arguments;
+  late final data = arguments['records'];
+
   Record conditionController = Get.put(Record());
+
   @override
   Widget build(BuildContext context) {
     Record recordC = Get.put(Record());
-    return FutureBuilder(
-        future: recordC.fetchRecordsByMeasurementId('${data['id']}'),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          } else if (snapshot.hasData && snapshot.data!['records'] != null) {
-            return DataTable(
-                columns: <DataColumn>[
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'No',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'N',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'P',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'K',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'pH',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                ],
-                rows: List.generate(snapshot.data!['records'].length, (row) {
-                  return DataRow(
-                    cells: <DataCell>[
-                      DataCell(InkWell(
-                          onTap: () {
-                            dynamic id = snapshot.data!['records'][row]['_id'];
-                            conditionController.getConditionId(id, data);
-
-                            // Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                            //   return DetailRecords();
-                            // })));
-                          },
-                          child: Text('#${row + 1}', style: TextStyle(color: Theme.of(context).splashColor)))),
-                      DataCell(Text('${snapshot.data!['records'][row]['condition']['nitrogen']}', style: TextStyle(color: Theme.of(context).primaryColor))),
-                      DataCell(Text('${snapshot.data!['records'][row]['condition']['phosphorus']}', style: TextStyle(color: Theme.of(context).primaryColor))),
-                      DataCell(Text('${snapshot.data!['records'][row]['condition']['potassium']}', style: TextStyle(color: Theme.of(context).primaryColor))),
-                      DataCell(Text('${snapshot.data!['records'][row]['condition']['ph']}', style: TextStyle(color: Theme.of(context).primaryColor))),
-                    ],
-                  );
-                }));
-          } else if (snapshot.hasData && snapshot.data!['data'] == null) {
-            return const SizedBox(
-              height: 150,
-              child: Center(
-                  child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+    return SingleChildScrollView(
+      child: DataTable(
+          columns: <DataColumn>[
+            DataColumn(
+              label: Expanded(
                 child: Text(
-                  'Tidak ada data. Silahkan tambahkan pengukuran',
-                  textAlign: TextAlign.center,
+                  'No',
+                  style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
                 ),
-              )),
-            );
-          }
-          // By default, show a loading spinner.
-          return SizedBox(
-            width: 50,
-            height: 50,
-            child: LinearProgressIndicator(
-              color: Theme.of(context).primaryColorDark,
-              backgroundColor: Theme.of(context).splashColor,
+              ),
             ),
-          );
-        });
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'N',
+                  style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'P',
+                  style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'K',
+                  style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'pH',
+                  style: TextStyle(fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+          rows: List.generate(data.length, (row) {
+            return DataRow(
+              cells: <DataCell>[
+                DataCell(InkWell(
+                    onTap: () {
+                      dynamic id = data[row]['_id'];
+                      conditionController.getConditionId(id, arguments['data']);
+                    },
+                    child: Text('#${row + 1}', style: TextStyle(color: Theme.of(context).splashColor)))),
+                DataCell(Text('${data[row]['condition']['nitrogen']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                DataCell(Text('${data[row]['condition']['phosphorus']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                DataCell(Text('${data[row]['condition']['potassium']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+                DataCell(Text('${data[row]['condition']['ph']}', style: TextStyle(color: Theme.of(context).primaryColor))),
+              ],
+            );
+          })),
+    );
   }
 }

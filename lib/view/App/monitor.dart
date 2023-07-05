@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:iotanic_app_dev/view/Form/add_field.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-lahan.dart';
 
@@ -155,11 +156,13 @@ class LandList extends StatelessWidget {
                                       ),
                                       (snapshot.data!['data'][index]['updated_at'] == null)
                                           ? Text(
-                                              '${snapshot.data!['data'][index]['created_at']}',
+                                              DateFormat("EEE, d MMM yyyy HH:mm:ss").format(DateTime.parse(snapshot.data!['data'][index]['created_at'].toString())),
+                                              // '${snapshot.data!['data'][index]['created_at']}',
                                               style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w400),
                                             )
                                           : Text(
-                                              '${snapshot.data!['data'][index]['updated_at']}',
+                                              DateFormat("EEE, d MMM yyyy HH:mm:ss").format(DateTime.parse(snapshot.data!['data'][index]['updated_at'].toString())),
+                                              // '${snapshot.data!['data'][index]['updated_at']}',
                                               style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w400),
                                             ),
                                     ],

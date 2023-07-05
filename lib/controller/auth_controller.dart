@@ -9,6 +9,8 @@ import 'package:iotanic_app_dev/view/Auth/signin.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../service/jwt.dart';
+import '../service/api.dart';
 import '../constant.dart';
 import '../model/conn.dart';
 import '../model/user.dart';
@@ -41,26 +43,42 @@ class AuthController extends GetxController {
   /// Throws:
   ///   - Jika terjadi kesalahan selama permintaan HTTP atau pemrosesan data, fungsi ini akan melempar Exception.
 
-  Future<void> signin(BuildContext context) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+  // Future<void> signin() async {
+  //   final url = Conn.baseUrl + Conn.endPoints.signin; // Ganti dengan URL sign-in API yang sesuai
+  //   final body = {'email': email.text, 'password': password.text};
 
+  //   final response = await api.post(Uri.parse(url), body: body);
+  //   if (response.statusCode == 200) {
+  //     final token = jsonDecode(response.body)['token'];
+  //     await setToken(token);
+
+  //     print('Sign-in successful');
+  //   } else {
+  //     print('Sign-in failed');
+  //   }
+  // }
+
+  Future<void> signin(BuildContext context) async {
+    String baseUrl = await getApi();
     try {
       // expected to post http://localhost:5000/auth/signin
-      var url = Uri.parse(Conn.baseUrl + Conn.endPoints.signin);
+      var url = Uri.parse(baseUrl + Conn.endPoints.signin);
       Map body = {
         'email': email.text,
         'password': password.text,
       };
 
-      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
+      final response = await api.post(url, body: body);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         if (json['success'] == true) {
           var token = json['token'];
-          final SharedPreferences prefs = await _prefs;
 
-          await prefs.setString('token', token);
+          await setToken(token);
+          // final SharedPreferences prefs = await _prefs;
+
+          // await prefs.setString('token', token);
           email.clear();
           password.clear();
 
@@ -122,7 +140,7 @@ class AuthController extends GetxController {
   /// ```
   Future<void> signout() async {
     final SharedPreferences prefs = await _prefs;
-    prefs.remove('token');
+    await destroyToken();
 
     Get.off(const SignIn());
   }
@@ -142,9 +160,9 @@ class AuthController extends GetxController {
   /// await signup(context);
   /// ```
   Future<void> signup(BuildContext context) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse(Conn.baseUrl + Conn.endPoints.signup);
+      var url = Uri.parse(baseUrl + Conn.endPoints.signup);
 
       Map body = {
         'name': name.text,
@@ -154,7 +172,7 @@ class AuthController extends GetxController {
         'address': village.text,
       };
 
-      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
+      http.Response response = await api.post(url, body: jsonEncode(body));
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);

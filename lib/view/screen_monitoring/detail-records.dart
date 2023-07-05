@@ -9,109 +9,106 @@ class DetailRecords extends StatefulWidget {
   State<DetailRecords> createState() => _DetailRecordsState();
 }
 
-var data = Get.arguments;
-
 class _DetailRecordsState extends State<DetailRecords> {
+  var data = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Conditions.fetchRecord('6498f0386df1e5db4067f6c0'),
-      builder: (context, snapshot) => Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          toolbarHeight: 70,
-          iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          actions: [
-            InkWell(
-              onTap: () {},
-              child: Container(
-                margin: EdgeInsets.all(15),
-                padding: EdgeInsets.all(12),
-                height: 10,
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Theme.of(context).dialogBackgroundColor.withOpacity(.5),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 70,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        actions: [
+          InkWell(
+            onTap: () {},
+            child: Container(
+              margin: EdgeInsets.all(15),
+              padding: EdgeInsets.all(12),
+              height: 10,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(context).dialogBackgroundColor.withOpacity(.5),
+              ),
+              child: Text(
+                'IoTanic',
+                style: TextStyle(
+                  color: Theme.of(context).canvasColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
-                child: Text(
-                  '${data['data']['device']['id']}',
-                  style: TextStyle(
-                    color: Theme.of(context).canvasColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                textAlign: TextAlign.center,
               ),
             ),
-          ],
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Title
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'NPK PH',
-                        style: TextStyle(
-                          letterSpacing: 5,
-                          color: Theme.of(context).primaryColor,
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Title
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'NPK PH',
+                      style: TextStyle(
+                        letterSpacing: 5,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Text(
+                      'Tanaman Anda',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Nampak ',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Tanaman Anda',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                        Text(
+                          'Baik',
+                          style: TextStyle(
+                            color: Theme.of(context).unselectedWidgetColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Nampak ',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        Text(
+                          ' Hari Ini!',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
-                          Text(
-                            'Baik',
-                            style: TextStyle(
-                              color: Theme.of(context).unselectedWidgetColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            ' Hari Ini!',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                // RadialBarChart
-                dataCircularChart(context),
-                // Table
-                dataTable(context),
-                // Button
-                Container(),
-              ],
-            ),
+              ),
+              // RadialBarChart
+              dataCircularChart(context),
+              // Table
+              dataTable(context),
+              // Button
+              Container(),
+            ],
           ),
         ),
       ),
@@ -120,6 +117,9 @@ class _DetailRecordsState extends State<DetailRecords> {
 }
 
 Widget dataTable(BuildContext context) {
+  var arguments = Get.arguments;
+  var data = arguments;
+
   dynamic ideal = {
     'n': data['data']['variety']['optimal_condition']['nitrogen'],
     'p': data['data']['variety']['optimal_condition']['phosphorus'],
@@ -139,6 +139,7 @@ Widget dataTable(BuildContext context) {
     'k': double.parse(((1 - ((ideal['k'] - records['k']).abs() / ideal['k'])) * 100).toStringAsFixed(1)),
     'ph': double.parse(((1 - ((ideal['ph'] - records['ph']).abs() / ideal['ph'])) * 100).toStringAsFixed(1)),
   };
+
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
     child: Column(
@@ -200,10 +201,7 @@ Widget dataTable(BuildContext context) {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_up_rounded,
-                color: Colors.green,
-              ),
+              (records['n'] > ideal['n']) ? const Icon(Icons.arrow_drop_up_rounded, color: Colors.green) : const Icon(Icons.arrow_drop_down_rounded, color: Colors.red),
             ],
           ),
         ),
@@ -264,10 +262,7 @@ Widget dataTable(BuildContext context) {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_up_rounded,
-                color: Colors.green,
-              ),
+              (records['p'] > ideal['p']) ? const Icon(Icons.arrow_drop_up_rounded, color: Colors.green) : const Icon(Icons.arrow_drop_down_rounded, color: Colors.red),
             ],
           ),
         ),
@@ -327,10 +322,7 @@ Widget dataTable(BuildContext context) {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_up_rounded,
-                color: Colors.green,
-              ),
+              (records['k'] > ideal['k']) ? const Icon(Icons.arrow_drop_up_rounded, color: Colors.green) : const Icon(Icons.arrow_drop_down_rounded, color: Colors.red),
             ],
           ),
         ),
@@ -390,10 +382,7 @@ Widget dataTable(BuildContext context) {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_down_rounded,
-                color: Colors.red,
-              ),
+              (records['ph'] > ideal['ph']) ? const Icon(Icons.arrow_drop_up_rounded, color: Colors.green) : const Icon(Icons.arrow_drop_down_rounded, color: Colors.red),
             ],
           ),
         ),
@@ -403,6 +392,8 @@ Widget dataTable(BuildContext context) {
 }
 
 Widget dataCircularChart(BuildContext context) {
+  var arguments = Get.arguments;
+  var data = arguments;
   dynamic ideal = {
     'n': data['data']['variety']['optimal_condition']['nitrogen'],
     'p': data['data']['variety']['optimal_condition']['phosphorus'],

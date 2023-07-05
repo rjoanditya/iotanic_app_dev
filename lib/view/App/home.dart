@@ -18,10 +18,10 @@ class Home extends StatelessWidget {
     ];
 
     List categoryName = [
-      'Agriculture',
-      'Fertilizer',
-      'Market',
-      'Technology',
+      'Pertanian',
+      'Pupuk',
+      'Pemasaran',
+      'Teknologi',
     ];
     List categoryIcon = [
       Icons.agriculture_rounded,
@@ -126,10 +126,11 @@ class Home extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             height: 125,
-            child: ListView.builder(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                categoryName.length,
+                (index) {
                   return GestureDetector(
                     onTap: () {
                       AlertDialog alert = AlertDialog(
@@ -153,26 +154,16 @@ class Home extends StatelessWidget {
                     },
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                spreadRadius: 0.2,
-                                blurRadius: 3,
-                                offset: Offset(0, 0),
-                              )
-                            ],
-                          ),
-                          height: 60,
-                          width: 60,
-                          // padding: const EdgeInsets.all(20),
-                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.5),
-                          child: Icon(
-                            categoryIcon[index],
-                            color: Theme.of(context).primaryColorDark,
+                        Card(
+                          elevation: 5,
+                          shadowColor: Colors.black26,
+                          child: SizedBox(
+                            width: screenWidth * 0.175,
+                            height: screenWidth * 0.175,
+                            child: Icon(
+                              categoryIcon[index],
+                              color: Theme.of(context).primaryColorDark,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -186,11 +177,12 @@ class Home extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        //
                       ],
                     ),
                   );
-                }),
+                },
+              ),
+            ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
@@ -202,11 +194,12 @@ class Home extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(10),
-            height: 150,
-            child: ListView.builder(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
+            height: 125,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                categoryName.length,
+                (index) {
                   return GestureDetector(
                     onTap: () {
                       AlertDialog alert = AlertDialog(
@@ -230,31 +223,20 @@ class Home extends StatelessWidget {
                     },
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                spreadRadius: 0.2,
-                                blurRadius: 3,
-                                offset: Offset(0, 0),
-                              )
-                            ],
-                          ),
-                          height: 60,
-                          width: 60,
-                          // padding: const EdgeInsets.all(20),
-                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.5),
-                          child: Icon(
-                            appsIcon[index],
-                            color: Theme.of(context).primaryColorDark,
+                        Card(
+                          elevation: 5,
+                          shadowColor: Colors.black26,
+                          child: SizedBox(
+                            width: screenWidth * 0.175,
+                            height: screenWidth * 0.175,
+                            child: Icon(
+                              appsIcon[index],
+                              color: Theme.of(context).primaryColorDark,
+                            ),
                           ),
                         ),
                         SizedBox(
                           width: 80,
-                          height: 50,
                           child: Text(
                             appsName[index],
                             style: TextStyle(
@@ -264,11 +246,12 @@ class Home extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        // Text(topic[index]),
                       ],
                     ),
                   );
-                }),
+                },
+              ),
+            ),
           ),
         ]),
       )),

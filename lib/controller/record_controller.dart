@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../service/jwt.dart';
+import '../service/api.dart';
 import '../constant.dart';
 import '../model/conn.dart';
 import '../view/screen_monitoring/detail-records.dart';
@@ -28,10 +30,10 @@ class Record extends GetxController {
   ///   atau Map dengan kunci 'error' dan pesan kesalahan jika terjadi kesalahan.
 
   Future<Map<String, dynamic>> fetchRecordsByMeasurementId(id) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
       final jsonData = json.decode(response.body);
 
       // Mapping json menjadi Map
@@ -59,17 +61,19 @@ class Record extends GetxController {
   ///
   /// Returns:
   /// - Future: Tidak mengembalikan nilai (void).
-  Future getConditionId(id, data) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+  Future<void> getConditionId(id, data) async {
+    // var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
+    print('getCondition Data: $data');
     try {
       // expected to get http://localhost:5000/land/:id
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}/$id');
+      http.Response response = await api.get(url);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         Map<String, dynamic> jsonRecords = (json as Map<String, dynamic>);
-
+        print(jsonRecords);
         Get.to(DetailRecords(), arguments: {'data': data, 'condition': jsonRecords});
       }
     } catch (e) {

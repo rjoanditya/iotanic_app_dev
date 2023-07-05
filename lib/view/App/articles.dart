@@ -91,14 +91,14 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
             Container(
               margin: const EdgeInsets.only(left: 10),
               child: Text(
-                'Headlines',
+                'Artikel',
                 style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w600),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(left: 10),
               child: Text(
-                'January 21, 2023',
+                '2 Juli 2023',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 14,
@@ -224,7 +224,7 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Poppins',
                     ),
-                    unselectedLabelStyle: TextStyle(
+                    unselectedLabelStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                     ),
                     unselectedLabelColor: Theme.of(context).primaryColor,
@@ -243,110 +243,112 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
                               text: '${categories[index]['category_name']}',
                             )),
                   )),
-              Container(
+              SizedBox(
                 // padding: const EdgeInsets.symmetric(horizontal: 10),
                 // color: Colors.green,
                 width: screenWidth * 0.9,
-                height: screenHeight * .65,
+                height: screenHeight * .67,
                 child: TabBarView(
                   controller: _tabController,
                   children: List.generate(
                     categories.length,
                     (index) {
                       List articles = categories[index]['data'];
-                      return ListView(
-                        scrollDirection: Axis.vertical,
-                        children: List.generate(
-                          articles.length,
-                          (e) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                              height: screenHeight * 0.125,
-                              width: screenWidth * 0.9,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${categories[index]['category_name']}',
-                                          style: TextStyle(
-                                            color: Theme.of(context).primaryColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: screenWidth * 0.8,
-                                          child: Text(
-                                            '${categories[index]['data'][e]}',
-                                            maxLines: 2,
+                      return SingleChildScrollView(
+                        child: Column(
+                          // scrollDirection: Axis.vertical,
+                          children: List.generate(
+                            articles.length,
+                            (e) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                height: screenHeight * 0.125,
+                                width: screenWidth * 0.9,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${categories[index]['category_name']}',
                                             style: TextStyle(
                                               color: Theme.of(context).primaryColor,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: screenWidth * 0.35,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Icon(
-                                                Icons.date_range_rounded,
-                                                size: 12,
+                                          SizedBox(
+                                            width: screenWidth * 0.8,
+                                            child: Text(
+                                              '${categories[index]['data'][e]}',
+                                              maxLines: 2,
+                                              style: TextStyle(
                                                 color: Theme.of(context).primaryColor,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
                                               ),
-                                              Text(
-                                                '15 Mar 2023',
-                                                style: TextStyle(
-                                                  color: Theme.of(context).primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.comment_rounded,
-                                                size: 12,
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                              Text(
-                                                '23',
-                                                style: TextStyle(
-                                                  color: Theme.of(context).primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
-                                        )
-                                      ],
+                                          SizedBox(
+                                            width: screenWidth * 0.35,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Icon(
+                                                  Icons.date_range_rounded,
+                                                  size: 12,
+                                                  color: Theme.of(context).primaryColor,
+                                                ),
+                                                Text(
+                                                  '15 Mar 2023',
+                                                  style: TextStyle(
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.comment_rounded,
+                                                  size: 12,
+                                                  color: Theme.of(context).primaryColor,
+                                                ),
+                                                Text(
+                                                  '23',
+                                                  style: TextStyle(
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.all(5),
-                                    width: screenWidth * 0.15,
-                                    height: screenWidth * 0.15,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    Container(
+                                      margin: const EdgeInsets.all(5),
+                                      width: screenWidth * 0.15,
+                                      height: screenWidth * 0.15,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      ),
+                                      child: const Image(
+                                        image: AssetImage('public/assets/img/artikel.png'),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    child: const Image(
-                                      image: AssetImage('public/assets/img/artikel.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },

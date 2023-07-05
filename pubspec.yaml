@@ -48,6 +48,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.2.1
+  flutter_windowmanager: ^0.2.0
 
   # mvvm
   http: ^0.13.5

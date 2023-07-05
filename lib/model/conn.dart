@@ -2,7 +2,8 @@ import '../constant.dart';
 
 class Conn {
   // static final String baseUrl = API_URL;
-  static const String baseUrl = API_URL;
+
+  // static String baseUrl = await getApi();
   static Routes endPoints = Routes();
 }
 

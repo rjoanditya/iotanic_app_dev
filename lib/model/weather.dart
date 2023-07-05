@@ -22,7 +22,7 @@ import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
 /// var weatherData = await fetchWeather(latitude, longitude);
 Future<Map<String, dynamic>> fetchWeather(lat, lon) async {
   const apiKey = API_KEY_WEATHER;
-  final url = 'https://api.openweathermap.org/data/2.5/weather?lon=$lon&lat=$lat&units=metric&appid=$apiKey';
+  final url = 'https://api.openweathermap.org/data/2.5/weather?lon=$lon&lat=$lat&units=metric&appid=$apiKey&lang=id';
 
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ Future<Map<String, dynamic>> fetchWeather(lat, lon) async {
 /// var forecastData = await fetchForecast(longitude, latitude);
 Future<Map<String, dynamic>> fetchForecast(lon, lat) async {
   const apiKey = API_KEY_WEATHER;
-  final url = 'https://api.openweathermap.org/data/2.5/forecast?lon=$lon&lat=$lat&cnt=40&units=metric&appid=$apiKey';
+  final url = 'https://api.openweathermap.org/data/2.5/forecast?lon=$lon&lat=$lat&cnt=40&units=metric&appid=$apiKey&lang=id';
 
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {

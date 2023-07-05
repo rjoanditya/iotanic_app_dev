@@ -38,13 +38,13 @@ class _ChartDetailState extends State<ChartDetail> {
       kData = kChart;
       phData = phChart;
     });
-    {}
   }
 
-  final List legend = ['Ideal', 'Pengukuran', '', '', ''];
+  final List legend = ['Ideal', 'Pengukuran'];
 
   @override
   Widget build(BuildContext context) {
+    print(data['id']);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -67,7 +67,7 @@ class _ChartDetailState extends State<ChartDetail> {
 
     List<SplineAreaSeries> generatePhosphorusSeries(List<ChartData> pData) {
       List<SplineAreaSeries> splines = [];
-      for (int i = 0; i < pData.first.y!.length; i++) {
+      for (int i = 0; i < legend.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
@@ -84,7 +84,7 @@ class _ChartDetailState extends State<ChartDetail> {
 
     List<SplineAreaSeries> generatePottasiumSeries(List<ChartData> kData) {
       List<SplineAreaSeries> splines = [];
-      for (int i = 0; i < kData.first.y!.length; i++) {
+      for (int i = 0; i < legend.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
@@ -101,7 +101,7 @@ class _ChartDetailState extends State<ChartDetail> {
 
     List<SplineAreaSeries> generatepHSeries(List<ChartData> phData) {
       List<SplineAreaSeries> splines = [];
-      for (int i = 0; i < phData.first.y!.length; i++) {
+      for (int i = 0; i < legend.length; i++) {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],

@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-measurements.dart';
+import 'package:latlong2/latlong.dart';
 
+import 'record_controller.dart';
 import '../constant.dart';
 import '../model/conn.dart';
 import '../model/user.dart';
 import 'land_controller.dart';
+import '../service/jwt.dart';
+import '../service/api.dart';
 
 class Measurement extends GetxController {
   User user = Get.put(User());
@@ -39,11 +43,11 @@ class Measurement extends GetxController {
 
   Future<Map> getMeasurements(dynamic landId) async {
     var land_id = landId;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to get http://localhost:5000/land/?user_id={user_id}
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$land_id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$land_id');
+      http.Response response = await api.get(url);
       final jsonData = json.decode(response.body);
 
       // Mapping json menjadi Map
@@ -74,17 +78,28 @@ class Measurement extends GetxController {
   /// Returns:
   /// - Future<void>: Tidak ada nilai yang dikembalikan.
   Future<void> getMeasurementById(id) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
+    Record measurec = Record();
+    Map recordsData = await measurec.fetchRecordsByMeasurementId(id);
+    print(recordsData);
+    List<LatLng> polygon = [];
+    List record = [];
+
+    for (var data in recordsData['records']) {
+      polygon.add(LatLng(data['location']['lat'], data['location']['lon']));
+      record.add(data);
+    }
+
     try {
       // expected to get http://localhost:5000/land/:id
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}/$id');
+      http.Response response = await api.get(url);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         Map<String, dynamic> data = (json as Map<String, dynamic>);
-
-        Get.to(DetailMeasurements(), arguments: data);
+        print('record :$record');
+        Get.to(DetailMeasurements(), arguments: {'data': data, 'polygon': polygon, 'records': record});
       }
     } catch (e) {
       print(e);
@@ -116,15 +131,15 @@ class Measurement extends GetxController {
   Future<void> createMeasurement(BuildContext context, landId) async {
     var land_id = landId;
     userId.text = await user.getUser('id');
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to post http://localhost:5000/measurement/
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}');
       Map body = {
         'user_id': userId.text,
         'land_id': land_id,
       };
-      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
+      http.Response response = await api.post(url, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
         final json = jsonDecode(response.body);
@@ -166,15 +181,15 @@ class Measurement extends GetxController {
   /// Returns:
   /// - Future<void>: Tidak ada nilai yang dikembalikan.
   Future<void> connectToDevice(var measurementId) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to patch http://localhost:5000/measurement/:id
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}/$measurementId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}/$measurementId');
       Map body = {
         'device_id': deviceId.text,
         'condition': 'start',
       };
-      http.Response response = await http.patch(url, body: jsonEncode(body), headers: headers);
+      http.Response response = await api.patch(url, body: jsonEncode(body));
       if (response.statusCode == 200) {
         Get.snackbar('Berhasil Menautkan', 'Perangkat berhasil tertaut');
       } else {
@@ -204,15 +219,15 @@ class Measurement extends GetxController {
 
   Future<void> disconnectToDevice(var measurementId, deviceId) async {
     // deviceId.text = 'feacf04c-a4';
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to patch http://localhost:5000/measurement/:id
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}/$measurementId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}/$measurementId');
       Map body = {
         'device_id': deviceId,
         'condition': 'end',
       };
-      http.Response response = await http.patch(url, body: jsonEncode(body), headers: headers);
+      http.Response response = await api.patch(url, body: jsonEncode(body));
     } catch (e) {
       print(e);
     }

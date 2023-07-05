@@ -1,7 +1,13 @@
+import 'dart:io';
+// import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../service/jwt.dart';
+import '../service/api.dart';
 
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter/services.dart';
@@ -15,18 +21,32 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  dynamic token = await getToken();
+
   runApp(ChangeNotifierProvider(
     child: const MyApp(),
     create: (BuildContext context) => ThemeProvider(
       isDarkMode: prefs.getBool("isDarkTheme") ?? false,
     ),
   ));
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    if (Platform.isAndroid) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+  });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
+  // final  token = prefs.get(TOKEN_KEY);
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
@@ -35,7 +55,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'IoTanic | Precision Farming',
           theme: themeProvider.getThemes,
-          home: const Splash(),
+          home: Splash(),
         );
       },
     );

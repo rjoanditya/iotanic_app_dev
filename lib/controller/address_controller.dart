@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../service/jwt.dart';
+import '../service/api.dart';
 import '../model/address.dart';
 import '../model/conn.dart';
 import '../constant.dart';
@@ -27,9 +29,9 @@ class AddressController extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat mengambil data dari API.
   static Future<List<Province>> getProvinces() async {
     // URL API static
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
-    var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.address}?search=province');
-    http.Response response = await http.get(url, headers: headers);
+    String baseUrl = await getApi();
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=province');
+    http.Response response = await api.get(url);
     List<Province> result = [];
 
     // Parsing data dari JSON ke list of Map
@@ -63,9 +65,11 @@ class AddressController extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat mengambil data dari API.
   static Future<List<Regency>> getRegencies(idProvince) async {
     // URL API static
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
-    var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.address}?search=district&id=$idProvince');
-    http.Response response = await http.get(url, headers: headers);
+    // var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=district&id=$idProvince');
+    print('kabupaten : $url');
+    http.Response response = await api.get(url);
     List<Regency> result = [];
     if (response.statusCode != 200) {
       return result;
@@ -101,9 +105,9 @@ class AddressController extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat mengambil data dari API.
   static Future<List<District>> getDistricts(idRegency) async {
     // URL API static
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
-    var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.address}?search=regency&id=$idRegency');
-    http.Response response = await http.get(url, headers: headers);
+    String baseUrl = await getApi();
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=regency&id=$idRegency');
+    http.Response response = await api.get(url);
     List<District> result = [];
     if (response.statusCode != 200) {
       return result;
@@ -140,9 +144,9 @@ class AddressController extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat mengambil data dari API.
   static Future<List<Village>> getVillages(idDistrict) async {
     // URL API static
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
-    var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.address}?search=village&id=$idDistrict');
-    http.Response response = await http.get(url, headers: headers);
+    String baseUrl = await getApi();
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=village&id=$idDistrict');
+    http.Response response = await api.get(url);
     List<Village> result = [];
     if (response.statusCode != 200) {
       return result;

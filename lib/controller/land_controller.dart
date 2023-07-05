@@ -10,6 +10,8 @@ import '../constant.dart';
 import '../../model/chartData.dart';
 import '../model/conn.dart';
 import '../model/user.dart';
+import '../service/jwt.dart';
+import '../service/api.dart';
 
 class Land extends GetxController {
   // Inisiasi text editing controller untuk form menambahkan lahan
@@ -42,13 +44,15 @@ class Land extends GetxController {
   ///   - Jika terjadi kesalahan selama permintaan HTTP atau pemrosesan data, fungsi ini akan melempar Exception.
   Future<Map> getLand() async {
     var user_id = await user.getUser('id');
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
+    print(TOKEN);
+    print(API_KEY);
 
     try {
       // expected to get http://localhost:5000/land/?user_id={user_id}
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.land}?user_id=$user_id');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.land}?user_id=$user_id');
 
-      http.Response response = await http.get(url, headers: headers);
+      http.Response response = await api.get(url);
 
       final jsonData = json.decode(response.body);
 
@@ -79,11 +83,11 @@ class Land extends GetxController {
   /// Throws:
   /// - `Exception`: Jika terjadi kesalahan saat mengambil data dari API.
   Future<void> getLandById(id) async {
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to get http://localhost:5000/land/:id
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.land}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.land}/$id');
+      http.Response response = await api.get(url);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -117,10 +121,10 @@ class Land extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat membuat data lahan.
   Future<void> createLand(BuildContext context) async {
     userId.text = await user.getUser('id');
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
       // expected to get http://localhost:5000/land/
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.land}');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.land}');
       Map body = {
         "name": name.text,
         "user_id": userId.text,
@@ -130,7 +134,7 @@ class Land extends GetxController {
         "location": {"lat": lat.text, "lon": lon.text}
       };
 
-      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
+      http.Response response = await api.post(url, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
         final json = jsonDecode(response.body);
@@ -186,15 +190,15 @@ class Land extends GetxController {
   ///   akan kosong.
   Future<List<dynamic>> calculateAverages(id) async {
     List averages = [];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     // Calculate averages
     double avgN = 0;
     double avgP = 0;
     double avgK = 0;
     double avgPH = 0;
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return averages;
@@ -234,10 +238,10 @@ class Land extends GetxController {
 
   Future<double> nitrogenAverages(id) async {
     double result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -266,10 +270,10 @@ class Land extends GetxController {
 
   Future<double> phosporusAverages(id) async {
     double result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -298,10 +302,10 @@ class Land extends GetxController {
 
   Future<double> potassiumAverages(id) async {
     double result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -330,10 +334,10 @@ class Land extends GetxController {
 
   Future<double> phAverages(id) async {
     double result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.record}?measurementId=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.record}?measurementId=$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -389,10 +393,10 @@ class Land extends GetxController {
     List<ChartData> result = [
       ChartData(1, [0, 0, 0, 0]),
     ];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -438,10 +442,10 @@ class Land extends GetxController {
     List<ChartData> result = [
       ChartData(1, [0, 0]),
     ];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$landId');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return result;
@@ -489,10 +493,10 @@ class Land extends GetxController {
     List<ChartData> result = [
       ChartData(1, [0, 0]),
     ];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$landId');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return result;
@@ -539,10 +543,10 @@ class Land extends GetxController {
     List<ChartData> result = [
       ChartData(1, [0, 0]),
     ];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$landId');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return result;
@@ -589,10 +593,10 @@ class Land extends GetxController {
     List<ChartData> result = [
       ChartData(1, [0, 0]),
     ];
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.measurement}?land_id=$landId');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return result;
@@ -633,10 +637,10 @@ class Land extends GetxController {
   ///   Jika terjadi kesalahan, nilai yang dikembalikan akan berupa 0.
   Future<int> optimalNitrogen(id) async {
     int result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.variety}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.variety}/$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -675,10 +679,10 @@ class Land extends GetxController {
 
   Future<int> optimalPhosporus(id) async {
     int result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.variety}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.variety}/$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -717,10 +721,10 @@ class Land extends GetxController {
 
   Future<int> optimalPotassium(id) async {
     int result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.variety}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.variety}/$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
@@ -759,10 +763,10 @@ class Land extends GetxController {
 
   Future<int> optimalPH(id) async {
     int result = 0;
-    var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
+    String baseUrl = await getApi();
     try {
-      var url = Uri.parse('${Conn.baseUrl}${Conn.endPoints.variety}/$id');
-      http.Response response = await http.get(url, headers: headers);
+      var url = Uri.parse('$baseUrl${Conn.endPoints.variety}/$id');
+      http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
       }
