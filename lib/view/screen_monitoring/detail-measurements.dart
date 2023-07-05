@@ -149,7 +149,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                             circles: [CircleMarker(point: point, radius: 500, useRadiusInMeter: true, color: Colors.blueAccent.withOpacity(.15), borderStrokeWidth: 0.5)],
                           ),
                           PolygonLayer(
-                            polygons: [Polygon(points: pointPolygons, isFilled: false, color: Theme.of(context).dialogBackgroundColor.withOpacity(.5))],
+                            polygons: [Polygon(points: pointPolygons, isFilled: true, color: Theme.of(context).dialogBackgroundColor.withOpacity(.5))],
                           ),
                           MarkerLayer(
                             markers: [
