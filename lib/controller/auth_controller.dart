@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'dart:async';
@@ -76,6 +78,7 @@ class AuthController extends GetxController {
           var token = json['token'];
 
           await setToken(token);
+          print(await getToken());
           // final SharedPreferences prefs = await _prefs;
 
           // await prefs.setString('token', token);
@@ -172,7 +175,7 @@ class AuthController extends GetxController {
         'address': village.text,
       };
 
-      http.Response response = await api.post(url, body: jsonEncode(body));
+      http.Response response = await api.post(url, body: body);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);

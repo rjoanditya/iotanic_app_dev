@@ -237,7 +237,12 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: const BorderRadius.all(Radius.circular(12)),
                       ),
                       child: DropdownSearch<dynamic>(
-                        dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Provinsi'),
+                        dropdownBuilder: (context, selectedItem) => Text(
+                          selectedItem?.name ?? 'Pilih Provinsi',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         onChanged: (newValue) async {
                           signUpController.province.text = newValue.id;
                           setState(() {});
@@ -322,7 +327,12 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: const BorderRadius.all(Radius.circular(12)),
                       ),
                       child: DropdownSearch<dynamic>(
-                        dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kabupaten'),
+                        dropdownBuilder: (context, selectedItem) => Text(
+                          selectedItem?.name ?? 'Pilih Kabupaten',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         onChanged: (newValue) async {
                           signUpController.regency.text = newValue.id;
                           setState(() {});
@@ -408,7 +418,12 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: const BorderRadius.all(Radius.circular(12)),
                       ),
                       child: DropdownSearch<dynamic>(
-                        dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kecamatan'),
+                        dropdownBuilder: (context, selectedItem) => Text(
+                          selectedItem?.name ?? 'Pilih Kecamatan',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         onChanged: (newValue) async {
                           signUpController.district.text = newValue.id;
                           setState(() {});
@@ -493,7 +508,12 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: const BorderRadius.all(Radius.circular(12)),
                       ),
                       child: DropdownSearch<dynamic>(
-                        dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Desa'),
+                        dropdownBuilder: (context, selectedItem) => Text(
+                          selectedItem?.name ?? 'Pilih Desa',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         onChanged: (newValue) async {
                           signUpController.village.text = newValue.id;
                           setState(() {});
