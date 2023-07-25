@@ -77,104 +77,104 @@ class _AddFieldState extends State<AddField> {
                           controller: landC.name,
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 7.5),
-                        child: DropdownSearch<dynamic>(
-                          asyncItems: (text) {
-                            return VarietyController.getVariety();
-                          },
-                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Tanaman'),
-                          onChanged: (newValue) async {
-                            landC.varietyId.text = newValue.id;
-                          },
-                          popupProps: PopupProps.bottomSheet(
-                            itemBuilder: (context, item, isSelected) {
-                              return Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                child: Text(
-                                  item.name ?? "",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              );
-                            },
-                            title: Container(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Text(
-                                'Pilih Jenis Tanaman yang tersedia',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            showSearchBox: true,
-                            searchFieldProps: TextFieldProps(
-                              controller: landC.varietyId,
-                              focusNode: FocusNode(),
-                              padding: const EdgeInsets.all(20),
-                              style: TextStyle(color: Theme.of(context).primaryColor),
-                              decoration: InputDecoration(
-                                  hintText: 'Cari Tanaman',
-                                  hintStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    // gapPadding: 17.0,
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight: screenHeight * 0.065,
-                                  )),
-                            ),
-                            bottomSheetProps: BottomSheetProps(
-                              elevation: 10,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-                              ),
-                              backgroundColor: Theme.of(context).highlightColor,
-                            ),
-                            listViewProps: const ListViewProps(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                            ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
+                      // Container(
+                      //   margin: const EdgeInsets.symmetric(vertical: 7.5),
+                      //   child: DropdownSearch<dynamic>(
+                      //     asyncItems: (text) {
+                      //       return VarietyController.getVariety();
+                      //     },
+                      //     dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Tanaman'),
+                      //     onChanged: (newValue) async {
+                      //       landC.varietyId.text = newValue.id;
+                      //     },
+                      //     popupProps: PopupProps.bottomSheet(
+                      //       itemBuilder: (context, item, isSelected) {
+                      //         return Container(
+                      //           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      //           child: Text(
+                      //             item.name ?? "",
+                      //             style: TextStyle(
+                      //               color: Theme.of(context).primaryColor,
+                      //             ),
+                      //           ),
+                      //         );
+                      //       },
+                      //       title: Container(
+                      //         padding: const EdgeInsets.only(top: 20),
+                      //         child: Text(
+                      //           'Pilih Jenis Tanaman yang tersedia',
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //             color: Theme.of(context).primaryColor,
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w600,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       showSearchBox: true,
+                      //       searchFieldProps: TextFieldProps(
+                      //         controller: landC.varietyId,
+                      //         focusNode: FocusNode(),
+                      //         padding: const EdgeInsets.all(20),
+                      //         style: TextStyle(color: Theme.of(context).primaryColor),
+                      //         decoration: InputDecoration(
+                      //             hintText: 'Cari Tanaman',
+                      //             hintStyle: TextStyle(
+                      //               color: Theme.of(context).primaryColor,
+                      //             ),
+                      //             focusedBorder: OutlineInputBorder(
+                      //               // gapPadding: 17.0,
+                      //               borderRadius: BorderRadius.circular(10),
+                      //               borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                      //             ),
+                      //             enabledBorder: OutlineInputBorder(
+                      //               // gapPadding: 17.0,
+                      //               borderRadius: BorderRadius.circular(10),
+                      //               borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                      //             ),
+                      //             constraints: BoxConstraints(
+                      //               maxHeight: screenHeight * 0.065,
+                      //             )),
+                      //       ),
+                      //       bottomSheetProps: BottomSheetProps(
+                      //         elevation: 10,
+                      //         shape: const RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                      //         ),
+                      //         backgroundColor: Theme.of(context).highlightColor,
+                      //       ),
+                      //       listViewProps: const ListViewProps(
+                      //         padding: EdgeInsets.symmetric(horizontal: 20),
+                      //       ),
+                      //       fit: FlexFit.loose,
+                      //       constraints: BoxConstraints(maxHeight: screenHeight * 0.6),
 
-                            // itemBuilder: listItem,
-                          ),
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            baseStyle: TextStyle(color: Theme.of(context).primaryColor),
-                            dropdownSearchDecoration: InputDecoration(
-                              label: Text(
-                                'Jenis Tanaman',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              suffixIconColor: Theme.of(context).primaryColorDark,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
-                              ),
-                              constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
-                            ),
-                          ),
-                        ),
-                      ),
+                      //       // itemBuilder: listItem,
+                      //     ),
+                      //     dropdownDecoratorProps: DropDownDecoratorProps(
+                      //       baseStyle: TextStyle(color: Theme.of(context).primaryColor),
+                      //       dropdownSearchDecoration: InputDecoration(
+                      //         label: Text(
+                      //           'Jenis Tanaman',
+                      //           style: TextStyle(
+                      //             color: Theme.of(context).primaryColor,
+                      //             fontSize: 14,
+                      //           ),
+                      //         ),
+                      //         suffixIconColor: Theme.of(context).primaryColorDark,
+                      //         focusedBorder: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(10),
+                      //           borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                      //         ),
+                      //         enabledBorder: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(10),
+                      //           borderSide: BorderSide(color: Theme.of(context).primaryColorDark),
+                      //         ),
+                      //         constraints: BoxConstraints(maxHeight: screenHeight * 0.08),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 7.5),
                         child: TextFormField(
@@ -239,7 +239,14 @@ class _AddFieldState extends State<AddField> {
                           borderRadius: const BorderRadius.all(Radius.circular(12)),
                         ),
                         child: DropdownSearch<dynamic>(
-                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Provinsi'),
+                          dropdownBuilder: (context, selectedItem) {
+                            return Text(
+                              selectedItem?.name ?? 'Pilih Provinsi',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          },
                           onChanged: (newValue) async {
                             landC.province.text = newValue.id;
                           },
@@ -321,7 +328,12 @@ class _AddFieldState extends State<AddField> {
                           borderRadius: const BorderRadius.all(Radius.circular(12)),
                         ),
                         child: DropdownSearch<dynamic>(
-                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kabupaten'),
+                          dropdownBuilder: (context, selectedItem) => Text(
+                            selectedItem?.name ?? 'Pilih Kabupaten',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                           onChanged: (newValue) async {
                             landC.regency.text = newValue.id;
                           },
@@ -402,7 +414,12 @@ class _AddFieldState extends State<AddField> {
                           borderRadius: const BorderRadius.all(Radius.circular(12)),
                         ),
                         child: DropdownSearch<dynamic>(
-                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Kecamatan'),
+                          dropdownBuilder: (context, selectedItem) => Text(
+                            selectedItem?.name ?? 'Pilih Kecamatan',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                           onChanged: (newValue) async {
                             landC.district.text = newValue.id;
                           },
@@ -483,7 +500,12 @@ class _AddFieldState extends State<AddField> {
                           borderRadius: const BorderRadius.all(Radius.circular(12)),
                         ),
                         child: DropdownSearch<dynamic>(
-                          dropdownBuilder: (context, selectedItem) => Text(selectedItem?.name ?? 'Pilih Desa'),
+                          dropdownBuilder: (context, selectedItem) => Text(
+                            selectedItem?.name ?? 'Pilih Desa',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                           onChanged: (newValue) async {
                             landC.village.text = newValue.id;
                           },

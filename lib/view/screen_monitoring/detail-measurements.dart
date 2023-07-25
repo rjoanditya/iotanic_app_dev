@@ -18,7 +18,7 @@ enum _MenuValues {
 }
 
 class DetailMeasurements extends StatefulWidget {
-  // const DetailMeasurements({super.key});
+  const DetailMeasurements({super.key});
 
   @override
   State<DetailMeasurements> createState() => _DetailMeasurementsState();
@@ -26,16 +26,23 @@ class DetailMeasurements extends StatefulWidget {
 
 class _DetailMeasurementsState extends State<DetailMeasurements> {
   var arguments = Get.arguments;
-
   late final MapController _mapController;
+  late bool isConnected = true;
   late final bool isEmptyRecords = true;
   double _rotation = 0;
   late final data = arguments['data'];
 
   // String _scanBarcode = 'Unknown';
+  @override
   void initState() {
     super.initState();
     _mapController = MapController();
+    if (data['device'] == null || data['end'] != null) {
+      print('object');
+      isConnected = false;
+      setState(() {});
+      print('isConnected $isConnected');
+    }
   }
 
 // scannnn
@@ -45,6 +52,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
     String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
 
     setState(() {
+      isConnected = true;
       measureC.deviceId.text = barcodeScanResult;
     });
     measureC.connectToDevice(data['id']);
@@ -52,6 +60,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
 
   @override
   Widget build(BuildContext context) {
+    print(isConnected);
     List<LatLng> pointPolygons = [];
     // print('arguments : ${arguments['data']}');
     if (arguments['polygon'] != []) {
@@ -67,166 +76,117 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
     LatLng point = LatLng(lat, lon);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 80,
-        backgroundColor: Theme.of(context).canvasColor,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(left: 5),
-              child: Text(
-                "MID-${data['id']}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          elevation: 0,
+          toolbarHeight: 80,
+          backgroundColor: Theme.of(context).canvasColor,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 5),
+                child: Text(
+                  "MID-${data['id']}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 5),
-              child: Text(
-                "${data['land']['name']}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+              Container(
+                margin: const EdgeInsets.only(left: 5),
+                child: Text(
+                  "${data['land']['name']}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.18,
-              decoration: BoxDecoration(
-                color: Theme.of(context).unselectedWidgetColor,
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                width: screenWidth,
+                height: screenHeight * 0.18,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).unselectedWidgetColor,
+                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
+                ),
               ),
-            ),
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.175,
-              decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(60), bottomRight: Radius.circular(60)),
+              Container(
+                width: screenWidth,
+                height: screenHeight * 0.175,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor,
+                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(60), bottomRight: Radius.circular(60)),
+                ),
               ),
-            ),
-            Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: screenHeight * 0.25,
-                      width: screenWidth * 0.8,
-                      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Theme.of(context).dialogBackgroundColor, width: 5, strokeAlign: BorderSide.strokeAlignOutside),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: FlutterMap(
-                        mapController: _mapController,
-                        options: MapOptions(
-                          center: point,
-                          zoom: 16,
-                          minZoom: 5,
-                          maxZoom: 18,
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: screenHeight * 0.25,
+                        width: screenWidth * 0.8,
+                        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Theme.of(context).dialogBackgroundColor, width: 5, strokeAlign: BorderSide.strokeAlignOutside),
                         ),
-                        children: [
-                          TileLayer(
-                            urlTemplate: ENDPOINT_MAPBOX,
-                            userAgentPackageName: 'com.example.app',
+                        clipBehavior: Clip.antiAlias,
+                        child: FlutterMap(
+                          mapController: _mapController,
+                          options: MapOptions(
+                            center: point,
+                            zoom: 16,
+                            minZoom: 5,
+                            maxZoom: 18,
                           ),
-                          CircleLayer(
-                            circles: [CircleMarker(point: point, radius: 500, useRadiusInMeter: true, color: Colors.blueAccent.withOpacity(.15), borderStrokeWidth: 0.5)],
-                          ),
-                          PolygonLayer(
-                            polygons: [Polygon(points: pointPolygons, isFilled: true, color: Theme.of(context).dialogBackgroundColor.withOpacity(.5))],
-                          ),
-                          MarkerLayer(
-                            markers: [
-                              Marker(
-                                width: 50,
-                                height: 50,
-                                point: point,
-                                builder: (context) => Icon(
-                                  Icons.location_on,
-                                  color: Theme.of(context).splashColor,
-                                  size: 30,
-                                  shadows: [BoxShadow(color: Colors.black.withOpacity(.5), spreadRadius: 5, blurRadius: 7, offset: const Offset(0, 4))],
+                          children: [
+                            TileLayer(
+                              urlTemplate: ENDPOINT_MAPBOX,
+                              userAgentPackageName: 'com.example.app',
+                            ),
+                            CircleLayer(
+                              circles: [CircleMarker(point: point, radius: 500, useRadiusInMeter: true, color: Colors.blueAccent.withOpacity(.15), borderStrokeWidth: 0.5)],
+                            ),
+                            PolygonLayer(
+                              polygons: [Polygon(points: pointPolygons, isFilled: true, color: Theme.of(context).dialogBackgroundColor.withOpacity(.5))],
+                            ),
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  width: 50,
+                                  height: 50,
+                                  point: point,
+                                  builder: (context) => Icon(
+                                    Icons.location_on,
+                                    color: Theme.of(context).splashColor,
+                                    size: 30,
+                                    shadows: [BoxShadow(color: Colors.black.withOpacity(.5), spreadRadius: 5, blurRadius: 7, offset: const Offset(0, 4))],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: screenWidth,
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      child: (data['device'] == null || data['end'] != null)
-                          ? Card(
-                              elevation: 5,
-                              shadowColor: Colors.black26,
-                              color: Theme.of(context).highlightColor,
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(5),
-                                      margin: const EdgeInsets.only(right: 10),
-                                      child: const Icon(
-                                        Icons.sensor_window_rounded,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Disconnected',
-                                              style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          'Tautkan Perangkat!',
-                                          style: TextStyle(
-                                            color: Theme.of(context).primaryColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Card(
-                              elevation: 5,
-                              shadowColor: Colors.black26,
-                              color: Theme.of(context).highlightColor,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.snackbar('Tautan dilepaskan', 'Berhasil melepaskan tautan');
-                                  measureC.disconnectToDevice(data['id'], data['device']['id']);
-                                },
+                      Container(
+                        width: screenWidth,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        child: (isConnected == false)
+                            ? Card(
+                                elevation: 5,
+                                shadowColor: Colors.black26,
+                                color: Theme.of(context).highlightColor,
                                 child: Container(
                                   padding: EdgeInsets.all(10),
                                   child: Row(
@@ -236,7 +196,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                         margin: const EdgeInsets.only(right: 10),
                                         child: const Icon(
                                           Icons.sensor_window_rounded,
-                                          color: Colors.green,
+                                          color: Colors.red,
                                         ),
                                       ),
                                       Column(
@@ -245,7 +205,7 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                           Row(
                                             children: [
                                               Text(
-                                                'Connected',
+                                                'Disconnected',
                                                 style: TextStyle(
                                                   color: Theme.of(context).primaryColor,
                                                   fontSize: 12,
@@ -253,16 +213,12 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                               ),
                                             ],
                                           ),
-                                          Container(
-                                            width: screenWidth * 0.6,
-                                            child: Text(
-                                              'Tekan untuk Melepaskan Tautan',
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          Text(
+                                            'Tautkan Perangkat!',
+                                            style: TextStyle(
+                                              color: Theme.of(context).primaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ],
@@ -270,55 +226,111 @@ class _DetailMeasurementsState extends State<DetailMeasurements> {
                                     ],
                                   ),
                                 ),
+                              )
+                            : Card(
+                                elevation: 5,
+                                shadowColor: Colors.black26,
+                                color: Theme.of(context).highlightColor,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await measureC.disconnectToDevice(data['id'], data['device']['id']);
+                                    print('ubah');
+                                    isConnected = false;
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          margin: const EdgeInsets.only(right: 10),
+                                          child: const Icon(
+                                            Icons.sensor_window_rounded,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Connected',
+                                                  style: TextStyle(
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              width: screenWidth * 0.6,
+                                              child: Text(
+                                                'Tekan untuk Melepaskan Tautan',
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 30),
-                      width: screenWidth,
-                      child: Text(
-                        'Records',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 30),
+                        width: screenWidth,
+                        child: Text(
+                          'Records',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Card(
-                        elevation: 5,
-                        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        shadowColor: Colors.black26,
-                        child: SizedBox(
-                          height: screenHeight * 0.275,
-                          child: TableRecord(),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Card(
+                          elevation: 5,
+                          margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                          shadowColor: Colors.black26,
+                          child: SizedBox(
+                            height: screenHeight * 0.275,
+                            child: TableRecord(),
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      height: 65,
-                    ),
-                  ],
+                      Container(
+                        height: 65,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          scanBarcode();
-        },
-        label: const Text(
-          'Tautkan Perangkat',
-          style: TextStyle(letterSpacing: 0.1),
-        ),
-        icon: const Icon(Icons.qr_code_2_rounded),
-      ),
-    );
+        floatingActionButton: (isConnected != true)
+            ? FloatingActionButton.extended(
+                onPressed: () async {
+                  scanBarcode();
+                },
+                label: const Text(
+                  'Tautkan Perangkat',
+                  style: TextStyle(letterSpacing: 0.1),
+                ),
+                icon: const Icon(Icons.qr_code_2_rounded),
+              )
+            : Container());
   }
 }
 

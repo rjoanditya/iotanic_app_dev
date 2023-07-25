@@ -14,8 +14,8 @@ class Variety {
   });
 
   factory Variety.fromJson(Map<String, dynamic> json) => Variety(
-        id: json["id"],
-        name: json["name"],
+        id: json["id"].toString(),
+        name: json["name"].toString(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -23,6 +23,8 @@ class Variety {
         "name": name,
       };
 
-  @override
-  String toString() => name;
+  // @override
+  // String toString() {
+  //   return '{id: $id, name: $name}';
+  // }
 }

@@ -202,11 +202,13 @@ class LandList extends StatelessWidget {
         }
         // By default, show a loading spinner.
         return SizedBox(
-          width: 50,
-          height: 50,
-          child: LinearProgressIndicator(
-            color: Theme.of(context).primaryColorDark,
-            backgroundColor: Theme.of(context).splashColor,
+          width: screenWidth,
+          height: screenHeight,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColorDark,
+              backgroundColor: Theme.of(context).splashColor,
+            ),
           ),
         );
       },

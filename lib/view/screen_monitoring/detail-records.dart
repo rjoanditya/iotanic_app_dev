@@ -24,8 +24,8 @@ class _DetailRecordsState extends State<DetailRecords> {
           InkWell(
             onTap: () {},
             child: Container(
-              margin: EdgeInsets.all(15),
-              padding: EdgeInsets.all(12),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(12),
               height: 10,
               width: 100,
               decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class _DetailRecordsState extends State<DetailRecords> {
             children: [
               // Title
               Container(
-                margin: EdgeInsets.symmetric(vertical: 15),
+                margin: const EdgeInsets.symmetric(vertical: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

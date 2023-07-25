@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-measurements.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/detail-varietas.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'record_controller.dart';
@@ -52,6 +53,7 @@ class Measurement extends GetxController {
 
       // Mapping json menjadi Map
       Map<String, dynamic> result = (jsonData as Map<String, dynamic>);
+
       return result;
     } catch (e) {
       return {'error': e};
@@ -81,12 +83,12 @@ class Measurement extends GetxController {
     String baseUrl = await getApi();
     Record measurec = Record();
     Map recordsData = await measurec.fetchRecordsByMeasurementId(id);
-    print(recordsData);
+    // print(recordsData);
     List<LatLng> polygon = [];
     List record = [];
 
     for (var data in recordsData['records']) {
-      polygon.add(LatLng(data['location']['lat'], data['location']['lon']));
+      polygon.add(LatLng(double.parse(data['location']['lat'].toString()), double.parse(data['location']['lon'].toString())));
       record.add(data);
     }
 
@@ -98,7 +100,7 @@ class Measurement extends GetxController {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         Map<String, dynamic> data = (json as Map<String, dynamic>);
-        print('record :$record');
+        // print('record :$record');
         Get.to(DetailMeasurements(), arguments: {'data': data, 'polygon': polygon, 'records': record});
       }
     } catch (e) {
@@ -128,8 +130,9 @@ class Measurement extends GetxController {
   ///
   /// Returns:
   /// - Future<void>: Tidak ada nilai yang dikembalikan.
-  Future<void> createMeasurement(BuildContext context, landId) async {
+  Future<void> createMeasurement(BuildContext context, landId, varietyId) async {
     var land_id = landId;
+    var variety_id = varietyId;
     userId.text = await user.getUser('id');
     String baseUrl = await getApi();
     try {
@@ -138,9 +141,13 @@ class Measurement extends GetxController {
       Map body = {
         'user_id': userId.text,
         'land_id': land_id,
+        'variety_id': variety_id,
       };
-      http.Response response = await api.post(url, body: jsonEncode(body));
+      print(url);
 
+      http.Response response = await api.post(url, body: (body));
+      print(body);
+      print(response.statusCode);
       if (response.statusCode == 201) {
         final json = jsonDecode(response.body);
         Get.snackbar(
@@ -154,6 +161,13 @@ class Measurement extends GetxController {
 
         // Land result = Get.put(Land());
         getMeasurementById(json['id']);
+      } else {
+        Get.snackbar(
+          "Gagal",
+          "Pastikan pengukuran sebelumnya telah selesai",
+          colorText: Colors.red,
+          margin: const EdgeInsets.all(20),
+        );
       }
     } catch (e) {
       print(e);
@@ -189,7 +203,7 @@ class Measurement extends GetxController {
         'device_id': deviceId.text,
         'condition': 'start',
       };
-      http.Response response = await api.patch(url, body: jsonEncode(body));
+      http.Response response = await api.patch(url, body: body);
       if (response.statusCode == 200) {
         Get.snackbar('Berhasil Menautkan', 'Perangkat berhasil tertaut');
       } else {
@@ -227,9 +241,66 @@ class Measurement extends GetxController {
         'device_id': deviceId,
         'condition': 'end',
       };
-      http.Response response = await api.patch(url, body: jsonEncode(body));
+
+      http.Response response = await api.patch(url, body: body);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        Get.snackbar('Tautan dilepaskan', 'Berhasil melepaskan tautan');
+      }
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getVarietiesByLandId(landId) async {
+    List<Map<String, dynamic>> result = [];
+    String baseUrl = await getApi();
+    try {
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      http.Response response = await api.get(url);
+
+      if (response.statusCode != 200) {
+        return result;
+      }
+      Map data = (jsonDecode(response.body) as Map<String, dynamic>);
+      // print(data);
+      // List<Map<String, dynamic>> varieties = [];
+      Set<String> varieties = {};
+      // print(data);
+      data['data'].forEach((item) {
+        if (!varieties.contains(item['variety']['id'])) {
+          varieties.add(item['variety']['id']);
+          varieties.add(item['variety']['name']);
+          // varieties.add(item['variety']['optimal_condition']);
+          result.add(item['variety']);
+        }
+      });
+      // print(result);
+      // print(varieties);
+    } catch (e) {
+      print(e);
+    }
+    return result;
+  }
+
+  Future<Map<String, dynamic>> getMeasurementsByVarietyId(varietyId, landId) async {
+    String baseUrl = await getApi();
+    Map<String, dynamic> result = {};
+    try {
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?variety_id=$varietyId&land_id=$landId');
+      // print(url);
+      http.Response response = await api.get(url);
+
+      if (response.statusCode != 200) {
+        return result;
+      }
+      Map<String, dynamic> data = (jsonDecode(response.body) as Map<String, dynamic>);
+      result = data;
+      // print(data);
+      // Get.to(DetailVarietas(), arguments: {'measurement': data, 'landId': landId});
+    } catch (e) {
+      print(e);
+    }
+    return result;
   }
 }

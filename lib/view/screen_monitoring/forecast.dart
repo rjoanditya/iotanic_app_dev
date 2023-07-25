@@ -158,10 +158,12 @@ class DataForecast extends StatelessWidget {
         }
         return SizedBox(
           width: screenWidth,
-          height: 50,
-          child: LinearProgressIndicator(
-            color: Theme.of(context).primaryColorDark,
-            backgroundColor: Theme.of(context).splashColor,
+          height: screenHeight,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColorDark,
+              backgroundColor: Theme.of(context).splashColor,
+            ),
           ),
         );
       },

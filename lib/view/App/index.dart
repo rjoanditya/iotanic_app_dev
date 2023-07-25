@@ -28,7 +28,7 @@ class _IndexState extends State<Index> {
     final List<Widget> _app = [
       Home(),
       Monitor(),
-      Community(),
+      // Community(),
       Articles(),
       Profile(),
     ];
@@ -49,10 +49,10 @@ class _IndexState extends State<Index> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               navButton(0, _selectedIndex, Icons.home_rounded, "Home", screenWidth * 0.2),
-              navButton(1, _selectedIndex, Icons.area_chart_rounded, "Monitor", screenWidth * 0.2),
-              navButton(2, _selectedIndex, Icons.chat_rounded, "Forum", screenWidth * 0.2),
-              navButton(3, _selectedIndex, Icons.line_style_rounded, "Article", screenWidth * 0.2),
-              navButton(4, _selectedIndex, Icons.person, "Profil", screenWidth * 0.2),
+              navButton(1, _selectedIndex, Icons.area_chart_rounded, "Lahan", screenWidth * 0.2),
+              // navButton(2, _selectedIndex, Icons.chat_rounded, "Forum", screenWidth * 0.2),
+              navButton(2, _selectedIndex, Icons.line_style_rounded, "Artikel", screenWidth * 0.2),
+              navButton(3, _selectedIndex, Icons.person, "Profil", screenWidth * 0.2),
             ],
           ),
         ),
@@ -65,7 +65,7 @@ class _IndexState extends State<Index> {
     return Container(
       decoration: BoxDecoration(
         color: (index == active) ? Theme.of(context).primaryColorDark : Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: (index == 4)
+        borderRadius: (index == 3)
             ? BorderRadius.only(topLeft: Radius.circular(10))
             : (index == 0)
                 ? BorderRadius.only(topRight: Radius.circular(10))

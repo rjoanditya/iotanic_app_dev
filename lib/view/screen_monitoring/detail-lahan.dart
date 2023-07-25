@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:iotanic_app_dev/controller/variety.dart';
+// import 'package:intl/intl.dart';
 import 'package:iotanic_app_dev/controller/measurement_controller.dart';
-import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
+// import 'package:iotanic_app_dev/view/screen_monitoring/chart-detail.dart';
+import 'package:iotanic_app_dev/view/screen_monitoring/detail-varietas.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
 
@@ -33,27 +36,28 @@ class _DetailLahanState extends State<DetailLahan> {
   @override
   void initState() {
     super.initState();
-    fetchData(); // Call the function to fetch the data here
+    // fetchData(); // Call the function to fetch the data here
   }
 
-  Future<void> fetchData() async {
-    final List<ChartData> chart = await landC.getRecordsByLandId(data['id']);
-    setState(() {
-      chartData = chart; // Assign the fetched data to the chartData variable
-    });
-    chartData ??= [
-      ChartData(1, [0, 0, 0, 0]),
-      // ChartData(2, [15, 27, 27, 27]),
-      // ChartData(3, [27, 26, 25, 25]),
-      // ChartData(4, [37, 31, 33, 35]),
-      // ChartData(5, [36, 36, 36, 36]),
-    ];
-    {}
-  }
+  // Future<void> fetchData() async {
+  //   final List<ChartData> chart = await landC.getRecordsByLandId(data['id']);
+  //   setState(() {
+  //     chartData = chart; // Assign the fetched data to the chartData variable
+  //   });
+  //   chartData ??= [
+  //     ChartData(1, [0, 0, 0, 0]),
+  //     // ChartData(2, [15, 27, 27, 27]),
+  //     // ChartData(3, [27, 26, 25, 25]),
+  //     // ChartData(4, [37, 31, 33, 35]),
+  //     // ChartData(5, [36, 36, 36, 36]),
+  //   ];
+  //   {}
+  // }
 
   @override
   Widget build(BuildContext context) {
     Measurement measureC = Get.put(Measurement());
+    VarietyController varietyC = Get.put(VarietyController());
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -76,8 +80,48 @@ class _DetailLahanState extends State<DetailLahan> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          measureC.createMeasurement(context, data['id']);
+        onPressed: () async {
+          dynamic variety = await VarietyController.getVariety();
+
+          // measureC.createMeasurement(context, data['id'], data['variety']['id']);
+          AlertDialog alert = AlertDialog(
+            backgroundColor: Theme.of(context).primaryColorDark,
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(variety.length, (index) {
+                  print(variety[index]);
+                  return GestureDetector(
+                    onTap: () async {
+                      await measureC.createMeasurement(context, data['id'], variety[index]['id']);
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          width: screenWidth * 0.8,
+                          height: screenWidth * 0.145,
+                          decoration: BoxDecoration(
+                            // color: Colors.amber,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Center(child: Text('${variety[index]['name']}'))),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          );
+          // ignore: use_build_context_synchronously
+          showDialog(
+            barrierDismissible: true,
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
         },
         child: Icon(Icons.add),
         tooltip: 'Tambah',
@@ -157,7 +201,7 @@ class _DetailLahanState extends State<DetailLahan> {
                 children: [
                   Card(
                     // color: Color.fromARGB(255, 239, 246, 255),
-                    margin: EdgeInsets.symmetric(vertical: 15),
+                    margin: const EdgeInsets.symmetric(vertical: 15),
                     color: Theme.of(context).cardColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
@@ -166,104 +210,104 @@ class _DetailLahanState extends State<DetailLahan> {
                     elevation: 5,
                     shadowColor: Colors.black26,
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       width: screenWidth * 0.85,
                       height: screenHeight * 0.2,
                       child: WeatherScreen(),
                     ),
                   ),
-                  Card(
-                    // color: Color.fromARGB(255, 239, 246, 255),
-                    margin: EdgeInsets.symmetric(vertical: 15),
-                    color: Theme.of(context).cardColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    // clipBehavior: Clip.hardEdge,
-                    elevation: 5,
-                    shadowColor: Colors.black26,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      width: screenWidth * 0.85,
-                      height: screenHeight * 0.4,
-                      child: Container(
-                        width: screenWidth,
-                        child: Column(children: [
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              margin: EdgeInsets.only(right: 10),
-                              width: screenWidth,
-                              height: 20,
-                              child: InkWell(
-                                onTap: () async {
-                                  Get.to(const ChartDetail(), arguments: data);
-                                },
-                                child: Text(
-                                  'Selengkapnya',
-                                  style: TextStyle(
-                                    color: Theme.of(context).splashColor,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 10,
-                            child: Container(
-                              child: SfCartesianChart(
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                  textStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor.withOpacity(.2),
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                palette: <Color>[
-                                  Theme.of(context).canvasColor,
-                                  Theme.of(context).unselectedWidgetColor,
-                                  Theme.of(context).indicatorColor,
-                                  Theme.of(context).dialogBackgroundColor,
-                                ],
-                                primaryXAxis: CategoryAxis(
-                                  labelStyle: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                  majorGridLines: MajorGridLines(width: 0.2),
-                                  majorTickLines: MajorTickLines(width: 0.2),
-                                  minorTickLines: MinorTickLines(width: 0.2),
-                                  minorGridLines: MinorGridLines(width: 0.2),
-                                  // borderWidth: 0.2,
-                                  maximumLabels: 5,
-                                ),
-                                primaryYAxis: CategoryAxis(
-                                  labelStyle: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                  maximumLabels: 1,
-                                  majorGridLines: MajorGridLines(width: 0.2),
-                                  majorTickLines: MajorTickLines(width: 0.2),
-                                  minorTickLines: MinorTickLines(width: 0.2),
-                                  minorGridLines: MinorGridLines(width: 0.2),
-                                ),
-                                // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
-                                series: generateSplineSeries(
-                                  chartData ??
-                                      [
-                                        ChartData(1, [0, 0, 0, 0])
-                                      ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ),
+                  // Card(
+                  //   // color: Color.fromARGB(255, 239, 246, 255),
+                  //   margin: EdgeInsets.symmetric(vertical: 15),
+                  //   color: Theme.of(context).cardColor,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(24),
+                  //   ),
+                  //   // clipBehavior: Clip.hardEdge,
+                  //   elevation: 5,
+                  //   shadowColor: Colors.black26,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(10),
+                  //     width: screenWidth * 0.85,
+                  //     height: screenHeight * 0.4,
+                  //     child: Container(
+                  //       width: screenWidth,
+                  //       child: Column(children: [
+                  //         Flexible(
+                  //           flex: 1,
+                  //           child: Container(
+                  //             margin: EdgeInsets.only(right: 10),
+                  //             width: screenWidth,
+                  //             height: 20,
+                  //             child: InkWell(
+                  //               onTap: () async {
+                  //                 Get.to(const ChartDetail(), arguments: data);
+                  //               },
+                  //               child: Text(
+                  //                 'Selengkapnya',
+                  //                 style: TextStyle(
+                  //                   color: Theme.of(context).splashColor,
+                  //                   fontWeight: FontWeight.w600,
+                  //                   fontSize: 12,
+                  //                 ),
+                  //                 textAlign: TextAlign.end,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         Flexible(
+                  //           flex: 10,
+                  //           child: Container(
+                  //             child: SfCartesianChart(
+                  //               legend: Legend(
+                  //                 isVisible: true,
+                  //                 position: LegendPosition.bottom,
+                  //                 textStyle: TextStyle(
+                  //                   color: Theme.of(context).primaryColor.withOpacity(.2),
+                  //                   fontSize: 10,
+                  //                 ),
+                  //               ),
+                  //               palette: <Color>[
+                  //                 Theme.of(context).canvasColor,
+                  //                 Theme.of(context).unselectedWidgetColor,
+                  //                 Theme.of(context).indicatorColor,
+                  //                 Theme.of(context).dialogBackgroundColor,
+                  //               ],
+                  //               primaryXAxis: CategoryAxis(
+                  //                 labelStyle: const TextStyle(
+                  //                   fontSize: 10,
+                  //                 ),
+                  //                 majorGridLines: MajorGridLines(width: 0.2),
+                  //                 majorTickLines: MajorTickLines(width: 0.2),
+                  //                 minorTickLines: MinorTickLines(width: 0.2),
+                  //                 minorGridLines: MinorGridLines(width: 0.2),
+                  //                 // borderWidth: 0.2,
+                  //                 maximumLabels: 5,
+                  //               ),
+                  //               primaryYAxis: CategoryAxis(
+                  //                 labelStyle: const TextStyle(
+                  //                   fontSize: 10,
+                  //                 ),
+                  //                 maximumLabels: 1,
+                  //                 majorGridLines: MajorGridLines(width: 0.2),
+                  //                 majorTickLines: MajorTickLines(width: 0.2),
+                  //                 minorTickLines: MinorTickLines(width: 0.2),
+                  //                 minorGridLines: MinorGridLines(width: 0.2),
+                  //               ),
+                  //               // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
+                  //               series: generateSplineSeries(
+                  //                 chartData ??
+                  //                     [
+                  //                       ChartData(1, [0, 0, 0, 0])
+                  //                     ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ]),
+                  //     ),
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -272,7 +316,7 @@ class _DetailLahanState extends State<DetailLahan> {
                         // height: screenHeight * 0.1,
                         margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                         child: Text(
-                          'Pengukuran Terakhir',
+                          'Komoditas Tanaman',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -283,110 +327,206 @@ class _DetailLahanState extends State<DetailLahan> {
                     ],
                   ),
                   FutureBuilder(
-                    future: measureC.getMeasurements('${data['id']}'),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('$snapshot.error');
-                      } else if (snapshot.hasData && snapshot.data!['data'] != null) {
-                        return Column(
-                          children: List.generate(
-                            snapshot.data!['count'],
-                            (index) => GestureDetector(
-                              onTap: () {
-                                var id = snapshot.data!;
-                                measureC.getMeasurementById(id['data'][index]['id']);
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                elevation: 5,
-                                shadowColor: Colors.black26,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  width: screenWidth * 0.85,
-                                  height: screenHeight * 0.15,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        // margin: const EdgeInsets.symmetric(horizontal: 15),
-                                        width: screenWidth * 0.13,
-                                        // height: screenWidth * 0.145,
-                                        decoration: BoxDecoration(
-                                          // color: Colors.amber,
-                                          borderRadius: BorderRadius.circular(50),
+                      future: measureC.getVarietiesByLandId(data['id']),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('$snapshot.error');
+                        } else if (snapshot.hasData && snapshot.data! != null) {
+                          return Column(
+                            children: List.generate(
+                                snapshot.data!.length,
+                                (index) => GestureDetector(
+                                      onTap: () async {
+                                        Get.to(const DetailVarietas(), arguments: {'data': data, 'variety': snapshot.data![index]});
+                                        // dynamic measureByVarietyId = await measureC.getMeasurementsByVarietyId('${snapshot.data![index]['id']}');
+                                      },
+                                      child: Card(
+                                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                        elevation: 5,
+                                        shadowColor: Colors.black26,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(24),
                                         ),
-                                        child: Icon(
-                                          Icons.grass,
-                                          size: screenWidth * 0.06,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20),
+                                          width: screenWidth * 0.85,
+                                          height: screenHeight * 0.15,
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                // data lahan disini
-                                                'MID-${snapshot.data!['data'][index]['id']}',
-                                                style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
-                                              ),
-                                              Text(
-                                                DateFormat("EEE, d MMM yyyy HH:mm:ss").format(DateTime.parse(snapshot.data!['data'][index]['created_at'].toString())),
-                                                style: TextStyle(
+                                              Container(
+                                                margin: const EdgeInsets.symmetric(horizontal: 15),
+                                                width: screenWidth * 0.13,
+                                                // height: screenWidth * 0.145,
+                                                decoration: BoxDecoration(
+                                                  // color: Colors.amber,
+                                                  borderRadius: BorderRadius.circular(50),
+                                                ),
+                                                child: Icon(
+                                                  Icons.grass,
+                                                  size: screenWidth * 0.06,
                                                   color: Theme.of(context).primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(10),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        '${snapshot.data![index]['name']}',
+                                                        style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: screenWidth * 0.15,
+                                                child: Icon(
+                                                  Icons.arrow_forward_ios_rounded,
+                                                  color: Theme.of(context).primaryColor,
+                                                  size: 15,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: screenWidth * 0.15,
-                                        child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    )),
+                          );
+                        } else if (snapshot.hasData && snapshot.data! == null) {
+                          return SizedBox(
+                            height: screenHeight * 0.15,
+                            child: const Center(
+                                child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                'Tidak ada data. Silahkan tambahkan pengukuran',
+                                textAlign: TextAlign.center,
                               ),
+                            )),
+                          );
+                        }
+                        // By default, show a loading spinner.
+                        return SizedBox(
+                          width: screenWidth,
+                          height: screenHeight,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).primaryColorDark,
+                              backgroundColor: Theme.of(context).splashColor,
                             ),
                           ),
                         );
-                      } else if (snapshot.hasData && snapshot.data!['data'] == null) {
-                        return SizedBox(
-                          height: screenHeight * 0.15,
-                          child: const Center(
-                              child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Tidak ada data. Silahkan tambahkan pengukuran',
-                              textAlign: TextAlign.center,
-                            ),
-                          )),
-                        );
-                      }
-                      // By default, show a loading spinner.
-                      return SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: LinearProgressIndicator(
-                          color: Theme.of(context).primaryColorDark,
-                          backgroundColor: Theme.of(context).splashColor,
-                        ),
-                      );
-                    },
-                  )
+                      }),
+                  // FutureBuilder(
+                  //   future: measureC.getMeasurements('${data['id']}'),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasError) {
+                  //       return Text('$snapshot.error');
+                  //     } else if (snapshot.hasData && snapshot.data!['data'] != null) {
+                  //       return Column(
+                  //         children: List.generate(
+                  //           snapshot.data!['count'],
+                  //           (index) => GestureDetector(
+                  //             onTap: () {
+                  //               var id = snapshot.data!;
+                  //               measureC.getMeasurementById(id['data'][index]['id']);
+                  //             },
+                  //             child: Card(
+                  //               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  //               elevation: 5,
+                  //               shadowColor: Colors.black26,
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(24),
+                  //               ),
+                  //               child: Container(
+                  //                 padding: EdgeInsets.all(20),
+                  //                 width: screenWidth * 0.85,
+                  //                 height: screenHeight * 0.15,
+                  //                 child: Row(
+                  //                   children: [
+                  //                     Container(
+                  //                       // margin: const EdgeInsets.symmetric(horizontal: 15),
+                  //                       width: screenWidth * 0.13,
+                  //                       // height: screenWidth * 0.145,
+                  //                       decoration: BoxDecoration(
+                  //                         // color: Colors.amber,
+                  //                         borderRadius: BorderRadius.circular(50),
+                  //                       ),
+                  //                       child: Icon(
+                  //                         Icons.grass,
+                  //                         size: screenWidth * 0.06,
+                  //                         color: Theme.of(context).primaryColor,
+                  //                       ),
+                  //                     ),
+                  //                     Expanded(
+                  //                       flex: 2,
+                  //                       child: Padding(
+                  //                         padding: const EdgeInsets.all(10),
+                  //                         child: Column(
+                  //                           mainAxisAlignment: MainAxisAlignment.center,
+                  //                           crossAxisAlignment: CrossAxisAlignment.start,
+                  //                           children: [
+                  //                             Text(
+                  //                               // data lahan disini
+                  //                               'MID-${snapshot.data!['data'][index]['id']}',
+                  //                               style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
+                  //                             ),
+                  //                             Text(
+                  //                               DateFormat("EEE, d MMM yyyy HH:mm:ss").format(DateTime.parse(snapshot.data!['data'][index]['created_at'].toString())),
+                  //                               style: TextStyle(
+                  //                                 color: Theme.of(context).primaryColor,
+                  //                                 fontWeight: FontWeight.w400,
+                  //                                 fontSize: 12,
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     SizedBox(
+                  //                       width: screenWidth * 0.15,
+                  //                       child: Icon(
+                  //                         Icons.arrow_forward_ios_rounded,
+                  //                         color: Theme.of(context).primaryColor,
+                  //                         size: 15,
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     } else if (snapshot.hasData && snapshot.data!['data'] == null) {
+                  //       return SizedBox(
+                  //         height: screenHeight * 0.15,
+                  //         child: const Center(
+                  //             child: Padding(
+                  //           padding: EdgeInsets.symmetric(horizontal: 20),
+                  //           child: Text(
+                  //             'Tidak ada data. Silahkan tambahkan pengukuran',
+                  //             textAlign: TextAlign.center,
+                  //           ),
+                  //         )),
+                  //       );
+                  //     }
+                  //     // By default, show a loading spinner.
+                  //     return SizedBox(
+                  //       width: 50,
+                  //       height: 50,
+                  //       child: LinearProgressIndicator(
+                  //         color: Theme.of(context).primaryColorDark,
+                  //         backgroundColor: Theme.of(context).splashColor,
+                  //       ),
+                  //     );
+                  //   },
+                  // )
                 ],
               ),
             ),
@@ -401,12 +541,13 @@ class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = Get.arguments;
+    // print('weather: $data');
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder<Map<String, dynamic>>(
-      future: fetchWeather('${data['location']['lat']}', '${data['location']['lon']}'),
+      future: fetchWeather(data['location']['lat'], data['location']['lon']),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -593,11 +734,13 @@ class WeatherScreen extends StatelessWidget {
 
         // By default, show a loading spinner.
         return SizedBox(
-          width: 50,
-          height: 50,
-          child: LinearProgressIndicator(
-            color: Theme.of(context).primaryColorDark,
-            backgroundColor: Theme.of(context).splashColor,
+          width: screenWidth,
+          height: screenHeight,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColorDark,
+              backgroundColor: Theme.of(context).splashColor,
+            ),
           ),
         );
       },

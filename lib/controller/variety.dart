@@ -21,21 +21,22 @@ class VarietyController extends GetxController {
   ///
   /// Returns:
   /// - Future<List<Variety>>: Daftar varietas tanaman dalam bentuk daftar objek Variety.
-  static Future<List<Variety>> getVariety() async {
+  static Future<List<Map<String, dynamic>>> getVariety() async {
     // URL API static
     String baseUrl = await getApi();
     var url = Uri.parse('$baseUrl${Conn.endPoints.variety}');
     http.Response response = await api.get(url);
 
-    List<Variety> result = [];
+    List<Map<String, dynamic>> result = [];
     if (response.statusCode != 200) {
       return result;
     }
 
-    List<dynamic> jsonData = json.decode(response.body)['data'];
+    // Map<String, dynamic> jsonData = json.decode(response.body)['data'];
+    Map<String, dynamic> jsonData = (jsonDecode(response.body));
 
-    for (var data in jsonData) {
-      result.add(Variety(id: data['id'], name: data['name']));
+    for (var data in jsonData['data']) {
+      result.add(data);
     }
 
     return result;

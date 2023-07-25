@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../controller/land_controller.dart';
+import '../../controller/measurement_controller.dart';
 import '../../model/chartData.dart';
 
 class ChartDetail extends StatefulWidget {
@@ -26,11 +27,16 @@ class _ChartDetailState extends State<ChartDetail> {
     fetchData(); // Call the function to fetch the data here
   }
 
+  Measurement measureC = Measurement();
   Future<void> fetchData() async {
-    final List<ChartData> nChart = await landC.getNitrogen(data['id'], data['variety']['id']);
-    final List<ChartData> pChart = await landC.getPhosporus(data['id'], data['variety']['id']);
-    final List<ChartData> kChart = await landC.getPotassium(data['id'], data['variety']['id']);
-    final List<ChartData> phChart = await landC.getPH(data['id'], data['variety']['id']);
+    // dynamic measureData = measureC.getMeasurements(data['data']['id']);
+    // dynamic optimalData = await measureData;
+    // print(optimalData);
+
+    final List<ChartData> nChart = await landC.getNitrogen(data['data']['id'], data['variety']['id']);
+    final List<ChartData> pChart = await landC.getPhosporus(data['data']['id'], data['variety']['id']);
+    final List<ChartData> kChart = await landC.getPotassium(data['data']['id'], data['variety']['id']);
+    final List<ChartData> phChart = await landC.getPH(data['data']['id'], data['variety']['id']);
 
     setState(() {
       nData = nChart;
@@ -44,7 +50,7 @@ class _ChartDetailState extends State<ChartDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(data['id']);
+    print(data['data']['id']);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -122,7 +128,7 @@ class _ChartDetailState extends State<ChartDetail> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         title: Text(
-          'Chart Details',
+          'Detail Grafik',
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 16,
