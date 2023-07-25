@@ -62,25 +62,65 @@ class Home extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.search),
-            color: Theme.of(context).primaryColor,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (BuildContext context) {
-                return const SearchInput();
-              }),
-            ),
-          ),
+              icon: const Icon(Icons.search),
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                AlertDialog alert = AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      // Icon(Icons.close_outlined),
+                      Text("Fitur belum tersedia")
+                    ],
+                  ),
+                );
+                showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              }
+              // => Navigator.of(context).push(
+              //   MaterialPageRoute(builder: (BuildContext context) {
+              //     return const SearchInput();
+              //   }),
+              // ),
+              ),
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
-              icon: const Icon(Icons.notifications_none),
-              color: Theme.of(context).primaryColor,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return const Notifications();
-                }),
-              ),
-            ),
+                icon: const Icon(Icons.notifications_none),
+                color: Theme.of(context).primaryColor,
+                onPressed: () {
+                  AlertDialog alert = AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        // Icon(Icons.close_outlined),
+                        Text("Fitur belum tersedia")
+                      ],
+                    ),
+                  );
+                  showDialog(
+                    barrierDismissible: true,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                }
+                // => Navigator.of(context).push(
+                //   MaterialPageRoute(builder: (BuildContext context) {
+                //     return const Notifications();
+                //   }),
+                // ),
+                ),
           ),
         ],
       ),
@@ -194,7 +234,7 @@ class Home extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(10),
-            height: 125,
+            height: 140,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(
@@ -237,6 +277,7 @@ class Home extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 80,
+                          height: 35,
                           child: Text(
                             appsName[index],
                             style: TextStyle(

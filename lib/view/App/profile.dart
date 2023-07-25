@@ -185,7 +185,7 @@ class Profile extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          'Settings',
+                          'Pengaturan',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
                         ),
                       ),
@@ -236,7 +236,7 @@ class Profile extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          'E-Statement',
+                          'Pernyataan Elektronik',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
                         ),
                       ),
@@ -300,7 +300,7 @@ class Profile extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          'FAQs',
+                          'Bantuan',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
                         ),
                       ),
@@ -351,7 +351,7 @@ class Profile extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          'Our Handbook',
+                          'Panduan Aplikasi',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
                         ),
                       ),
@@ -398,7 +398,7 @@ class Profile extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.only(left: 30),
                         child: const Text(
-                          'Sign Out',
+                          'Keluar',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
                         ),
                       ),

@@ -27,7 +27,7 @@ class _CommunityState extends State<Community> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Center(
             child: Text(
-              'Community',
+              'Komunitas',
               style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.w600),
             ),
           )),
@@ -38,7 +38,7 @@ class _CommunityState extends State<Community> {
               SizedBox(
                 width: screenWidth * 0.8,
                 child: Text(
-                  'Learn Market, Educate the Farmer',
+                  'Bertumbuh Bersama dengan IoTanic',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,

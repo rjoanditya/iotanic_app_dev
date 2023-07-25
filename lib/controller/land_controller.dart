@@ -1,16 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotanic_app_dev/service/jwt.dart';
 import 'package:iotanic_app_dev/view/screen_monitoring/detail-lahan.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../constant.dart';
 import '../../model/chartData.dart';
 import '../model/conn.dart';
 import '../model/user.dart';
-import '../service/jwt.dart';
 import '../service/api.dart';
 
 class Land extends GetxController {
@@ -43,21 +44,17 @@ class Land extends GetxController {
   /// Throws:
   ///   - Jika terjadi kesalahan selama permintaan HTTP atau pemrosesan data, fungsi ini akan melempar Exception.
   Future<Map> getLand() async {
-    var user_id = await user.getUser('id');
+    var userId = await user.getUser('id');
     String baseUrl = await getApi();
-    print(TOKEN);
-    print(API_KEY);
-
     try {
-      // expected to get http://localhost:5000/land/?user_id={user_id}
-      var url = Uri.parse('$baseUrl${Conn.endPoints.land}?user_id=$user_id');
+      // expected to get http://localhost:5000/land/?userId={userId}
+      var url = Uri.parse('$baseUrl${Conn.endPoints.land}?user_id=$userId');
 
       http.Response response = await api.get(url);
 
       final jsonData = json.decode(response.body);
-
       // Mapping json menjadi Map
-      Map<String, dynamic> result = (jsonData as Map<String, dynamic>);
+      Map<String, dynamic> result = (jsonData);
 
       return result;
     } catch (e) {
@@ -91,9 +88,10 @@ class Land extends GetxController {
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
-        Map<String, dynamic> data = (json as Map<String, dynamic>);
+        // Map<String, dynamic> data = (json as Map<String, dynamic>);
+        Map data = json;
 
-        Get.to(DetailLahan(), arguments: data);
+        Get.to(const DetailLahan(), arguments: data);
       }
     } catch (e) {
       print(e);
@@ -121,21 +119,26 @@ class Land extends GetxController {
   /// - `Exception`: Jika terjadi kesalahan saat membuat data lahan.
   Future<void> createLand(BuildContext context) async {
     userId.text = await user.getUser('id');
+
     String baseUrl = await getApi();
+    var headers = {'Content-Type': 'application/json'};
     try {
       // expected to get http://localhost:5000/land/
       var url = Uri.parse('$baseUrl${Conn.endPoints.land}');
       Map body = {
         "name": name.text,
         "user_id": userId.text,
-        "variety_id": varietyId.text,
         "area": area.text,
         "address_id": village.text,
-        "location": {"lat": lat.text, "lon": lon.text}
+        "location": {"lat": '${lat.text}', "lon": '${lon.text}'},
       };
+      print(jsonEncode(body));
+      print(body);
+      final response = await api.post(url, body: json.encode(body), headers: headers);
+      // print(response);
 
-      http.Response response = await api.post(url, body: jsonEncode(body));
-
+      printError();
+      print('response ::: ${response.statusCode}');
       if (response.statusCode == 201) {
         final json = jsonDecode(response.body);
         Get.snackbar(
@@ -388,14 +391,14 @@ class Land extends GetxController {
   ///   tanahnya dalam bentuk objek ChartData. Jika terjadi kesalahan, List yang dikembalikan
   ///   akan berisi satu objek ChartData dengan nilai default yaitu ID 1 dan rata-rata
   ///   kondisi tanah [0, 0, 0, 0].
-  Future<List<ChartData>> getRecordsByLandId(id) async {
+  Future<List<ChartData>> getRecordsByLandId(id, variety_id) async {
     // hasil yang diharapkan
     List<ChartData> result = [
       ChartData(1, [0, 0, 0, 0]),
     ];
     String baseUrl = await getApi();
     try {
-      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$id');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$id&variety_id=$variety_id');
       http.Response response = await api.get(url);
       if (response.statusCode != 200) {
         return result;
@@ -411,6 +414,7 @@ class Land extends GetxController {
     } catch (e) {
       print(e);
     }
+
     return result;
   }
 
@@ -444,7 +448,7 @@ class Land extends GetxController {
     ];
     String baseUrl = await getApi();
     try {
-      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId&variety_id=$varietyId');
       http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
@@ -495,7 +499,7 @@ class Land extends GetxController {
     ];
     String baseUrl = await getApi();
     try {
-      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId&variety_id=$varietyId');
       http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
@@ -545,14 +549,14 @@ class Land extends GetxController {
     ];
     String baseUrl = await getApi();
     try {
-      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId&variety_id=$varietyId');
       http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
         return result;
       }
       Map<String, dynamic> jsonMeasurements = (jsonDecode(response.body) as Map<String, dynamic>);
-
+      print(jsonMeasurements);
       int i = 1;
       for (var data in jsonMeasurements['data']) {
         result.add(ChartData(i, [await optimalPotassium(varietyId), await potassiumAverages(data['id'])]));
@@ -595,7 +599,7 @@ class Land extends GetxController {
     ];
     String baseUrl = await getApi();
     try {
-      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId');
+      var url = Uri.parse('$baseUrl${Conn.endPoints.measurement}?land_id=$landId&variety_id=$varietyId');
       http.Response response = await api.get(url);
 
       if (response.statusCode != 200) {
