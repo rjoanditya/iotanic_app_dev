@@ -10,7 +10,7 @@ class SearchInput extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     List riwayat = [
-      'Agrikultur',
+      'Pertanian',
       'Cabai',
       'Pupuk',
       'Presisi',
@@ -28,7 +28,7 @@ class SearchInput extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Search',
+                'Pencarian',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
               )
             ],
