@@ -67,7 +67,7 @@ class AddressController extends GetxController {
     // URL API static
     // var headers = {'Content-Type': 'application/json', 'Authorization': API_KEY};
     String baseUrl = await getApi();
-    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=district&id=$idProvince');
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=regency&id=$idProvince');
     print('kabupaten : $url');
     http.Response response = await api.get(url);
     List<Regency> result = [];
@@ -106,7 +106,7 @@ class AddressController extends GetxController {
   static Future<List<District>> getDistricts(idRegency) async {
     // URL API static
     String baseUrl = await getApi();
-    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=regency&id=$idRegency');
+    var url = Uri.parse('$baseUrl${Conn.endPoints.address}?search=district&id=$idRegency');
     http.Response response = await api.get(url);
     List<District> result = [];
     if (response.statusCode != 200) {
