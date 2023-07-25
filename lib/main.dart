@@ -29,11 +29,11 @@ Future<void> main() async {
       isDarkMode: prefs.getBool("isDarkTheme") ?? false,
     ),
   ));
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    if (Platform.isAndroid) {
-      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-    }
-  });
+  // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  //   if (Platform.isAndroid) {
+  //     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  //   }
+  // });
 }
 
 class MyApp extends StatefulWidget {
@@ -67,6 +67,8 @@ class ThemeProvider extends ChangeNotifier {
   // themeProvider.swapTheme();
   // print(themes.getLogo);
   bool isDarkMode = false;
+
+  bool isLogin = false;
 
   late ThemeData _selectedTheme;
   late Image _selectedLogo;
