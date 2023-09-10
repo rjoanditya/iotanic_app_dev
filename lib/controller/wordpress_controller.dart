@@ -7,6 +7,7 @@ import 'package:iotanic_app_dev/view/App/detail_articles.dart';
 
 class WordpressController extends GetxController {
   late List categories = [];
+  late String url_wordpress = 'https://iotanic.id';
 
   @override
   void onInit() {
@@ -21,7 +22,8 @@ class WordpressController extends GetxController {
 
   Future<Map<String, dynamic>> getUser(id) async {
     var username = 'admin';
-    var password = 'eNmBwwVo6*Iug)%2P0p@4YIy';
+    var password = 'i9PeJgZfO&';
+    // var password = 'Aicademy1234578';
 
     Map<String, dynamic> result = {};
     var headers = {
@@ -29,7 +31,7 @@ class WordpressController extends GetxController {
       'Accept': 'application/json',
     };
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/users?id=$id');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/users?id=$id');
       http.Response response = await http.get(url, headers: headers);
 
       if (response.statusCode != 200) {
@@ -57,7 +59,7 @@ class WordpressController extends GetxController {
     List result = [];
     var headers = {"Accept": "application/json"};
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/comments?post=$id');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/comments?post=$id');
       http.Response response = await http.get(url, headers: headers);
 
       if (response.statusCode != 200) {
@@ -76,7 +78,7 @@ class WordpressController extends GetxController {
     Map<String, dynamic> result = {};
     var headers = {"Accept": "application/json"};
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/media/$id');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/media/$id');
       http.Response response = await http.get(url, headers: headers);
 
       if (response.statusCode != 200) {
@@ -94,13 +96,11 @@ class WordpressController extends GetxController {
   Future<void> getPost(id) async {
     var headers = {"Accept": "application/json"};
     try {
-      print(id);
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/posts/$id');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/posts/$id');
       http.Response response = await http.get(url, headers: headers);
       if (response.statusCode != 200) {}
       final jsonData = (jsonDecode(response.body));
       final data = jsonData;
-      print(data);
       Get.to(DetailArticles(), arguments: data);
     } catch (e) {
       print(e);
@@ -111,7 +111,7 @@ class WordpressController extends GetxController {
     List<Map<String, dynamic>> result = [];
     var headers = {"Accept": "application/json"};
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/posts?categories=$id&status=publish');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/posts?categories=$id&status=publish');
       http.Response response = await http.get(url, headers: headers);
       if (response.statusCode != 200) {
         return result;
@@ -140,9 +140,11 @@ class WordpressController extends GetxController {
     List<Map<String, dynamic>> result = [];
     var headers = {"Accept": "application/json"};
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/categories?parent=11');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/categories?parent=50');
       http.Response response = await http.get(url, headers: headers);
-
+      // print(url);
+      // print(response.statusCode);
+      // print(response.body);
       if (response.statusCode != 200) {
         return result;
       }
@@ -164,7 +166,7 @@ class WordpressController extends GetxController {
     List<Map<String, dynamic>> result = [];
     var headers = {"Accept": "application/json"};
     try {
-      var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/posts/?status=publish');
+      var url = Uri.parse('$url_wordpress/wp-json/wp/v2/posts/?status=publish');
       http.Response response = await http.get(url, headers: headers);
 
       if (response.statusCode != 200) {
@@ -186,37 +188,39 @@ class WordpressController extends GetxController {
     }
     return result;
   }
-}
 
-Future<Map<String, dynamic>> getUser(id) async {
-  var username = 'admin';
-  var password = 'eNmBwwVo6*Iug)%2P0p@4YIy';
+  // Future<Map<String, dynamic>> getUser(id) async {
+  //   var username = 'admin';
+  //   // var password = 'eNmBwwVo6*Iug)%2P0p@4YIy';
+  //   var password = 'Aicademy12345678';
 
-  Map<String, dynamic> result = {};
-  var headers = {
-    'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
-    'Accept': 'application/json',
-  };
-  try {
-    var url = Uri.parse('https://iotanic.id/wp-json/wp/v2/users?id=$id');
-    http.Response response = await http.get(url, headers: headers);
+  //   Map<String, dynamic> result = {};
+  //   var headers = {
+  //     'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+  //     'Accept': 'application/json',
+  //   };
+  //   try {
+  //     // var url_wordpress = url_wordpress;
+  //     var url = Uri.parse('$url_wordpress/wp-json/wp/v2/users?id=$id');
+  //     http.Response response = await http.get(url, headers: headers);
 
-    if (response.statusCode != 200) {
-      return result;
-    }
-    final jsonData = (jsonDecode(response.body));
-    print(jsonData);
+  //     if (response.statusCode != 200) {
+  //       return result;
+  //     }
+  //     final jsonData = (jsonDecode(response.body));
+  //     print(jsonData);
 
-    // for (var data in jsonData) {
-    //   result.add({
-    //     'id': data['id'],
-    //     'name': data['name'],
-    //     'posts': await getPosts(data['id']),
-    //   });
-    // }
-  } catch (e) {
-    print({e});
-  }
+  //     // for (var data in jsonData) {
+  //     //   result.add({
+  //     //     'id': data['id'],
+  //     //     'name': data['name'],
+  //     //     'posts': await getPosts(data['id']),
+  //     //   });
+  //     // }
+  //   } catch (e) {
+  //     print({e});
+  //   }
 
-  return result;
+  //   return result;
+  // }
 }

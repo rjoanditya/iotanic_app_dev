@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:iotanic_app_dev/view/App/index.dart';
 import '../service/jwt.dart';
 import '../service/api.dart';
 
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 // import 'package:flutter/services.dart';
 // import 'package:http/http.dart' as http;
 
+import 'view/App/home.dart';
 import 'view/splash.dart';
 
 Future<void> main() async {
@@ -20,33 +22,28 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  dynamic token = await getToken();
 
   runApp(ChangeNotifierProvider(
-    child: const MyApp(),
+    child: MyApp(prefs: prefs),
     create: (BuildContext context) => ThemeProvider(
       isDarkMode: prefs.getBool("isDarkTheme") ?? false,
     ),
   ));
-  // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-  //   if (Platform.isAndroid) {
-  //     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-  //   }
-  // });
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final SharedPreferences prefs;
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+  final dynamic token = getToken(); // You need to implement the getToken() function
 
-  // final  token = prefs.get(TOKEN_KEY);
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
@@ -55,7 +52,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'IoTanic | Precision Farming',
           theme: themeProvider.getThemes,
-          home: Splash(),
+          home: (isTokenExpired(token.toString())) ? const Splash() : const Index(),
         );
       },
     );

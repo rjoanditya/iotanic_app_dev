@@ -26,14 +26,15 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchArticles();
+    // if (categories.isEmpty) {}
   }
 
   Future<void> _fetchArticles() async {
-    List<Map<String, dynamic>> articles = await wordpressC.getArticles();
+    List<Map<String, dynamic>> articlesByCategories = await wordpressC.getArticles();
     List<Map<String, dynamic>> latestArticle = await wordpressC.getLatestArticles();
 
     setState(() {
-      categories = articles;
+      categories = articlesByCategories;
       latest = latestArticle[0];
       _tabController = TabController(length: categories.length, vsync: this);
       isLoading = false;
@@ -51,6 +52,7 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
     if (isLoading) {
       double screenWidth = MediaQuery.of(context).size.width;
       double screenHeight = MediaQuery.of(context).size.height;
+      print(latest);
       return SizedBox(
         width: screenWidth,
         height: screenHeight,
@@ -86,7 +88,7 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
             // Container(
             //   margin: const EdgeInsets.only(left: 10),
             //   child: Text(
-            //     '2 Juli 2023',
+            //     DateFormat.YEAR_MONTH_DAY,
             //     style: TextStyle(
             //       color: Theme.of(context).primaryColor,
             //       fontSize: 14,
@@ -97,7 +99,7 @@ class _ArticlesState extends State<Articles> with TickerProviderStateMixin {
         ),
         actions: [
           Container(
-            // margin: const EdgeInsets.only(right: 10),
+            margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () async {
                 AlertDialog alert = AlertDialog(

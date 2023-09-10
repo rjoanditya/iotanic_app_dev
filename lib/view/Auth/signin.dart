@@ -8,6 +8,7 @@ import 'package:iotanic_app_dev/main.dart';
 import 'package:iotanic_app_dev/view/App/home.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signup.dart';
+import 'package:iotanic_app_dev/view/search/search_list.dart';
 import 'package:provider/provider.dart';
 // import 'package:iotanic_app_dev/model/auth.dart';
 // import 'package:iotanic_app_dev/view/App/index.dart';
@@ -160,6 +161,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
                       themeProvider.swapTheme();
+                      // Get.to(SearchList());
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

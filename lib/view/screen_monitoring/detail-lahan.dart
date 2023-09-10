@@ -79,13 +79,21 @@ class _DetailLahanState extends State<DetailLahan> {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text('Pilih Komoditas'),
         onPressed: () async {
           dynamic variety = await VarietyController.getVariety();
 
           // measureC.createMeasurement(context, data['id'], data['variety']['id']);
           AlertDialog alert = AlertDialog(
             backgroundColor: Theme.of(context).primaryColorDark,
+            title: Text(
+              'Daftar Komoditas',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -107,7 +115,13 @@ class _DetailLahanState extends State<DetailLahan> {
                             // color: Colors.amber,
                             borderRadius: BorderRadius.circular(50),
                           ),
-                          child: Center(child: Text('${variety[index]['name']}'))),
+                          child: Center(
+                              child: Text(
+                            '${variety[index]['name']}',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ))),
                     ),
                   );
                 }),
@@ -123,7 +137,8 @@ class _DetailLahanState extends State<DetailLahan> {
             },
           );
         },
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
+        // child: Icon(Icons.add),
         tooltip: 'Tambah',
         // icon: Icon(Icons.add),
         // label: Text(
@@ -329,6 +344,7 @@ class _DetailLahanState extends State<DetailLahan> {
                   FutureBuilder(
                       future: measureC.getVarietiesByLandId(data['id']),
                       builder: (context, snapshot) {
+                        print(snapshot.data);
                         if (snapshot.hasError) {
                           return Text('$snapshot.error');
                         } else if (snapshot.hasData && snapshot.data! != null) {
@@ -397,14 +413,15 @@ class _DetailLahanState extends State<DetailLahan> {
                                       ),
                                     )),
                           );
-                        } else if (snapshot.hasData && snapshot.data! == null) {
+                        } else if (snapshot.data == []) {
                           return SizedBox(
                             height: screenHeight * 0.15,
-                            child: const Center(
+                            child: Center(
                                 child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'Tidak ada data. Silahkan tambahkan pengukuran',
+                                style: TextStyle(color: Theme.of(context).primaryColor),
                                 textAlign: TextAlign.center,
                               ),
                             )),

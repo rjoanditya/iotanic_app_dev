@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -83,19 +85,26 @@ class _DetailArticlesState extends State<DetailArticles> {
                   width: screenWidth,
                   fit: BoxFit.cover,
                 ),
+              ),
+              Container(
+                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(5))),
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                clipBehavior: Clip.antiAlias,
+                child: HtmlWidget(
+                  html,
+                  // onTapUrl: (p0) {
+                  //   return FutureOr();
+                  // },
+                  textStyle: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
                 // child: Image(
                 //   image: AssetImage('public/assets/img/artikel.png'),
                 //   width: screenWidth,
                 //   fit: BoxFit.cover,
                 // ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: HtmlWidget(
-                  html,
-                  textStyle: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              )
             ],
           ),
         ),

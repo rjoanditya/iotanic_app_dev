@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iotanic_app_dev/view/App/notifications.dart';
 import 'package:iotanic_app_dev/view/search/search_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:iotanic_app_dev/view/search/search_list.dart';
 // import '../../main.dart';
 
 class Home extends StatelessWidget {
@@ -22,6 +24,12 @@ class Home extends StatelessWidget {
       'Pupuk',
       'Pemasaran',
       'Teknologi',
+    ];
+    List categoryId = [
+      230,
+      230,
+      232,
+      232,
     ];
     List categoryIcon = [
       Icons.agriculture_rounded,
@@ -173,24 +181,25 @@ class Home extends StatelessWidget {
                 (index) {
                   return GestureDetector(
                     onTap: () {
-                      AlertDialog alert = AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            // Icon(Icons.close_outlined),
-                            Text("Fitur belum tersedia")
-                          ],
-                        ),
-                      );
-                      showDialog(
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return alert;
-                        },
-                      );
+                      Get.to(const SearchList());
+                      // AlertDialog alert = AlertDialog(
+                      //   content: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: const [
+                      //       // Icon(Icons.close_outlined),
+                      //       Text("Fitur belum tersedia")
+                      //     ],
+                      //   ),
+                      // );
+                      // showDialog(
+                      //   barrierDismissible: true,
+                      //   context: context,
+                      //   builder: (BuildContext context) {
+                      //     return alert;
+                      //   },
+                      // );
                     },
                     child: Column(
                       children: [

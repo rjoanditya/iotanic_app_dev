@@ -36,12 +36,14 @@ class _ForecastState extends State<Forecast> {
                 ),
               );
             }
-            return SizedBox(
-              width: screenWidth,
-              height: 50,
-              child: LinearProgressIndicator(
-                color: Theme.of(context).primaryColorDark,
-                backgroundColor: Theme.of(context).splashColor,
+            return Center(
+              child: SizedBox(
+                width: 10,
+                height: 10,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColorDark,
+                  backgroundColor: Theme.of(context).splashColor,
+                ),
               ),
             );
           },
