@@ -1,8 +1,8 @@
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:iotanic_app_dev/constant.dart';
-import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
+// import 'package:iotanic_app_dev/view/screen_monitoring/forecast.dart';
 
 /// Fetches weather data from the OpenWeatherMap API based on the provided latitude and longitude coordinates.
 /// Returns a `Future` that resolves to a `Map` containing the weather data.

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:iotanic_app_dev/controller/auth_controller.dart';
 
 import 'package:iotanic_app_dev/main.dart';
-import 'package:iotanic_app_dev/view/App/home.dart';
-import 'package:iotanic_app_dev/view/App/index.dart';
+// import 'package:iotanic_app_dev/view/App/home.dart';
+// import 'package:iotanic_app_dev/view/App/index.dart';
 import 'package:iotanic_app_dev/view/Auth/signup.dart';
-import 'package:iotanic_app_dev/view/search/search_list.dart';
+// import 'package:iotanic_app_dev/view/search/search_list.dart';
 import 'package:provider/provider.dart';
 // import 'package:iotanic_app_dev/model/auth.dart';
 // import 'package:iotanic_app_dev/view/App/index.dart';

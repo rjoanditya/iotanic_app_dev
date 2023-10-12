@@ -73,31 +73,30 @@ class Home extends StatelessWidget {
               icon: const Icon(Icons.search),
               color: Theme.of(context).primaryColor,
               onPressed: () {
-                AlertDialog alert = AlertDialog(
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      // Icon(Icons.close_outlined),
-                      Text("Fitur belum tersedia")
-                    ],
-                  ),
+                // AlertDialog alert = AlertDialog(
+                //   content: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: const [
+                //       // Icon(Icons.close_outlined),
+                //       Text("Fitur belum tersedia")
+                //     ],
+                //   ),
+                // );
+                // showDialog(
+                //   barrierDismissible: true,
+                //   context: context,
+                //   builder: (BuildContext context) {
+                //     return alert;
+                //   },
+                // );
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return const SearchInput();
+                  }),
                 );
-                showDialog(
-                  barrierDismissible: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return alert;
-                  },
-                );
-              }
-              // => Navigator.of(context).push(
-              //   MaterialPageRoute(builder: (BuildContext context) {
-              //     return const SearchInput();
-              //   }),
-              // ),
-              ),
+              }),
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(

@@ -6,10 +6,11 @@ import 'package:iotanic_app_dev/view/screen_profile/faq.dart';
 import 'package:iotanic_app_dev/view/screen_profile/personal-data.dart';
 import 'package:iotanic_app_dev/view/screen_profile/settings.dart';
 
+// ignore: must_be_immutable
 class Profile extends StatelessWidget {
-  // const Profile({super.key});
-
   AuthController authcontroller = Get.put(AuthController());
+
+  Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -374,8 +375,8 @@ class Profile extends StatelessWidget {
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
               ),
-              onPressed: () {
-                authcontroller.signout();
+              onPressed: () async {
+                await authcontroller.signout();
               },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),

@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:iotanic_app_dev/view/App/detail_articles.dart';
-import 'package:iotanic_app_dev/view/search/search_input.dart';
+// import 'package:iotanic_app_dev/view/App/detail_articles.dart';
+// import 'package:iotanic_app_dev/view/search/search_input.dart';
 
 import '../../controller/wordpress_controller.dart';
 

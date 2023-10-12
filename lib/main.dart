@@ -1,20 +1,21 @@
-import 'dart:io';
+// import 'dart:io';
 // import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iotanic_app_dev/view/App/index.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../service/jwt.dart';
-import '../service/api.dart';
+// import '../service/api.dart';
 
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+// import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter/services.dart';
 // import 'package:http/http.dart' as http;
 
-import 'view/App/home.dart';
+// import 'view/App/home.dart';
 import 'view/splash.dart';
 
 Future<void> main() async {
@@ -42,20 +43,48 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final dynamic token = getToken(); // You need to implement the getToken() function
+  late dynamic token;
+  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+    token = getToken(); // Initialize the token using the getToken() function
+  } // You need to implement the getToken() function
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'IoTanic | Precision Farming',
-          theme: themeProvider.getThemes,
-          home: (isTokenExpired(token.toString())) ? const Splash() : const Index(),
-        );
-      },
-    );
+    return FutureBuilder(
+        future: token,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData && snapshot.data != null) {
+            Map<String, dynamic> session = JwtDecoder.decode(snapshot.data.toString());
+            print('session $session');
+            return Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return GetMaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'IoTanic | Precision Farming',
+                  theme: themeProvider.getThemes,
+                  home: const Index(),
+                );
+              },
+            );
+          }
+          return Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return GetMaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'IoTanic | Precision Farming',
+                theme: themeProvider.getThemes,
+                home: const Splash(),
+              );
+            },
+          );
+        });
   }
 }
 

@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 Future<String> getApi() async {
   // Uri url = Uri.parse("https://api.iotanic.id/api.json");
