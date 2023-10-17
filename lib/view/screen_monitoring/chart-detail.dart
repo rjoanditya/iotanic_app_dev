@@ -46,7 +46,7 @@ class _ChartDetailState extends State<ChartDetail> {
     });
   }
 
-  final List legend = ['Ideal', 'Pengukuran'];
+  final List legend = ['Ideal', 'Actual'];
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +60,15 @@ class _ChartDetailState extends State<ChartDetail> {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
+            name: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: nData,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              height: 5,
+              width: 5,
+            ),
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
@@ -77,9 +83,15 @@ class _ChartDetailState extends State<ChartDetail> {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
+            name: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: pData,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              height: 5,
+              width: 5,
+            ),
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
@@ -94,9 +106,15 @@ class _ChartDetailState extends State<ChartDetail> {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
+            name: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: kData,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              height: 5,
+              width: 5,
+            ),
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
@@ -111,9 +129,15 @@ class _ChartDetailState extends State<ChartDetail> {
         splines.add(
           SplineAreaSeries<ChartData, String>(
             legendItemText: legend[i],
+            name: legend[i],
             opacity: 0.5,
             splineType: SplineType.natural,
             dataSource: phData,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              height: 5,
+              width: 5,
+            ),
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
@@ -189,37 +213,29 @@ class _ChartDetailState extends State<ChartDetail> {
                               ),
                             ),
                             palette: <Color>[
+                              Theme.of(context).splashColor,
                               Theme.of(context).unselectedWidgetColor,
-                              Theme.of(context).indicatorColor,
-                              Theme.of(context).dialogBackgroundColor,
-                              Theme.of(context).canvasColor,
+                              // Theme.of(context).indicatorColor,
+                              // Theme.of(context).dialogBackgroundColor,
+                              // Theme.of(context).canvasColor,
                             ],
                             primaryXAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
-                              // borderWidth: 0.2,
-                              maximumLabels: 5,
+                              // visibleMinimum: 1,
+                              majorGridLines: const MajorGridLines(width: 0),
+                              labelPlacement: LabelPlacement.onTicks,
                             ),
-                            primaryYAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              maximumLabels: 1,
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
+                            primaryYAxis: NumericAxis(
+                              axisLine: const AxisLine(width: 0),
+                              edgeLabelPlacement: EdgeLabelPlacement.shift,
+                              majorTickLines: const MajorTickLines(size: 0),
                             ),
+                            // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                             series: generateNitrogenSeries(nData ??
                                 [
                                   ChartData(1, [0, 0])
                                 ]),
+                            tooltipBehavior: TooltipBehavior(enable: true),
                           ),
                         ),
                       ]),
@@ -274,37 +290,28 @@ class _ChartDetailState extends State<ChartDetail> {
                               ),
                             ),
                             palette: <Color>[
+                              Theme.of(context).splashColor,
                               Theme.of(context).unselectedWidgetColor,
-                              Theme.of(context).indicatorColor,
-                              Theme.of(context).dialogBackgroundColor,
-                              Theme.of(context).canvasColor,
+                              // Theme.of(context).indicatorColor,
+                              // Theme.of(context).dialogBackgroundColor,
+                              // Theme.of(context).canvasColor,
                             ],
                             primaryXAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
-                              // borderWidth: 0.2,
-                              maximumLabels: 5,
+                              // visibleMinimum: 1,
+                              majorGridLines: const MajorGridLines(width: 0),
+                              labelPlacement: LabelPlacement.onTicks,
                             ),
-                            primaryYAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              maximumLabels: 1,
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
+                            primaryYAxis: NumericAxis(
+                              axisLine: const AxisLine(width: 0),
+                              edgeLabelPlacement: EdgeLabelPlacement.shift,
+                              majorTickLines: const MajorTickLines(size: 0),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                             series: generatePhosphorusSeries(pData ??
                                 [
                                   ChartData(1, [0, 0, 0, 0])
                                 ]),
+                            tooltipBehavior: TooltipBehavior(enable: true),
                           ),
                         ),
                       ]),
@@ -360,37 +367,28 @@ class _ChartDetailState extends State<ChartDetail> {
                               ),
                             ),
                             palette: <Color>[
+                              Theme.of(context).splashColor,
                               Theme.of(context).unselectedWidgetColor,
-                              Theme.of(context).indicatorColor,
-                              Theme.of(context).dialogBackgroundColor,
-                              Theme.of(context).canvasColor,
+                              // Theme.of(context).indicatorColor,
+                              // Theme.of(context).dialogBackgroundColor,
+                              // Theme.of(context).canvasColor,
                             ],
                             primaryXAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
-                              // borderWidth: 0.2,
-                              maximumLabels: 5,
+                              // visibleMinimum: 1,
+                              majorGridLines: const MajorGridLines(width: 0),
+                              labelPlacement: LabelPlacement.onTicks,
                             ),
-                            primaryYAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              maximumLabels: 1,
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
+                            primaryYAxis: NumericAxis(
+                              axisLine: const AxisLine(width: 0),
+                              edgeLabelPlacement: EdgeLabelPlacement.shift,
+                              majorTickLines: const MajorTickLines(size: 0),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                             series: generatePottasiumSeries(kData ??
                                 [
                                   ChartData(1, [0, 0, 0, 0])
                                 ]),
+                            tooltipBehavior: TooltipBehavior(enable: true),
                           ),
                         ),
                       ]),
@@ -446,37 +444,28 @@ class _ChartDetailState extends State<ChartDetail> {
                               ),
                             ),
                             palette: <Color>[
+                              Theme.of(context).splashColor,
                               Theme.of(context).unselectedWidgetColor,
-                              Theme.of(context).indicatorColor,
-                              Theme.of(context).dialogBackgroundColor,
-                              Theme.of(context).canvasColor,
+                              // Theme.of(context).indicatorColor,
+                              // Theme.of(context).dialogBackgroundColor,
+                              // Theme.of(context).canvasColor,
                             ],
                             primaryXAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
-                              // borderWidth: 0.2,
-                              maximumLabels: 5,
+                              // visibleMinimum: 1,
+                              majorGridLines: const MajorGridLines(width: 0),
+                              labelPlacement: LabelPlacement.onTicks,
                             ),
-                            primaryYAxis: CategoryAxis(
-                              labelStyle: const TextStyle(
-                                fontSize: 10,
-                              ),
-                              maximumLabels: 1,
-                              majorGridLines: const MajorGridLines(width: 0.2),
-                              majorTickLines: const MajorTickLines(width: 0.2),
-                              minorTickLines: const MinorTickLines(width: 0.2),
-                              minorGridLines: const MinorGridLines(width: 0.2),
+                            primaryYAxis: NumericAxis(
+                              axisLine: const AxisLine(width: 0),
+                              edgeLabelPlacement: EdgeLabelPlacement.shift,
+                              majorTickLines: const MajorTickLines(size: 0),
                             ),
                             // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                             series: generatepHSeries(phData ??
                                 [
                                   ChartData(1, [0, 0, 0, 0])
                                 ]),
+                            tooltipBehavior: TooltipBehavior(enable: true),
                           ),
                         ),
                       ]),

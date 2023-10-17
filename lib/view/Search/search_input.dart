@@ -10,11 +10,11 @@ class SearchInput extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     List riwayat = [
-      'Pertanian',
-      'Cabai',
-      'Pupuk',
-      'Presisi',
-      'Badai Cabeyan',
+      // 'Pertanian',
+      // 'Cabai',
+      // 'Pupuk',
+      // 'Presisi',
+      // 'Badai Cabeyan',
     ];
     // double screenWidth = MediaQuery.of(context).size.width;
     TextEditingController search = TextEditingController();
@@ -40,10 +40,10 @@ class SearchInput extends StatelessWidget {
           child: Column(
             children: [
               Form(
-                key: formKey,
+                // key: formKey,
                 child: Builder(
                   builder: (context) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30.0),
                     child: Column(
                       children: [
                         Column(
@@ -51,12 +51,10 @@ class SearchInput extends StatelessWidget {
                             Material(
                               elevation: 0,
                               borderRadius: const BorderRadius.all(Radius.circular(50)),
-                              child: TextFormField(
-                                // validator: (value) {
-                                //   if (value == null || !isEmail(value)) {
-                                //     return 'Email is not valid!';
-                                //   }
-                                // },
+                              child: TextField(
+                                onSubmitted: (value) async {
+                                  print(value);
+                                },
                                 style: TextStyle(color: Theme.of(context).primaryColor.withOpacity(0.6)),
                                 controller: search,
                                 obscureText: false,
@@ -65,13 +63,18 @@ class SearchInput extends StatelessWidget {
                                   border: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(50)),
                                   ),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Theme.of(context).primaryColor.withOpacity(.5),
+                                  ),
                                   hintText: 'Telusuri Koleksi',
-                                  hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),
+                                  hintStyle: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor.withOpacity(.6)),
                                   fillColor: Theme.of(context).highlightColor,
                                   filled: true,
+                                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide(width: 0.8, color: Theme.of(context).primaryColor)),
                                   contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15,
-                                    horizontal: 10,
+                                    vertical: 20,
+                                    horizontal: 20,
                                   ),
                                 ),
                               ),
@@ -87,7 +90,8 @@ class SearchInput extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Riwayat Anda',
+                  // 'Riwayat Anda',
+                  '',
                   style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -121,7 +125,8 @@ class SearchInput extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Cari Kategori',
+                  // 'Cari Kategori',
+                  '',
                   style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),

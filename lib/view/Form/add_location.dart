@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/retry.dart';
 import 'package:iotanic_app_dev/controller/land_controller.dart';
 // import 'package:flutter/services.dart';
 import '../../constant.dart';
@@ -21,8 +23,13 @@ class _AddLocationState extends State<AddLocation> {
   final MapController _mapController = MapController();
   TextEditingController searchController = TextEditingController();
   LatLng point = LatLng(-7.5624974, 110.8557175);
+  LatLng gpsLatLng = LatLng(0, 0);
 
-  LatLng currentLocation = LatLng(0, 0);
+  Position? myLocation;
+  LatLng currentLocation = LatLng(-7.5624974, 110.8557175);
+
+  late bool servicePermission = false;
+  late LocationPermission permission;
 
   void performGeocoding(String query) async {
     List<Location> locations = await locationFromAddress(query);
@@ -36,6 +43,24 @@ class _AddLocationState extends State<AddLocation> {
       // Handle the case where no locations are found
       print('error');
     }
+  }
+
+  Future performGeolocator() async {
+    // lets first of all check if we have permission to access location service
+    servicePermission = await Geolocator.isLocationServiceEnabled();
+    if (!servicePermission) {
+      print('service disabled');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    myLocation = await Geolocator.getCurrentPosition();
+    gpsLatLng = LatLng(myLocation!.latitude, myLocation!.longitude);
+    point = LatLng(myLocation!.latitude, myLocation!.longitude);
+    setState(() {});
+
+    return myLocation;
   }
 
   // double _rotation = 0;
@@ -172,27 +197,55 @@ class _AddLocationState extends State<AddLocation> {
           ),
         ),
       ),
-      floatingActionButton: Container(
-          margin: EdgeInsets.only(bottom: 120),
-          // width: 50,
-          // height: 50,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              maximumSize: Size(60, 60),
-              minimumSize: Size(60, 60),
-              backgroundColor: Colors.white,
-              shape: CircleBorder(),
-            ),
-            onPressed: () {
-              _mapController.move(point, 15);
-            },
-            child: Center(
-              child: Icon(
-                Icons.location_searching_rounded,
-                color: Theme.of(context).canvasColor,
-              ),
-            ),
-          )),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+              margin: EdgeInsets.only(bottom: 20),
+              // width: 50,
+              // height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  maximumSize: Size(60, 60),
+                  minimumSize: Size(60, 60),
+                  backgroundColor: Colors.red,
+                  shape: CircleBorder(),
+                ),
+                onPressed: () {
+                  _mapController.move(point, 15);
+                },
+                child: Center(
+                  child: Icon(
+                    Icons.location_searching_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+              )),
+          Container(
+              margin: EdgeInsets.only(bottom: 120),
+              // width: 50,
+              // height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  maximumSize: Size(60, 60),
+                  minimumSize: Size(60, 60),
+                  backgroundColor: Colors.white,
+                  shape: CircleBorder(),
+                ),
+                onPressed: () async {
+                  await performGeolocator();
+
+                  _mapController.move(gpsLatLng, 15);
+                },
+                child: Center(
+                  child: Icon(
+                    Icons.my_location_rounded,
+                    color: Theme.of(context).canvasColor,
+                  ),
+                ),
+              )),
+        ],
+      ),
     );
   }
 }

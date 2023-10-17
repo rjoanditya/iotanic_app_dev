@@ -60,7 +60,7 @@ class _DetailVarietasState extends State<DetailVarietas> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final List legendItem = ['Nitrogen', 'Phospat', 'Potasium', 'pH'];
+    final List legendItem = ['Nitrogen', 'Fosfor', 'Kalium', 'pH'];
 
     List<SplineSeries> generateSplineSeries(List<ChartData> chartData) {
       List<SplineSeries> splines = [];
@@ -68,7 +68,13 @@ class _DetailVarietasState extends State<DetailVarietas> {
         splines.add(
           SplineSeries<ChartData, String>(
             legendItemText: legendItem[i],
+            name: legendItem[i],
             dataSource: chartData,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              height: 5,
+              width: 5,
+            ),
             xValueMapper: (ChartData data, _) => data.x.toString(),
             yValueMapper: (ChartData data, _) => data.y![i],
           ),
@@ -231,27 +237,24 @@ class _DetailVarietasState extends State<DetailVarietas> {
                                   Theme.of(context).indicatorColor,
                                   Theme.of(context).dialogBackgroundColor,
                                 ],
+
                                 primaryXAxis: CategoryAxis(
-                                  labelStyle: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                  majorGridLines: MajorGridLines(width: 0.2),
-                                  majorTickLines: MajorTickLines(width: 0.2),
-                                  minorTickLines: MinorTickLines(width: 0.2),
-                                  minorGridLines: MinorGridLines(width: 0.2),
-                                  // borderWidth: 0.2,
-                                  maximumLabels: 5,
+                                  // isInversed: true,
+                                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                                  labelPlacement: LabelPlacement.betweenTicks,
+                                  // visibleMinimum: 1,
+                                  visibleMaximum: 6,
+                                  majorGridLines: const MajorGridLines(width: 0),
+                                  // labelPlacement: LabelPlacement.onTicks,
                                 ),
-                                primaryYAxis: CategoryAxis(
-                                  labelStyle: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                  maximumLabels: 1,
-                                  majorGridLines: MajorGridLines(width: 0.2),
-                                  majorTickLines: MajorTickLines(width: 0.2),
-                                  minorTickLines: MinorTickLines(width: 0.2),
-                                  minorGridLines: MinorGridLines(width: 0.2),
-                                ),
+                                primaryYAxis: NumericAxis(
+                                    // minimum: 30,
+                                    // maximum: 80,
+
+                                    axisLine: const AxisLine(width: 0),
+                                    edgeLabelPlacement: EdgeLabelPlacement.shift,
+                                    // labelFormat: '{value} ppm',
+                                    majorTickLines: const MajorTickLines(size: 0)),
                                 // primaryYAxis: CategoryAxis(labelStyle: TextStyle(fontSize: 12)),
                                 series: generateSplineSeries(
                                   chartData ??
@@ -259,6 +262,7 @@ class _DetailVarietasState extends State<DetailVarietas> {
                                         ChartData(1, [0, 0, 0, 0])
                                       ],
                                 ),
+                                tooltipBehavior: TooltipBehavior(enable: true),
                               ),
                             ),
                           ),
@@ -290,6 +294,7 @@ class _DetailVarietasState extends State<DetailVarietas> {
                       if (snapshot.hasError) {
                         return Text('$snapshot.error');
                       } else if (snapshot.hasData && snapshot.data!['data'] != null) {
+                        var i = 1;
                         return Column(
                           children: List.generate(
                             snapshot.data!['count'],
@@ -314,16 +319,35 @@ class _DetailVarietasState extends State<DetailVarietas> {
                                     children: [
                                       Container(
                                         // margin: const EdgeInsets.symmetric(horizontal: 15),
-                                        width: screenWidth * 0.13,
+                                        // width: screenWidth * 0.13,
                                         // height: screenWidth * 0.145,
+                                        width: 50,
+                                        height: 50,
                                         decoration: BoxDecoration(
                                           // color: Colors.amber,
                                           borderRadius: BorderRadius.circular(50),
                                         ),
-                                        child: Icon(
-                                          Icons.grass,
-                                          size: screenWidth * 0.06,
-                                          color: Theme.of(context).primaryColor,
+                                        // child: Icon(
+                                        //   Icons.grass,
+                                        //   size: screenWidth * 0.06,
+                                        //   color: Theme.of(context).primaryColor,
+                                        // ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).primaryColor,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '${i++}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 20,
+                                                color: Theme.of(context).scaffoldBackgroundColor,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       Expanded(
